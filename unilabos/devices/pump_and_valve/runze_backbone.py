@@ -78,7 +78,7 @@ class RunzeSyringePumpInfo:
 
 
 class RunzeSyringePump:
-    def __init__(self, port: str, address: str = "1", max_volume: float = 25.0, mode: RunzeSyringePumpMode = None):
+    def __init__(self, port: str, address: str = "1", max_volume: float = 25.0, mode: RunzeSyringePumpMode = None ,**kwargs):
         self.port = port
         self.address = address
 

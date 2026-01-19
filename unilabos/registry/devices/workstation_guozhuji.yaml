@@ -1,0 +1,1347 @@
+jingfeispectrometer_device:
+  category:
+  - workstation_guozhuji
+  class:
+    action_value_mappings:
+      auto-calibrate:
+        feedback: {}
+        goal: {}
+        goal_default:
+          spectro_num: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                spectro_num:
+                  type: string
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: calibrate参数
+          type: object
+        type: UniLabJsonCommand
+      auto-continuous_monitor_multi_wavelengths:
+        feedback: {}
+        goal: {}
+        goal_default:
+          duration_sec: null
+          interval_sec: 1
+          spectro_num: null
+          wavelengths: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                duration_sec:
+                  type: string
+                interval_sec:
+                  default: 1
+                  type: string
+                spectro_num:
+                  type: string
+                wavelengths:
+                  type: string
+              required:
+              - wavelengths
+              type: object
+            result: {}
+          required:
+          - goal
+          title: continuous_monitor_multi_wavelengths参数
+          type: object
+        type: UniLabJsonCommand
+      auto-measure_absorbance_at_wavelength:
+        feedback: {}
+        goal: {}
+        goal_default:
+          spectro_num: null
+          verbose: false
+          wavelength: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                spectro_num:
+                  type: string
+                verbose:
+                  default: false
+                  type: string
+                wavelength:
+                  type: string
+              required:
+              - wavelength
+              type: object
+            result: {}
+          required:
+          - goal
+          title: measure_absorbance_at_wavelength参数
+          type: object
+        type: UniLabJsonCommand
+      auto-measure_absorbance_at_wavelengths:
+        feedback: {}
+        goal: {}
+        goal_default:
+          spectro_num: null
+          verbose: false
+          wavelengths: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                spectro_num:
+                  type: string
+                verbose:
+                  default: false
+                  type: string
+                wavelengths:
+                  type: string
+              required:
+              - wavelengths
+              type: object
+            result: {}
+          required:
+          - goal
+          title: measure_absorbance_at_wavelengths参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_integration_time:
+        feedback: {}
+        goal: {}
+        goal_default:
+          time_ms: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                time_ms:
+                  type: string
+              required:
+              - time_ms
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_integration_time参数
+          type: object
+        type: UniLabJsonCommand
+    module: unilabos.devices.jingfei.Jingfei:JingfeiSpectrometer
+    status_types:
+      absorbance: String
+    type: python
+  config_info: []
+  description: ''
+  handles: []
+  icon: ''
+  init_param_schema:
+    config:
+      properties:
+        dll_name:
+          default: FLA5000DLL.dll
+          type: string
+      required: []
+      type: object
+    data:
+      properties:
+        absorbance:
+          type: string
+        baseline:
+          type: string
+        original_data:
+          type: string
+        wave_data:
+          type: string
+        zeroline:
+          type: string
+      required:
+      - original_data
+      - wave_data
+      - zeroline
+      - baseline
+      - absorbance
+      type: object
+  registry_type: device
+  version: 1.0.0
+workstation_guozhuji:
+  category:
+  - workstation_guozhuji
+  class:
+    action_value_mappings:
+      auto-blow_dry:
+        feedback: {}
+        goal: {}
+        goal_default:
+          air_inlet_valve_position: null
+          air_outlet_valve_position: null
+          aspirate_velocity: null
+          cycles: null
+          dispense_velocity: null
+          volume: null
+          wait_time_after_aspirate: 0.2
+          wait_time_after_dispense: 0.2
+          wait_time_between_cycles: 0.1
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                air_inlet_valve_position:
+                  type: string
+                air_outlet_valve_position:
+                  type: string
+                aspirate_velocity:
+                  type: number
+                cycles:
+                  type: integer
+                dispense_velocity:
+                  type: number
+                volume:
+                  type: number
+                wait_time_after_aspirate:
+                  default: 0.2
+                  type: number
+                wait_time_after_dispense:
+                  default: 0.2
+                  type: number
+                wait_time_between_cycles:
+                  default: 0.1
+                  type: number
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: blow_dry参数
+          type: object
+        type: UniLabJsonCommand
+      auto-calculate_slope:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: calculate_slope参数
+          type: object
+        type: UniLabJsonCommand
+      auto-calibrate_spectrometer:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: calibrate_spectrometer参数
+          type: object
+        type: UniLabJsonCommand
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-collect_liquid:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: collect_liquid参数
+          type: object
+        type: UniLabJsonCommand
+      auto-initialize_motors:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: initialize_motors参数
+          type: object
+        type: UniLabJsonCommand
+      auto-measure_absorbance:
+        feedback: {}
+        goal: {}
+        goal_default:
+          verbose: false
+          wavelength: null
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                verbose:
+                  default: false
+                  type: boolean
+                wavelength:
+                  type: integer
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: measure_absorbance参数
+          type: object
+        type: UniLabJsonCommand
+      auto-move_motors_to_collection_position:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: move_motors_to_collection_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-move_motors_to_position:
+        feedback: {}
+        goal: {}
+        goal_default:
+          acceleration: null
+          speed: null
+          x_distance: null
+          y_distance: null
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                acceleration:
+                  type: integer
+                speed:
+                  type: number
+                x_distance:
+                  type: number
+                y_distance:
+                  type: number
+              required:
+              - x_distance
+              - y_distance
+              type: object
+            result: {}
+          required:
+          - goal
+          title: move_motors_to_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-post_init:
+        feedback: {}
+        goal: {}
+        goal_default:
+          ros_node: null
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                ros_node:
+                  type: object
+              required:
+              - ros_node
+              type: object
+            result: {}
+          required:
+          - goal
+          title: post_init参数
+          type: object
+        type: UniLabJsonCommand
+      auto-run_auto_collection:
+        feedback: {}
+        goal: {}
+        goal_default:
+          max_duration: null
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                max_duration:
+                  type: string
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: run_auto_collection参数
+          type: object
+        type: UniLabJsonCommand
+      auto-run_sth:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: run_sth参数
+          type: object
+        type: UniLabJsonCommand
+      auto-sample_loading:
+        feedback: {}
+        goal: {}
+        goal_default:
+          aspirate_velocity: null
+          dispense_velocity: null
+          inlet_valve_position: null
+          outlet_valve_position: null
+          volume: null
+          wait_time_after_aspirate: 0.5
+          wait_time_after_dispense: 0.5
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                aspirate_velocity:
+                  type: number
+                dispense_velocity:
+                  type: number
+                inlet_valve_position:
+                  type: string
+                outlet_valve_position:
+                  type: string
+                volume:
+                  type: number
+                wait_time_after_aspirate:
+                  default: 0.5
+                  type: number
+                wait_time_after_dispense:
+                  default: 0.5
+                  type: number
+              required:
+              - inlet_valve_position
+              - outlet_valve_position
+              - volume
+              type: object
+            result: {}
+          required:
+          - goal
+          title: sample_loading参数
+          type: object
+        type: UniLabJsonCommand
+    module: unilabos.devices.workstation_guozhuji.workstation_guozhuji:AutoLiquidCollectionWorkstation
+    status_types: {}
+    type: python
+  config_info: []
+  description: ''
+  handles: []
+  icon: ''
+  init_param_schema:
+    config:
+      properties:
+        config:
+          type: string
+      required: []
+      type: object
+    data:
+      properties: {}
+      required: []
+      type: object
+  registry_type: device
+  version: 1.0.0
+xy35motor_x_device:
+  category:
+  - workstation_guozhuji
+  class:
+    action_value_mappings:
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disable:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: disable参数
+          type: object
+        type: UniLabJsonCommand
+      auto-emergency_stop:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: emergency_stop参数
+          type: object
+        type: UniLabJsonCommand
+      auto-enable:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: enable参数
+          type: object
+        type: UniLabJsonCommand
+      auto-initialize:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: initialize参数
+          type: object
+        type: UniLabJsonCommand
+      auto-move_distance:
+        feedback: {}
+        goal: {}
+        goal_default:
+          acceleration: 5000
+          distance_mm: null
+          lead: 4.0
+          precision: 100
+          speed_mm_per_sec: null
+          steps_per_rev: 16384
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                acceleration:
+                  default: 5000
+                  type: integer
+                distance_mm:
+                  type: number
+                lead:
+                  default: 4.0
+                  type: number
+                precision:
+                  default: 100
+                  type: integer
+                speed_mm_per_sec:
+                  type: number
+                steps_per_rev:
+                  default: 16384
+                  type: integer
+              required:
+              - distance_mm
+              - speed_mm_per_sec
+              type: object
+            result: {}
+          required:
+          - goal
+          title: move_distance参数
+          type: object
+        type: UniLabJsonCommand
+      auto-move_to_position:
+        feedback: {}
+        goal: {}
+        goal_default:
+          acceleration: 5000
+          precision: 100
+          speed: null
+          steps: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                acceleration:
+                  default: 5000
+                  type: integer
+                precision:
+                  default: 100
+                  type: integer
+                speed:
+                  type: integer
+                steps:
+                  type: integer
+              required:
+              - steps
+              - speed
+              type: object
+            result: {}
+          required:
+          - goal
+          title: move_to_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_actual_speed:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_actual_speed参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_actual_steps:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_actual_steps参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_current:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_current参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_status:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_status参数
+          type: object
+        type: UniLabJsonCommand
+      auto-send_command:
+        feedback: {}
+        goal: {}
+        goal_default:
+          command: null
+          response_length: 8
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                command:
+                  type: string
+                response_length:
+                  default: 8
+                  type: integer
+              required:
+              - command
+              type: object
+            result: {}
+          required:
+          - goal
+          title: send_command参数
+          type: object
+        type: UniLabJsonCommand
+      auto-wait_until_stopped:
+        feedback: {}
+        goal: {}
+        goal_default:
+          check_interval: 0.5
+          timeout: 60.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                check_interval:
+                  default: 0.5
+                  type: number
+                timeout:
+                  default: 60.0
+                  type: number
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: wait_until_stopped参数
+          type: object
+        type: UniLabJsonCommand
+      auto-zero:
+        feedback: {}
+        goal: {}
+        goal_default:
+          speed: -200
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                speed:
+                  default: -200
+                  type: integer
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: zero参数
+          type: object
+        type: UniLabJsonCommand
+    hardware_interface:
+      name: hardware_interface
+      read: send_command
+      write: send_command
+    module: unilabos.devices.workstation_guozhuji.xy35motor:XY35Motor
+    status_types:
+      status_info: dict
+    type: python
+  config_info: []
+  description: ''
+  handles: []
+  icon: ''
+  init_param_schema:
+    config:
+      properties:
+        address:
+          default: 4
+          type: integer
+        baudrate:
+          default: 9600
+          type: integer
+        port:
+          type: string
+      required:
+      - port
+      type: object
+    data:
+      properties:
+        status_info:
+          type: object
+      required:
+      - status_info
+      type: object
+  registry_type: device
+  version: 1.0.0
+xy35motor_y_device:
+  category:
+  - workstation_guozhuji
+  class:
+    action_value_mappings:
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disable:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: disable参数
+          type: object
+        type: UniLabJsonCommand
+      auto-emergency_stop:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: emergency_stop参数
+          type: object
+        type: UniLabJsonCommand
+      auto-enable:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: enable参数
+          type: object
+        type: UniLabJsonCommand
+      auto-initialize:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: initialize参数
+          type: object
+        type: UniLabJsonCommand
+      auto-move_distance:
+        feedback: {}
+        goal: {}
+        goal_default:
+          acceleration: 5000
+          distance_mm: null
+          lead: 4.0
+          precision: 100
+          speed_mm_per_sec: null
+          steps_per_rev: 16384
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                acceleration:
+                  default: 5000
+                  type: integer
+                distance_mm:
+                  type: number
+                lead:
+                  default: 4.0
+                  type: number
+                precision:
+                  default: 100
+                  type: integer
+                speed_mm_per_sec:
+                  type: number
+                steps_per_rev:
+                  default: 16384
+                  type: integer
+              required:
+              - distance_mm
+              - speed_mm_per_sec
+              type: object
+            result: {}
+          required:
+          - goal
+          title: move_distance参数
+          type: object
+        type: UniLabJsonCommand
+      auto-move_to_position:
+        feedback: {}
+        goal: {}
+        goal_default:
+          acceleration: 5000
+          precision: 100
+          speed: null
+          steps: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                acceleration:
+                  default: 5000
+                  type: integer
+                precision:
+                  default: 100
+                  type: integer
+                speed:
+                  type: integer
+                steps:
+                  type: integer
+              required:
+              - steps
+              - speed
+              type: object
+            result: {}
+          required:
+          - goal
+          title: move_to_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_actual_speed:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_actual_speed参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_actual_steps:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_actual_steps参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_current:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_current参数
+          type: object
+        type: UniLabJsonCommand
+      auto-read_status:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: read_status参数
+          type: object
+        type: UniLabJsonCommand
+      auto-send_command:
+        feedback: {}
+        goal: {}
+        goal_default:
+          command: null
+          response_length: 8
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                command:
+                  type: string
+                response_length:
+                  default: 8
+                  type: integer
+              required:
+              - command
+              type: object
+            result: {}
+          required:
+          - goal
+          title: send_command参数
+          type: object
+        type: UniLabJsonCommand
+      auto-wait_until_stopped:
+        feedback: {}
+        goal: {}
+        goal_default:
+          check_interval: 0.5
+          timeout: 60.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                check_interval:
+                  default: 0.5
+                  type: number
+                timeout:
+                  default: 60.0
+                  type: number
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: wait_until_stopped参数
+          type: object
+        type: UniLabJsonCommand
+      auto-zero:
+        feedback: {}
+        goal: {}
+        goal_default:
+          speed: -200
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                speed:
+                  default: -200
+                  type: integer
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: zero参数
+          type: object
+        type: UniLabJsonCommand
+    hardware_interface:
+      name: hardware_interface
+      read: send_command
+      write: send_command
+    module: unilabos.devices.workstation_guozhuji.xy35motor:XY35Motor
+    status_types:
+      status_info: dict
+    type: python
+  config_info: []
+  description: ''
+  handles: []
+  icon: ''
+  init_param_schema:
+    config:
+      properties:
+        address:
+          default: 5
+          type: integer
+        baudrate:
+          default: 9600
+          type: integer
+        port:
+          type: string
+      required:
+      - port
+      type: object
+    data:
+      properties:
+        status_info:
+          type: object
+      required:
+      - status_info
+      type: object
+  registry_type: device
+  version: 1.0.0

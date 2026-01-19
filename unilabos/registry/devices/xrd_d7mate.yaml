@@ -127,48 +127,6 @@ xrd_d7mate:
           title: EmptyIn
           type: object
         type: EmptyIn
-      get_sample_down:
-        feedback: {}
-        goal:
-          sample_station: 1
-        goal_default:
-          int_input: 0
-        handles: {}
-        result: {}
-        schema:
-          description: ''
-          properties:
-            feedback:
-              properties: {}
-              required: []
-              title: IntSingleInput_Feedback
-              type: object
-            goal:
-              properties:
-                int_input:
-                  maximum: 2147483647
-                  minimum: -2147483648
-                  type: integer
-              required:
-              - int_input
-              title: IntSingleInput_Goal
-              type: object
-            result:
-              properties:
-                return_info:
-                  type: string
-                success:
-                  type: boolean
-              required:
-              - return_info
-              - success
-              title: IntSingleInput_Result
-              type: object
-          required:
-          - goal
-          title: IntSingleInput
-          type: object
-        type: IntSingleInput
       get_sample_request:
         feedback: {}
         goal: {}
@@ -233,6 +191,48 @@ xrd_d7mate:
           title: EmptyIn
           type: object
         type: EmptyIn
+      sample_down:
+        feedback: {}
+        goal:
+          sample_station: 1
+        goal_default:
+          int_input: 0
+        handles: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback:
+              properties: {}
+              required: []
+              title: IntSingleInput_Feedback
+              type: object
+            goal:
+              properties:
+                int_input:
+                  maximum: 2147483647
+                  minimum: -2147483648
+                  type: integer
+              required:
+              - int_input
+              title: IntSingleInput_Goal
+              type: object
+            result:
+              properties:
+                return_info:
+                  type: string
+                success:
+                  type: boolean
+              required:
+              - return_info
+              - success
+              title: IntSingleInput_Result
+              type: object
+          required:
+          - goal
+          title: IntSingleInput
+          type: object
+        type: IntSingleInput
       send_sample_down_ready:
         feedback: {}
         goal: {}
@@ -560,7 +560,6 @@ xrd_d7mate:
     module: unilabos.devices.xrd_d7mate.xrd_d7mate:XRDClient
     status_types:
       current_acquire_data: dict
-      sample_down: dict
       sample_request: dict
       sample_status: dict
     type: python
@@ -586,8 +585,6 @@ xrd_d7mate:
       properties:
         current_acquire_data:
           type: object
-        sample_down:
-          type: object
         sample_request:
           type: object
         sample_status:
@@ -596,6 +593,5 @@ xrd_d7mate:
       - sample_request
       - current_acquire_data
       - sample_status
-      - sample_down
       type: object
   version: 1.0.0

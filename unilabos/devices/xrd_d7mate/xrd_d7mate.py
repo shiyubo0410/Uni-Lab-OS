@@ -473,7 +473,7 @@ class XRDClient:
 
     # ==================== 下样流程 ====================
     
-    def get_sample_down(self, sample_station: int) -> dict:
+    def sample_down(self, sample_station: int) -> dict:
         """
         下样请求
         
@@ -500,7 +500,7 @@ class XRDClient:
         try:
             # 按协议要求，content 直接为整数工位号
             cmd = {
-                "command": "GET_SAMPLE_DOWN",
+                "command": "sample_down",
                 "content": {
                     "Sample station":int(3)
                 }
@@ -678,7 +678,7 @@ class XRDClient:
         2) 发送上样请求并等待允许；
         3) 等待指定分钟后发送样品准备完成（携带采集参数）；
         4) 周期性轮询采集数据与工位状态；
-        5) 一旦任一下样位变为 True，执行下样流程（GET_SAMPLE_DOWN + SEND_SAMPLE_DOWN_READY）。
+        5) 一旦任一下样位变为 True，执行下样流程（sample_down + SEND_SAMPLE_DOWN_READY）。
 
         Args:
             sample_id: 样品名称
@@ -793,7 +793,7 @@ class XRDClient:
                 return {"return_info": "未检测到任一下样位 True，流程未完成", "success": False}
 
             # 5) 下样流程
-            r_down = self.get_sample_down(down_station_idx)
+            r_down = self.sample_down(down_station_idx)
             if not r_down.get("status", False):
                 return {"return_info": f"下样请求失败(工位 {down_station_idx}): {r_down.get('message', '未知')}", "success": False}
             if self._ros_node:

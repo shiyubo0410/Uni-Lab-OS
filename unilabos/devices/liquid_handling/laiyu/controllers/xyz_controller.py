@@ -1112,7 +1112,7 @@ def run_tests():
     
     # 创建离线控制器（不自动连接）
     offline_controller = XYZController(
-        port='/dev/ttyUSB_CH340',
+        port='COM9',
         machine_config=config,
         auto_connect=False
     )
@@ -1175,7 +1175,7 @@ def run_tests():
     
     # 可能的串口列表
     possible_ports = [
-        '/dev/ttyUSB_CH340'
+        'COM9'
     ]
     
     connected_controller = None
@@ -1246,7 +1246,7 @@ def run_tests():
 # ==================== 测试和示例代码 ====================
 if __name__ == "__main__":
     run_tests()
-    # xyz_controller = XYZController(port='/dev/ttyUSB_CH340', auto_connect=True)
+    # xyz_controller = XYZController(port='COM9', auto_connect=True)
     # # xyz_controller.stop_all_axes()
     # xyz_controller.connect_device()
     # time.sleep(1)

@@ -166,6 +166,280 @@ rotavap.one:
       required: []
       type: object
   version: 1.0.0
+separator.chinwe:
+  category:
+  - organic_miscellaneous
+  class:
+    action_value_mappings:
+      auto-connect:
+        feedback: {}
+        goal: {}
+        goal_default:
+          baudrate: null
+          port: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                baudrate:
+                  type: string
+                port:
+                  type: string
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: connect参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disconnect:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: disconnect参数
+          type: object
+        type: UniLabJsonCommand
+      auto-rotate_motor:
+        feedback: {}
+        goal: {}
+        goal_default:
+          clockwise: true
+          motor_id: null
+          turns: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                clockwise:
+                  default: true
+                  type: boolean
+                motor_id:
+                  type: integer
+                turns:
+                  type: number
+              required:
+              - motor_id
+              - turns
+              type: object
+            result: {}
+          required:
+          - goal
+          title: rotate_motor参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_motor_speed:
+        feedback: {}
+        goal: {}
+        goal_default:
+          motor_id: null
+          speed: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                motor_id:
+                  type: integer
+                speed:
+                  type: number
+              required:
+              - motor_id
+              - speed
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_motor_speed参数
+          type: object
+        type: UniLabJsonCommand
+      auto-spin_when_ec_ge_0:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: spin_when_ec_ge_0参数
+          type: object
+        type: UniLabJsonCommand
+      auto-stir_task:
+        feedback: {}
+        goal: {}
+        goal_default:
+          repeats: 1
+          settling_time: 120
+          stir_speed: null
+          stir_time: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                repeats:
+                  default: 1
+                  type: integer
+                settling_time:
+                  default: 120
+                  type: integer
+                stir_speed:
+                  type: integer
+                stir_time:
+                  type: integer
+              required:
+              - stir_time
+              - stir_speed
+              type: object
+            result: {}
+          required:
+          - goal
+          title: stir_task参数
+          type: object
+        type: UniLabJsonCommand
+      set_stir:
+        feedback:
+          status: status
+        goal:
+          command: command
+        goal_default:
+          command: ''
+        handles: {}
+        result:
+          success: success
+        schema:
+          description: ''
+          properties:
+            feedback:
+              properties:
+                status:
+                  type: string
+              required:
+              - status
+              title: SendCmd_Feedback
+              type: object
+            goal:
+              properties:
+                command:
+                  type: string
+              required:
+              - command
+              title: SendCmd_Goal
+              type: object
+            result:
+              properties:
+                return_info:
+                  type: string
+                success:
+                  type: boolean
+              required:
+              - return_info
+              - success
+              title: SendCmd_Result
+              type: object
+          required:
+          - goal
+          title: SendCmd
+          type: object
+        type: SendCmd
+    module: unilabos.devices.separator.chinwe:ChinweDevice
+    status_types:
+      device_status: dict
+      ec_adc_value: int
+      ec_value: float
+      is_connected: bool
+      voltage: float
+    type: python
+  config_info: []
+  description: 液-液分离器设备，基于自制Grbl控制器的自动化分离系统。该设备集成搅拌、沉降、阀门控制和电导率传感器，通过串口通信实现精确的分离操作控制。支持自动搅拌、分层沉降、基于传感器反馈的智能分液等功能。适用于有机化学中的萃取分离、相分离、液-液提取等需要精确分离控制的实验应用。
+  handles:
+  - data_type: fluid
+    handler_key: in
+    io_type: target
+    label: in
+    side: NORTH
+  - data_type: fluid
+    handler_key: out
+    io_type: source
+    label: out
+    side: SOUTH
+  icon: ''
+  init_param_schema:
+    config:
+      properties:
+        baudrate:
+          default: 115200
+          type: integer
+        debug:
+          default: false
+          type: boolean
+        port:
+          type: string
+      required:
+      - port
+      type: object
+    data:
+      properties:
+        device_status:
+          type: object
+        ec_adc_value:
+          type: integer
+        ec_value:
+          type: number
+        is_connected:
+          type: boolean
+        voltage:
+          type: number
+      required:
+      - is_connected
+      - voltage
+      - ec_value
+      - ec_adc_value
+      - device_status
+      type: object
+  version: 1.0.0
 separator.homemade:
   category:
   - organic_miscellaneous
@@ -460,7 +734,17 @@ separator.homemade:
     type: python
   config_info: []
   description: 液-液分离器设备，基于自制Grbl控制器的自动化分离系统。该设备集成搅拌、沉降、阀门控制和电导率传感器，通过串口通信实现精确的分离操作控制。支持自动搅拌、分层沉降、基于传感器反馈的智能分液等功能。适用于有机化学中的萃取分离、相分离、液-液提取等需要精确分离控制的实验应用。
-  handles: []
+  handles:
+  - data_type: fluid
+    handler_key: in
+    io_type: target
+    label: in
+    side: NORTH
+  - data_type: fluid
+    handler_key: out
+    io_type: source
+    label: out
+    side: SOUTH
   icon: ''
   init_param_schema:
     config:

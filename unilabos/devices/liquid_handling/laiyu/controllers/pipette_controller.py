@@ -703,7 +703,7 @@ if __name__ == "__main__":
         
         # 获取用户输入的连接参数
         print("\n📡 设备连接配置:")
-        port = input("请输入移液器串口端口 (默认: /dev/ttyUSB_CH340): ").strip() or "/dev/ttyUSB_CH340"
+        port = input("请输入移液器串口端口 (默认: COM9): ").strip() or "COM9"
         address_input = input("请输入移液器设备地址 (默认: 4): ").strip()
         address = int(address_input) if address_input else 4
         
@@ -711,7 +711,7 @@ if __name__ == "__main__":
         xyz_enable = input("是否连接 XYZ 步进电机控制器? (y/N): ").strip().lower()
         xyz_port = None
         if xyz_enable not in ['n', 'no']:
-            xyz_port = input("请输入 XYZ 控制器串口端口 (默认: /dev/ttyUSB_CH340): ").strip() or "/dev/ttyUSB_CH340"
+            xyz_port = input("请输入 XYZ 控制器串口端口 (默认: COM9): ").strip() or "COM9"
         
         try:
             # 创建移液控制器实例

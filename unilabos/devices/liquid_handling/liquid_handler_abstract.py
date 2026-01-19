@@ -34,7 +34,7 @@ class SimpleReturn(TypedDict):
     volumes: list
 
 class LiquidHandlerMiddleware(LiquidHandler):
-    def __init__(self, backend: LiquidHandlerBackend, deck: Deck, simulator: bool = False, channel_num: int = 8, **kwargs):
+    def __init__(self, backend: LiquidHandlerBackend, deck: Deck, simulator: bool = False, channel_num: int = 8, total_height: float = 310, **kwargs):
         self._simulator = simulator
         self.channel_num = channel_num
         self.pending_liquids_dict = {}
@@ -46,6 +46,8 @@ class LiquidHandlerMiddleware(LiquidHandler):
             else:
                 self._simulate_backend = LiquidHandlerChatterboxBackend(channel_num)
             self._simulate_handler = LiquidHandlerAbstract(self._simulate_backend, deck, False)
+        if hasattr(backend, "total_height"):
+            backend.total_height = total_height
         super().__init__(backend, deck)
 
     async def setup(self, **backend_kwargs):
