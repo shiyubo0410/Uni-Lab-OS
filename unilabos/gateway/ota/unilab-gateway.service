@@ -1,0 +1,31 @@
+[Unit]
+Description=Uni-Lab IoT Gateway
+Documentation=https://github.com/deepmodeling/Uni-Lab-OS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# User=root 不是为了"安全"考虑，而是 gateway/main.py:152 看 euid==0 才把管理 Web 绑 80 端口，
+# 否则降级 8080，用户裸 URL 访问就失败。**绝不要擅自改成普通用户。**
+User=root
+# Group=dialout 是为了串口设备（/dev/ttyUSB*、/dev/ttyACM*）读写权限。
+# root 其实天然有权限，但保留 dialout 不动既保留兼容也明确语义。
+Group=dialout
+# symlink 部署：D3.B 升级时 OTA Agent 切 symlink，service 文件不动
+WorkingDirectory=/opt/unilab/current
+# env 文件由工厂烧录到 /etc/，含 WS_URL/HTTP_URL/MOUNT_UUID/AK/SK 等。
+# 模板见仓库里的 unilab-gateway.env.example（若有）。env 文件本身不进 git。
+EnvironmentFile=/etc/unilab-gateway.env
+# ExecStart 的命令行参数都从 env 文件展开，仓库版本和 OPi 实际跑的对齐。
+# 改这一行前，请先 ssh 到任一台已部署 OPi 上 cat 一份现状对比。
+ExecStart=/opt/unilab/venv/bin/python -m unilabos.gateway.main --config /home/orangepi/gateway.yaml --ws-url ${WS_URL} --http-url ${HTTP_URL} --register --mount-uuid ${MOUNT_UUID} --ak ${UNILABOS_BASICCONFIG_AK} --sk ${UNILABOS_BASICCONFIG_SK} --log-level INFO --auto-discover
+
+Restart=always
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=unilab-gateway
+
+[Install]
+WantedBy=multi-user.target

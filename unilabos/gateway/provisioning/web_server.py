@@ -1,0 +1,617 @@
+"""
+配网 / 管理 Web 服务器
+
+提供轻量级 HTTP 服务器，有两种工作模式：
+
+- ``provisioning``：AP 配网模式下展示 ``provision.html``，让用户填 WiFi 信息
+- ``management``：STA 联网模式下常驻，展示 ``management.html``，让用户在
+   局域网内通过浏览器修改 ``/etc/unilab-gateway.env``（AK/SK/mount_uuid/url）
+   或一键"重置 WiFi"重新进入 AP 配网。
+
+为什么不分两个 server 类：两种模式 90% 路由是共享的（首页 + status），
+而且 management 模式需要复用 wifi_manager 来读 SSID / 重置连接，分开
+反而把状态管理切成两半。所以一个类里用 ``mode`` 区分。
+"""
+
+import asyncio
+import logging
+import os
+import socket
+import subprocess
+from pathlib import Path
+from typing import Any, Callable, Dict, Optional
+
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
+
+logger = logging.getLogger("provisioning_server")
+
+
+# /etc/unilab-gateway.env 里的字段 → 前端字段名 的映射
+# 命名差异：env 里的环境变量名是 UNILABOS_BASICCONFIG_AK / SK，但前端展示
+# 简化成 ak / sk。MOUNT_UUID / WS_URL / HTTP_URL 直接同名小写。
+ENV_FIELDS: Dict[str, str] = {
+    "UNILABOS_BASICCONFIG_AK": "ak",
+    "UNILABOS_BASICCONFIG_SK": "sk",
+    "MOUNT_UUID": "mount_uuid",
+    "WS_URL": "ws_url",
+    "HTTP_URL": "http_url",
+}
+# 反向：前端 → env key
+ENV_FIELDS_REVERSE: Dict[str, str] = {v: k for k, v in ENV_FIELDS.items()}
+
+
+def _safe_unquote(value: str) -> str:
+    """env 文件里的值可能带成对的单/双引号，解析时去掉一层并反转义。
+
+    systemd ``EnvironmentFile`` 的 quoting 规则（systemd.exec(5)）：
+    - ``KEY=foo``：字面量
+    - ``KEY="foo"``：双引号内支持 ``\\"`` ``\\\\`` ``\\n`` ``\\t`` 等转义
+    - ``KEY='foo'``：单引号内字面量（不解释转义）
+
+    我们这里只支持 systemd 真正能 round-trip 的子集：
+    简单的双/单引号包裹 + 双引号内的 ``\\"`` ``\\\\``。
+    """
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in ('"', "'"):
+        inner = value[1:-1]
+        if value[0] == '"':
+            # 反向解析双引号转义：\\\\ → \\，\\" → "
+            return inner.replace('\\"', '"').replace("\\\\", "\\")
+        return inner
+    return value
+
+
+def _quote_for_systemd_env(value: str) -> str:
+    """systemd EnvironmentFile 兼容的最小 quoting。
+
+    systemd.exec(5) 描述：``EnvironmentFile=`` 支持 ``KEY=VALUE``、
+    ``KEY="VALUE"``，引号内可以用 ``\\"`` ``\\\\`` ``\\n`` 等转义。
+    **不支持 POSIX shell 的 ``'...'"...""...""...'`` 复杂转义**——所以
+    ``shlex.quote`` 的输出在 systemd 里会被原样保留，导致回读时还原不回去。
+
+    策略：
+    - 空字符串：返回 ``""``
+    - 不含 ``空格 / 制表 / " / \\\\ / # / $ / 换行`` 的安全值 → 裸写不加引号
+    - 含特殊字符 → 双引号包裹，转义 ``"`` 为 ``\\"``，转义 ``\\\\`` 为 ``\\\\\\\\``
+    """
+    if value == "":
+        return '""'
+    SAFE_CHARS = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.:/=+@%")
+    if all(c in SAFE_CHARS for c in value):
+        return value
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+async def _sudo_cat(path: str) -> Optional[str]:
+    """``sudo -n cat <path>``，失败返回 None。
+
+    用于读取 ``/etc/unilab-gateway.env``——文件 owner=root mode=0600，
+    orangepi 用户直接 ``open()`` 会 PermissionError，必须经 sudoers 免密授权
+    的 cat 路径读取。
+    """
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "sudo", "-n", "cat", path,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, stderr = await proc.communicate()
+        if proc.returncode != 0:
+            logger.warning(
+                f"sudo cat {path} 失败 rc={proc.returncode} stderr={stderr.decode(errors='replace')[:200]}"
+            )
+            return None
+        return stdout.decode("utf-8", errors="replace")
+    except FileNotFoundError:
+        logger.error("sudo 命令不存在，无法读 env 文件")
+        return None
+    except Exception as e:
+        logger.error(f"sudo cat 异常: {e}")
+        return None
+
+
+async def _sudo_tee_write(path: str, content: str) -> tuple[bool, str]:
+    """``sudo -n tee <path>``，把 content 写到 path。
+
+    失败时返回 (False, 错误信息)。
+    """
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "sudo", "-n", "tee", path,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        _, stderr = await proc.communicate(content.encode("utf-8"))
+        if proc.returncode != 0:
+            err = stderr.decode("utf-8", errors="replace")[:300]
+            logger.error(f"sudo tee {path} 失败 rc={proc.returncode}: {err}")
+            return False, f"写入失败：{err or '未知错误'}"
+        return True, ""
+    except FileNotFoundError:
+        return False, "sudo / tee 命令不存在"
+    except Exception as e:
+        logger.error(f"sudo tee 异常: {e}")
+        return False, str(e)
+
+
+def _get_lan_ip() -> str:
+    """获取本机面向公网的 LAN IP（不会真发包，只是借 socket.connect 的路由查询）。
+
+    返回 ``"unknown"`` 表示拿不到。
+    """
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.settimeout(0.5)
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+    except Exception:
+        try:
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return "unknown"
+    finally:
+        s.close()
+
+
+def _get_current_wifi_ssid() -> str:
+    """nmcli 拿当前已连 WiFi 的 SSID，失败返回空字符串。"""
+    try:
+        result = subprocess.run(
+            ["nmcli", "-t", "-f", "TYPE,STATE,CONNECTION", "device", "status"],
+            capture_output=True, text=True, timeout=3,
+        )
+        if result.returncode != 0:
+            return ""
+        for line in result.stdout.strip().split("\n"):
+            parts = line.split(":")
+            if len(parts) >= 3 and parts[0] == "wifi" and parts[1] == "connected":
+                return parts[2]
+        return ""
+    except Exception:
+        return ""
+
+
+class ProvisioningServer:
+    """配网 / 管理 Web 服务器"""
+
+    def __init__(
+        self,
+        wifi_manager,
+        on_success: Optional[Callable] = None,
+        host: str = "0.0.0.0",
+        port: int = 80,
+        mode: str = "provisioning",
+        env_file_path: str = "/etc/unilab-gateway.env",
+        machine_name: str = "",
+    ):
+        """
+        :param wifi_manager: WiFiManager 实例
+        :param on_success: 配网成功回调（仅 provisioning 模式使用）
+        :param host: 监听地址（默认 0.0.0.0 全网卡）
+        :param port: 监听端口
+        :param mode: ``"provisioning"`` 或 ``"management"``
+        :param env_file_path: ``/etc/unilab-gateway.env`` 路径，management 模式读写
+        :param machine_name: 网关机器名，给 management 首页展示用
+        """
+        if mode not in ("provisioning", "management"):
+            raise ValueError(f"mode 必须是 provisioning 或 management，收到 {mode!r}")
+
+        self.wifi_manager = wifi_manager
+        self.on_success = on_success
+        self.host = host
+        self.port = port
+        self.mode = mode
+        self.env_file_path = env_file_path
+        self.machine_name = machine_name
+
+        self.app = FastAPI(title=f"UniLab Gateway ({mode})")
+        self._setup_routes()
+
+        template_dir = Path(__file__).parent / "templates"
+        self.templates = Jinja2Templates(directory=str(template_dir))
+
+        self._server: Optional[Any] = None
+        self._server_task: Optional[asyncio.Task] = None
+
+    # =====================================================================
+    # 路由
+    # =====================================================================
+    def _setup_routes(self) -> None:
+        if self.mode == "provisioning":
+            self._setup_provisioning_routes()
+        else:
+            self._setup_management_routes()
+
+        # 两种模式都有的状态接口
+        @self.app.get("/api/status")
+        async def get_status():
+            return JSONResponse({
+                "mode": self.mode,
+                "ap_ssid": self.wifi_manager.ap_ssid,
+                "is_connected": self.wifi_manager.is_connected(),
+            })
+
+    def _setup_provisioning_routes(self) -> None:
+        """AP 模式：配网页面 + 扫 WiFi + 提交 WiFi 凭证。"""
+
+        @self.app.get("/", response_class=HTMLResponse)
+        async def index(request: Request):
+            return self.templates.TemplateResponse(
+                request,
+                "provision.html",
+                {"ap_ssid": self.wifi_manager.ap_ssid},
+            )
+
+        @self.app.get("/api/scan")
+        async def scan_wifi():
+            try:
+                wifi_list = self.wifi_manager.scan_wifi()
+                return JSONResponse({"success": True, "wifi_list": wifi_list})
+            except Exception as e:
+                logger.error(f"扫描 WiFi 失败: {e}")
+                return JSONResponse(
+                    {"success": False, "error": str(e)},
+                    status_code=500,
+                )
+
+        @self.app.post("/api/connect")
+        async def connect_wifi(request: Request):
+            try:
+                data = await request.json()
+                ssid = (data.get("ssid") or "").strip()
+                password = data.get("password") or ""
+
+                if not ssid:
+                    return JSONResponse(
+                        {"success": False, "error": "SSID 不能为空"},
+                        status_code=400,
+                    )
+
+                logger.info(f"收到配网请求: SSID={ssid}, password_len={len(password)}")
+
+                loop = asyncio.get_event_loop()
+                result = await loop.run_in_executor(
+                    None, self.wifi_manager.connect_wifi, ssid, password
+                )
+                if isinstance(result, tuple):
+                    success, error_msg = result
+                else:
+                    success = bool(result)
+                    error_msg = "连接失败，请检查密码是否正确"
+
+                if success:
+                    logger.info(f"✓ WiFi 配置成功: {ssid}")
+                    if self.on_success:
+                        asyncio.create_task(self._delayed_callback(ssid))
+                    return JSONResponse({
+                        "success": True,
+                        "message": f"成功连接到 {ssid}，网关将在 5 秒后重启",
+                    })
+                return JSONResponse(
+                    {"success": False, "error": error_msg},
+                    status_code=400,
+                )
+
+            except Exception as e:
+                logger.error(f"连接 WiFi 异常: {e}")
+                return JSONResponse(
+                    {"success": False, "error": str(e)},
+                    status_code=500,
+                )
+
+    def _setup_management_routes(self) -> None:
+        """STA 模式：管理后台 + 改 AK/SK + 重置 WiFi。"""
+
+        @self.app.get("/", response_class=HTMLResponse)
+        async def index(request: Request):
+            return self.templates.TemplateResponse(
+                request,
+                "management.html",
+                {
+                    "machine_name": self.machine_name,
+                    "ap_ssid": self.wifi_manager.ap_ssid,
+                },
+            )
+
+        @self.app.get("/api/info")
+        async def get_info():
+            """返回首页要显示的网关基本信息（hostname / IP / 当前 WiFi 等）。"""
+            return JSONResponse({
+                "success": True,
+                "hostname": socket.gethostname(),
+                "machine_name": self.machine_name,
+                "lan_ip": _get_lan_ip(),
+                "wifi_ssid": _get_current_wifi_ssid(),
+                "ap_ssid": self.wifi_manager.ap_ssid,
+                "env_file": self.env_file_path,
+            })
+
+        @self.app.get("/api/config")
+        async def get_config():
+            """读 /etc/unilab-gateway.env，返回明文。"""
+            content = await _sudo_cat(self.env_file_path)
+            if content is None:
+                # 文件不存在 / 没权限：返回空白配置，前端表单仍可用
+                logger.warning(f"读不到 {self.env_file_path}，回填空配置")
+                return JSONResponse({
+                    "success": True,
+                    "config": {field: "" for field in ENV_FIELDS.values()},
+                    "warning": (
+                        f"读不到 {self.env_file_path}，可能是文件不存在或 sudoers 没配好。"
+                        "可以直接在下方表单填入新值并保存。"
+                    ),
+                })
+            cfg = self._parse_env(content)
+            return JSONResponse({"success": True, "config": cfg})
+
+        @self.app.post("/api/config")
+        async def save_config(request: Request):
+            """写 env 文件，然后异步重启 unilab-gateway 服务。"""
+            try:
+                data = await request.json()
+            except Exception as e:
+                return JSONResponse(
+                    {"success": False, "error": f"请求体不是合法 JSON: {e}"},
+                    status_code=400,
+                )
+            return await self._apply_config_payload(data, source="POST")
+
+        @self.app.get("/api/config/apply")
+        async def apply_config_via_query(request: Request):
+            """通过 URL query 参数一键配置（扫码 / 分享链接场景）。
+
+            示例：::
+
+                GET /api/config/apply?ak=AK_XXX&sk=SK_XXX&mount_uuid=abc-123
+
+            语义和 ``POST /api/config`` 完全一致，复用同一套写入 + 重启逻辑。
+            注意：query 里的明文 AK/SK 会被浏览器 history / 反代日志记录，仅用于
+            局域网管理后台的"快速配置"场景，**不要把这种链接发到公网**。
+            """
+            params: Dict[str, str] = {
+                "ak": (request.query_params.get("ak") or "").strip(),
+                "sk": (request.query_params.get("sk") or "").strip(),
+                "mount_uuid": (request.query_params.get("mount_uuid") or "").strip(),
+                "ws_url": (request.query_params.get("ws_url") or "").strip(),
+                "http_url": (request.query_params.get("http_url") or "").strip(),
+            }
+            return await self._apply_config_payload(params, source="GET")
+
+        @self.app.post("/api/reset")
+        async def reset_wifi():
+            """重置 WiFi：清掉已保存的 connection，重启系统进 AP 配网模式。"""
+            try:
+                deleted = await asyncio.get_event_loop().run_in_executor(
+                    None, self._forget_all_saved_wifi
+                )
+                logger.info(f"[RESET] 清除了 {deleted} 个已保存的 WiFi connection")
+            except Exception as e:
+                logger.error(f"[RESET] 清除 WiFi 异常: {e}")
+                return JSONResponse(
+                    {"success": False, "error": f"清除 WiFi 配置失败：{e}"},
+                    status_code=500,
+                )
+
+            asyncio.create_task(self._delayed_reboot())
+            return JSONResponse({
+                "success": True,
+                "message": (
+                    "✓ WiFi 配置已清除，网关将在 3 秒后重启进入配网模式。\n"
+                    "重启后请用手机连接热点 "
+                    f"{self.wifi_manager.ap_ssid}（密码 {self.wifi_manager.ap_password}），"
+                    "浏览器打开 http://192.168.12.1 重新配网。"
+                ),
+            })
+
+    # =====================================================================
+    # 内部辅助
+    # =====================================================================
+    async def _apply_config_payload(
+        self, data: Dict[str, Any], source: str = "POST"
+    ) -> JSONResponse:
+        """共享的"应用配置"逻辑：校验 → 渲染 env → sudo tee 写入 → 触发延迟重启。
+
+        被 ``POST /api/config`` 和 ``GET /api/config/apply`` 共同复用。
+        ``source`` 仅用于日志区分入口。
+        """
+        ak = (data.get("ak") or "").strip()
+        sk = (data.get("sk") or "").strip()
+        mount_uuid = (data.get("mount_uuid") or "").strip()
+        ws_url = (data.get("ws_url") or "").strip()
+        http_url = (data.get("http_url") or "").strip()
+
+        if not ak or not sk:
+            return JSONResponse(
+                {"success": False, "error": "AK 和 SK 必填"},
+                status_code=400,
+            )
+
+        content = self._render_env({
+            "ak": ak,
+            "sk": sk,
+            "mount_uuid": mount_uuid,
+            "ws_url": ws_url,
+            "http_url": http_url,
+        })
+
+        ok, err = await _sudo_tee_write(self.env_file_path, content)
+        if not ok:
+            return JSONResponse(
+                {"success": False, "error": err},
+                status_code=500,
+            )
+
+        logger.info(
+            f"✓ [{source}] 已写入 {self.env_file_path}（ak_len={len(ak)} sk_len={len(sk)} "
+            f"mount_uuid={mount_uuid!r} ws_url={ws_url!r} http_url={http_url!r}）"
+        )
+
+        # 后台延迟重启 systemd 服务，让本响应能正常返回给浏览器
+        asyncio.create_task(self._delayed_systemctl_restart())
+
+        return JSONResponse({
+            "success": True,
+            "message": (
+                "✓ 配置已保存。网关将在 3 秒后重启 unilab-gateway 服务以应用新的 AK/SK，"
+                "约 30 秒后请到 Uni-Lab 控制台查看是否上线。\n"
+                "本管理后台稍后会短暂中断，重启完成后会自动恢复。"
+            ),
+        })
+
+    @staticmethod
+    def _parse_env(content: str) -> Dict[str, str]:
+        """把 env 文件内容解析成 ``{ak, sk, mount_uuid, ws_url, http_url}``"""
+        cfg = {field: "" for field in ENV_FIELDS.values()}
+        for raw in content.splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            if key in ENV_FIELDS:
+                cfg[ENV_FIELDS[key]] = _safe_unquote(value)
+        return cfg
+
+    @staticmethod
+    def _render_env(cfg: Dict[str, str]) -> str:
+        """把前端字段渲染成 env 文件内容（保留必要字段，空值不写）。"""
+        lines = [
+            "# /etc/unilab-gateway.env",
+            "# 由网关管理后台 (mode=management) 生成。手动编辑也 OK，但下次保存会覆盖。",
+            "",
+        ]
+        # 顺序固定，方便 diff
+        for env_key in ("UNILABOS_BASICCONFIG_AK", "UNILABOS_BASICCONFIG_SK",
+                        "MOUNT_UUID", "WS_URL", "HTTP_URL"):
+            field = ENV_FIELDS[env_key]
+            value = cfg.get(field, "").strip()
+            if value:
+                # 用 systemd 兼容的 quoting，保证 _parse_env 能 round-trip
+                lines.append(f"{env_key}={_quote_for_systemd_env(value)}")
+        return "\n".join(lines) + "\n"
+
+    def _forget_all_saved_wifi(self) -> int:
+        """删除所有已保存的非 AP WiFi connection，返回删除数量。
+
+        放在 ProvisioningServer 而不是 WiFiManager 里：因为这是管理后台特有
+        的"重置"语义，WiFiManager 关心的是配网时的 connection 创建。
+        """
+        deleted = 0
+        try:
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "TYPE,NAME", "connection", "show"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode != 0:
+                logger.warning(f"nmcli connection show 失败: {result.stderr}")
+                return 0
+
+            ap_conn_name = getattr(self.wifi_manager, "_ap_connection_name", "")
+            for line in result.stdout.strip().split("\n"):
+                if not line or ":" not in line:
+                    continue
+                conn_type, conn_name = line.split(":", 1)
+                if conn_type != "802-11-wireless":
+                    continue
+                if conn_name == ap_conn_name:
+                    continue
+                logger.info(f"[RESET] 删除 WiFi connection: {conn_name}")
+                subprocess.run(
+                    ["sudo", "-n", "nmcli", "connection", "delete", conn_name],
+                    capture_output=True, timeout=10,
+                )
+                deleted += 1
+            return deleted
+        except Exception as e:
+            logger.error(f"_forget_all_saved_wifi 异常: {e}")
+            return deleted
+
+    async def _delayed_callback(self, ssid: Optional[str] = None) -> None:
+        """配网成功后延迟通知主流程，给 HTTP 响应留发送时间。"""
+        await asyncio.sleep(2)
+        if self.on_success:
+            try:
+                try:
+                    self.on_success(ssid)
+                except TypeError:
+                    self.on_success()
+            except Exception as e:
+                logger.error(f"配网成功回调异常: {e}")
+
+    async def _delayed_systemctl_restart(self) -> None:
+        """延迟 3 秒后重启 unilab-gateway 服务，让 HTTP 响应能正常返回。
+
+        重启会立即 SIGTERM 当前进程（包括本管理 server），所以这里 fire-and-forget
+        即可。子进程用 ``Popen`` 启起来后就会被 init 接管，跟我们死无关。
+        """
+        await asyncio.sleep(3)
+        logger.warning("[ADMIN] 重启 unilab-gateway 服务以应用新的 AK/SK 配置")
+        try:
+            subprocess.Popen(
+                ["sudo", "-n", "systemctl", "restart", "unilab-gateway"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except Exception as e:
+            logger.error(f"[ADMIN] sudo systemctl restart 调用失败: {e}")
+
+    async def _delayed_reboot(self) -> None:
+        """延迟 3 秒后整机重启（重置 WiFi 走整机重启，理由见 wifi_manager.reboot_system）。"""
+        await asyncio.sleep(3)
+        logger.warning("[ADMIN] 重置 WiFi：整机重启进入配网模式")
+        try:
+            subprocess.Popen(
+                ["sudo", "-n", "reboot"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except Exception as e:
+            logger.error(f"[ADMIN] sudo reboot 调用失败: {e}")
+
+    # =====================================================================
+    # 启停
+    # =====================================================================
+    async def start(self) -> None:
+        """启动 Web 服务器（异步任务，不阻塞调用方）。"""
+        import uvicorn
+
+        logger.info(
+            f"启动 {self.mode} Web 服务器: http://{self.host}:{self.port}"
+        )
+
+        config = uvicorn.Config(
+            self.app,
+            host=self.host,
+            port=self.port,
+            log_level="warning",
+        )
+        self._server = uvicorn.Server(config)
+        self._server_task = asyncio.create_task(self._server.serve())
+
+    async def stop(self) -> None:
+        if self._server:
+            logger.info(f"停止 {self.mode} Web 服务器")
+            self._server.should_exit = True
+            if self._server_task:
+                try:
+                    await self._server_task
+                except Exception as e:
+                    logger.debug(f"server task 退出异常: {e}")
+
+    def run_blocking(self) -> None:
+        """阻塞式运行（独立进程调用）。"""
+        import uvicorn
+
+        logger.info(f"启动 {self.mode} Web 服务器: http://{self.host}:{self.port}")
+        uvicorn.run(self.app, host=self.host, port=self.port, log_level="warning")
+
+
+# 备用兼容：os 仍然 import 进来——一些下游代码可能引用 web_server.os 检查路径
+__all__ = ["ProvisioningServer", "ENV_FIELDS"]
+_ = os  # 避免 lint 觉得 os 没用上

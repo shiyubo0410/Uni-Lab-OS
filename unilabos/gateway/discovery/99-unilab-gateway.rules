@@ -1,0 +1,46 @@
+# udev 规则：USB 串口热插拔检测
+#
+# 安装方法：
+#   sudo cp 99-unilab-gateway.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload-rules
+#
+# 当 USB 串口设备插入时，自动触发 hotplug_handler 脚本进行设备识别。
+#
+# 重要：每条厂商规则匹配后用 GOTO 跳到末尾，避免后面的"通用规则"重复触发
+# handler，导致同一个 port 被探测两次（会引发 RS-485 总线串扰、误识别成
+# 多个 worker 抢占同一个 /dev/ttyUSB*）。
+
+# FTDI USB-to-serial 适配器
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'", \
+  GOTO="unilab_gateway_end"
+
+# CH340/CH341 USB-to-serial 适配器
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'", \
+  GOTO="unilab_gateway_end"
+
+# CP210x USB-to-serial 适配器
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'", \
+  GOTO="unilab_gateway_end"
+
+# STMicroelectronics USB Virtual COM Port (IKA RCT digital 等使用 STM32 内置 VCP)
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'", \
+  GOTO="unilab_gateway_end"
+
+# 通用 USB CDC ACM 设备（Arduino 等）
+ACTION=="add", SUBSYSTEM=="tty", ATTRS{bInterfaceClass}=="02", ATTRS{bInterfaceSubClass}=="02", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'", \
+  GOTO="unilab_gateway_end"
+
+# 通用 USB 串口设备（匹配 ttyUSB* / ttyACM*）
+# 仅当上面的厂商规则都没匹配时才会跑到这里（兜底）
+ACTION=="add", SUBSYSTEM=="tty", KERNEL=="ttyUSB[0-9]*", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'"
+
+ACTION=="add", SUBSYSTEM=="tty", KERNEL=="ttyACM[0-9]*", \
+  RUN+="/bin/sh -c 'cd /home/orangepi/code/Uni-Lab-OS && /home/orangepi/code/Uni-Lab-OS/.venv/bin/python -m unilabos.gateway.discovery.hotplug_handler /dev/%k'"
+
+LABEL="unilab_gateway_end"

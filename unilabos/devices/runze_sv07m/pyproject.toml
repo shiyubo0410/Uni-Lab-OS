@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unilab-device-runze-sv07m"
+version = "1.0.0"
+description = "润泽 (Runze) SV07M 多通道切换阀 Uni-Lab-OS 设备驱动包, RUNZE 自定义二进制协议, RS-232 / RS-485 (8N1, 默认 9600)。"
+requires-python = ">=3.10"
+license = { text = "DP Technology Proprietary License" }
+authors = [{ name = "The unilabos developers" }]
+keywords = ["unilab", "unilabos", "valve", "selector-valve", "runze", "sv07m", "rs485", "rs232"]
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[tool.setuptools]
+py-modules = ["runze_sv07m"]
+
+[tool.unilabos.registry]
+paths = ["."]

@@ -1,0 +1,43 @@
+# /etc/sudoers.d/unilab-gateway
+#
+# 允许 orangepi 用户免密 sudo 跑网关相关命令。
+# 安装：
+#   sudo install -m 440 -o root -g root \
+#       unilabos/gateway/provisioning/sudoers.d.unilab-gateway \
+#       /etc/sudoers.d/unilab-gateway
+#   sudo visudo -cf /etc/sudoers.d/unilab-gateway   # 校验语法
+#
+# 关键命令说明：
+#   create_ap  - OPi 镜像预装在 /usr/bin/create_ap，启 hostapd + dnsmasq
+#   nmcli      - 切换 wlan0 managed/unmanaged，给 hostapd 让出网卡；管理后台
+#                "重置 WiFi" 按钮也用它清除已保存的 connection
+#   pkill      - stop_ap 兜底清理 hostapd / dnsmasq 残留
+#   reboot     - 配网完成后重启系统。unisoc sprdwl_ng 驱动从 AP 切回 STA 在
+#                程序集成里不可靠（rmmod/modprobe / restart NetworkManager 在
+#                stop_ap 之后都救不回 driver 卡死），唯一稳的方案就是 reboot——
+#                开机后 NM autoconnect 保存的 WiFi，systemd 拉起 unilab-gateway。
+#   tee        - 管理后台写 /etc/unilab-gateway.env（AK/SK/mount_uuid/url）。
+#                env 文件 owner=root 0600，orangepi 不能直接写，必须 sudo tee。
+#   cat        - 管理后台读 /etc/unilab-gateway.env 回显当前配置。
+#                同样因为 600 权限，普通用户读不了，必须 sudo cat。
+#   systemctl  - 管理后台修改 AK/SK 后重启 unilab-gateway 服务以应用新配置。
+#                Debian/Ubuntu 上 /bin/systemctl 是 /usr/bin/systemctl 的
+#                符号链接，sudoers 里两条都给上避免不同发行版踩坑。
+#
+# 安全考虑：仅授权这几个具体路径，不开放全 sudo。
+
+orangepi ALL=(root) NOPASSWD: /usr/bin/create_ap
+orangepi ALL=(root) NOPASSWD: /usr/bin/nmcli
+orangepi ALL=(root) NOPASSWD: /usr/bin/pkill
+orangepi ALL=(root) NOPASSWD: /sbin/reboot
+orangepi ALL=(root) NOPASSWD: /usr/sbin/reboot
+
+# 管理后台：读/写 /etc/unilab-gateway.env
+orangepi ALL=(root) NOPASSWD: /usr/bin/tee /etc/unilab-gateway.env
+orangepi ALL=(root) NOPASSWD: /usr/bin/cat /etc/unilab-gateway.env
+
+# 管理后台：修改 AK/SK 后重启 unilab-gateway 服务
+orangepi ALL=(root) NOPASSWD: /bin/systemctl restart unilab-gateway
+orangepi ALL=(root) NOPASSWD: /bin/systemctl restart unilab-gateway.service
+orangepi ALL=(root) NOPASSWD: /usr/bin/systemctl restart unilab-gateway
+orangepi ALL=(root) NOPASSWD: /usr/bin/systemctl restart unilab-gateway.service

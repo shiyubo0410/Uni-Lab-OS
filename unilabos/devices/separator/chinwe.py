@@ -358,7 +358,7 @@ class ChinweDevice(UniversalDriver):
 
     def __init__(self, port: str = "192.168.1.200:8899", baudrate: int = 9600,
                  pump_ids: List[int] = None, motor_ids: List[int] = None,
-                 sensor_id: int = 6, sensor_threshold: int = 300,
+                 sensor_id: int = 1, sensor_threshold: int = 1500,
                  timeout: float = 10.0):
         """
         初始化 ChinWe 工作站
@@ -395,6 +395,9 @@ class ChinweDevice(UniversalDriver):
         # 轮询线程控制
         self._stop_event = threading.Event()
         self._poll_thread = None
+
+        # funnel_drain 取消事件：新调用启动时通知旧调用立即退出
+        self._funnel_drain_cancel = threading.Event()
 
         # 实时状态缓存
         self.status_cache = {
@@ -558,37 +561,125 @@ class ChinweDevice(UniversalDriver):
             return True
         return False
 
-    def motor_run_continuous(self, motor_id: int, speed: int, direction: str = "顺时针"):
+    def stir(self, speed: int, duration: float, direction: str = "顺时针"):
         """
-        电机一直旋转 (速度模式)
+        搅拌 (固定使用电机4，速度模式运行指定时间后自动停止)
+        :param speed: 转速 (RPM)
+        :param duration: 搅拌时长 (秒)
         :param direction: "顺时针" or "逆时针"
         """
-        motor_id = int(motor_id)
+        motor_id = 4
         if motor_id not in self.motors: return False
 
         dir_val = 0 if direction == "顺时针" else 1
         self.motors[motor_id].run_speed(speed, dir_val)
+        self.logger.info(f"Stirring at {speed} RPM for {duration} seconds...")
+        time.sleep(float(duration))
+        self.motors[motor_id].stop()
+        self.logger.info("Stirring stopped.")
         return True
 
-    def motor_rotate_quarter(self, motor_id: int, speed: int = 60, direction: str = "顺时针"):
+    def motor_rotate_quarter(self, speed: int = 60, direction: str = "顺时针"):
         """
-        电机旋转1/4圈 (阻塞)
-        假设电机设置为 3200 脉冲/圈，1/4圈 = 800脉冲
+        电机5旋转约78度 (阻塞，固定使用电机5控制分液漏斗旋钮)
+        3200 脉冲/圈，700脉冲 ≈ 78度
         """
-        motor_id = int(motor_id)
+        motor_id = 5
         if motor_id not in self.motors: return False
 
-        pulses = 800
+        pulses = 700
         dir_val = 0 if direction == "顺时针" else 1
 
         self.motors[motor_id].run_position(pulses, speed, dir_val, absolute=False)
 
-        # 预估时间阻塞 (单位: 分钟 -> 秒)
-        # Time(s) = revs / (RPM/60). revs = 0.25. time = 15 / RPM.
         estimated_time = 15.0 / max(1, speed)
         time.sleep(estimated_time + 0.5)
 
         return True
+
+    def drain(self, speed: int = 60, timeout: int = 300, threshold: int = 1500) -> bool:
+        """
+        分液漏斗放液
+        - 电机5 顺时针转700脉冲 → 打开阀门
+        - 传感器ID=1，RSSI<=threshold视为无液
+        - 检测到无液 → 电机5 逆时针转700脉冲关闭阀门
+        :param speed: 电机转速 (RPM)
+        :param timeout: 等待液体流干超时 (秒)
+        :param threshold: 液位判断阈值，RSSI高于此值为有液
+        """
+        PULSES = 700
+        THRESHOLD = threshold
+        motor = self.motors.get(5)
+        if motor is None:
+            self.logger.error("Motor 5 not found")
+            return False
+
+        sensor = XKCSensor(1, self.mgr, THRESHOLD)
+        estimated_time = 15.0 / max(1, speed)
+
+        # 停止轮询线程，独占 RS485 总线
+        self._stop_event.set()
+        if self._poll_thread and self._poll_thread.is_alive():
+            self._poll_thread.join(timeout=2.0)
+
+        funnel_opened = False
+        drained = False
+
+        try:
+            # 步骤1：打开阀门
+            self.logger.info("Step 1: Opening funnel (motor 5, clockwise 700 pulses)...")
+            motor.run_position(pulses=PULSES, speed_rpm=speed, direction=0, absolute=False)
+            time.sleep(estimated_time + 0.5)
+            self.logger.info("Funnel opened.")
+            funnel_opened = True
+
+            # 步骤2：等待无液
+            self.logger.info(f"Step 2: Waiting for liquid to drain (timeout={timeout}s)...")
+            start = time.time()
+            consecutive_failures = 0
+
+            while time.time() - start < timeout:
+                data = sensor.read_level()
+                elapsed = time.time() - start
+
+                if data is None:
+                    consecutive_failures += 1
+                    if consecutive_failures % 6 == 0:
+                        self.logger.warning(f"  Sensor read failed {consecutive_failures} times (elapsed {elapsed:.0f}s)")
+                    if consecutive_failures >= 20:
+                        self.logger.warning("  20 consecutive failures, assuming drained.")
+                        drained = True
+                        break
+                    time.sleep(0.5)
+                    continue
+
+                consecutive_failures = 0
+                level_str = "有液" if data['level'] else "无液"
+                self.logger.info(f"  [{elapsed:5.1f}s] Level={level_str}, RSSI={data['rssi']}")
+
+                if not data['level']:
+                    self.logger.info("  No liquid detected → closing funnel.")
+                    drained = True
+                    break
+
+                time.sleep(0.2)
+
+            if not drained:
+                self.logger.warning(f"Timeout ({timeout}s) reached, closing funnel anyway.")
+
+        except Exception as e:
+            self.logger.error(f"drain error: {e}")
+
+        finally:
+            if funnel_opened:
+                # 步骤3：关闭阀门
+                self.logger.info("Step 3: Closing funnel (motor 5, counter-clockwise 700 pulses)...")
+                motor.run_position(pulses=PULSES, speed_rpm=speed, direction=1, absolute=False)
+                time.sleep(estimated_time + 0.5)
+                self.logger.info("Funnel closed.")
+            self._start_polling()
+
+        return drained
 
     def motor_stop(self, motor_id: int):
         """电机停止"""
@@ -628,22 +719,77 @@ class ChinweDevice(UniversalDriver):
         return super().execute_command_from_outer(command_dict)
 
 if __name__ == "__main__":
-    # Test
-    logging.basicConfig(level=logging.INFO)
-    dev = ChinweDevice(port="192.168.31.201:8899")
-    try:
-        if dev.is_connected:
-            print(f"Status: Level={dev.sensor_level}, RSSI={dev.sensor_rssi}")
+    import logging
+    import sys
 
-            # Test pump 1
-            # dev.pump_valve(1, 1)
-            # dev.pump_move(1, 1000, "aspirate")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    log = logging.getLogger("test")
 
-            # Test motor 4
-             # dev.motor_run(4, 60, 0, 2)
+    PORT = "COM6"            # ← 根据实际情况修改
+    MOTOR_SPEED = 60         # RPM
+    DRAIN_TIMEOUT = 120      # 等待流干超时 (秒)
+    PULSES = 700             # 1/8圈 = 400脉冲 = 45度 (3200脉冲/圈)
 
-            for _ in range(5):
-                print(f"Level={dev.sensor_level}, RSSI={dev.sensor_rssi}")
-                time.sleep(1)
-    finally:
-        dev.disconnect()
+    print("=" * 50)
+    print("  请选择测试模式:")
+    print("  1 - 传感器监测 (持续打印 RSSI，Ctrl+C 退出)")
+    print("  2 - 分液漏斗完整流程 (开阀→等无液→关阀)")
+    print("=" * 50)
+    while True:
+        choice = input("  输入 1 或 2: ").strip()
+        if choice in ("1", "2"):
+            break
+        print("  请输入 1 或 2")
+
+    log.info(f"Connecting to {PORT} ...")
+    dev = ChinweDevice(port=PORT, motor_ids=[4, 5], sensor_id=1)
+
+    if not dev.is_connected:
+        log.error("Connection failed, abort.")
+        sys.exit(1)
+
+    dev._stop_event.set()
+    if dev._poll_thread and dev._poll_thread.is_alive():
+        dev._poll_thread.join(timeout=2.0)
+    log.info("Polling thread stopped.")
+
+    sensor = dev.sensor
+
+    # ══════════════════════════════════════════════
+    # 模式1：传感器监测
+    # ══════════════════════════════════════════════
+    if choice == "1":
+        threshold = dev.sensor_threshold
+        log.info(f"Sensor monitor started. threshold={threshold}  (Ctrl+C to stop)")
+        print("─" * 50)
+        try:
+            count = 0
+            while True:
+                data = sensor.read_level()
+                count += 1
+                if data is None:
+                    print(f"[{count:4d}] READ FAILED")
+                else:
+                    level_str = "有液 ●" if data['level'] else "无液 ○"
+                    marker = " <<<" if not data['level'] else ""
+                    print(f"[{count:4d}] RSSI={data['rssi']:5d}  threshold={threshold}  {level_str}{marker}")
+                time.sleep(0.3)
+        except KeyboardInterrupt:
+            print("\nStopped.")
+        finally:
+            dev.disconnect()
+
+    # ══════════════════════════════════════════════
+    # 模式2：分液漏斗完整流程
+    # ══════════════════════════════════════════════
+    else:
+        try:
+            result = dev.drain(speed=MOTOR_SPEED, timeout=DRAIN_TIMEOUT)
+            log.info(f"Done. drained={result}")
+        finally:
+            dev.disconnect()
+            log.info("Disconnected.")

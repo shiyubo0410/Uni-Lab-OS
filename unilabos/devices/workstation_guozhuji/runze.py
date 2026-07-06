@@ -10,12 +10,6 @@ from serial import Serial
 from serial.serialutil import SerialException
 
 
-# 同一串口(RS485 总线)可被多个泵共享：按端口名复用同一个 Serial 句柄，并用同一把总线锁串行化收发
-_shared_serials: dict = {}
-_shared_bus_locks: dict = {}
-_shared_registry_lock = Lock()
-
-
 class RunzeSyringePumpMode(Enum):
     Normal = 0
     AccuratePos = 1
@@ -98,20 +92,18 @@ class RunzeSyringePump:
         self._position = 0
 
         try:
-            # 多个泵挂在同一 COM 口(RS485 总线)时，只打开一次串口并共享句柄/总线锁
-            with _shared_registry_lock:
-                ser = _shared_serials.get(port)
-                if ser is None or not getattr(ser, "is_open", False):
-                    ser = Serial(baudrate=9600, port=port)
-                    _shared_serials[port] = ser
-                    _shared_bus_locks[port] = Lock()
-                self.hardware_interface = ser
-                self._bus_lock = _shared_bus_locks[port]
+            # if port in serial_ports and serial_ports[port].is_open:
+            #     self.hardware_interface = serial_ports[port]
+            # else:
+            #     serial_ports[port] = self.hardware_interface = Serial(
+            #         baudrate=9600,
+            #         port=port
+            #     )
+            self.hardware_interface = Serial(baudrate=9600, port=port)
 
         except (OSError, SerialException) as e:
             # raise RunzeSyringePumpConnectionError from e
             self.hardware_interface = port
-            self._bus_lock = Lock()
 
         self._busy = False
         self._closing = False
@@ -125,11 +117,9 @@ class RunzeSyringePump:
 
     def send_command(self, full_command: str):
         full_command_data = bytearray(full_command, "ascii")
-        # 总线锁：同一 COM 口上的多个泵串行收发，避免指令/应答交叠
-        with self._bus_lock:
-            self.hardware_interface.write(full_command_data)
-            time.sleep(0.05)
-            output = self._receive(self.hardware_interface.read_until(b"\n"))
+        response = self.hardware_interface.write(full_command_data)
+        time.sleep(0.05)
+        output = self._receive(self.hardware_interface.read_until(b"\n"))
         return output
 
     def _query(self, command: str):
@@ -248,7 +238,7 @@ class RunzeSyringePump:
     def set_velocity_grade(self, velocity: Union[int, str]):
         return self._run(f"S{velocity}")
 
-    def velocity_grade(self):
+    def get_velocity_grade(self) -> str:
         response = self._query("?2")
         status_raw, pulse_freq = response[0], int(response[1:])
         g = "-1"
@@ -258,14 +248,14 @@ class RunzeSyringePump:
                 break
         return g
 
-    def velocity_init(self):
+    def get_velocity_init(self) -> tuple:
         response = self._query("?1")
         status_raw, pulse_freq = response[0], int(response[1:])
         self._status = self._standardize_status(status_raw)
         velocity = pulse_freq / self.total_steps_vel * self.max_volume
         return pulse_freq, velocity
 
-    def velocity_end(self):
+    def get_velocity_end(self) -> tuple:
         response = self._query("?3")
         status_raw, pulse_freq = response[0], int(response[1:])
         self._status = self._standardize_status(status_raw)
@@ -280,32 +270,12 @@ class RunzeSyringePump:
     def valve_position(self) -> str:
         return self._valve_position
 
-    def set_valve_position(self, position: Union[int, str, float] = None, command: Union[int, str, float] = None):
-        # 兼容 pump_protocol 生成的 command 参数名（与 position 等价）
-        if position is None:
-            position = command
+    def set_valve_position(self, position: Union[int, str, float]):
         if isinstance(position, float):
             position = round(position / 120)
-        # 归一化为阀门指令：数字端口 -> "I{n}"；单字符命令(I/O/B...) -> 大写
-        if isinstance(position, int):
-            cmd = f"I{position}"
-            norm = str(position)
-        else:
-            pos_str = str(position).strip()
-            if pos_str.isdigit():
-                cmd = f"I{pos_str}"
-                norm = pos_str
-            elif len(pos_str) == 1:
-                cmd = pos_str.upper()
-                norm = pos_str.upper()
-            else:
-                # 例如 'default'：pump_protocol 在流程图上取不到该跳的阀门端口时会返回此兜底值
-                raise ValueError(
-                    f"无法识别的阀门位置 {position!r}（应为端口号或单字符命令）。"
-                    f"通常是流程图上对应这一跳的边缺少端口(handle)信息，导致 pump_protocol 返回了 'default'。"
-                )
-        response = self._run(cmd)
-        self._valve_position = norm
+        command = f"I{position}" if isinstance(position, int) or ord(position) <= 57 else position.upper()
+        response = self._run(command)
+        self._valve_position = f"{position}" if isinstance(position, int) or ord(position) <= 57 else position.upper()
         return response
 
     def get_valve_position(self) -> str:
@@ -374,7 +344,7 @@ class RunzeSyringePump:
         pos_step = int(volume / self.max_volume * self.total_steps)
         return self._run(f"D{pos_step}")
 
-    def plunger_position(self):
+    def get_plunger_position(self) -> float:
         response = self._query("?4")
         status, pos_step = response[0], int(response[1:])
         return pos_step / self.total_steps * self.max_volume
@@ -399,175 +369,6 @@ class RunzeSyringePump:
     def query_software_version(self):
         return self._query("?23")
 
-    # 液体来源 -> 阀门口编号映射（进液口）
-    LIQUID_SOURCE_MAP = {
-        "液体1": 1,
-        "液体2": 2,
-        "液体3": 3,
-    }
-
-    # 目标柱子 -> 阀门口编号映射（出液口）
-    COLUMN_TARGET_MAP = {
-        "柱1": 4,
-        "柱2": 5,
-        "柱3": 6,
-    }
-
-    # 固定泵速（mL/s）
-    FIXED_VELOCITY = 5.0
-
-    def add_liquid(
-        self,
-        liquid_source: str,
-        column_target: str,
-        volume: float,
-    ):
-        """
-        加液体操作：从指定液体口吸取液体，注入指定柱子。
-        泵速固定为 5 mL/s。
-
-        Args:
-            liquid_source (str): 液体来源，可选 "液体1" / "液体2" / "液体3"
-            column_target (str): 目标柱子，可选 "柱1" / "柱2" / "柱3"
-            volume (float): 液体体积，单位：mL
-
-        Returns:
-            dict: 包含操作状态的字典
-        """
-        if liquid_source not in self.LIQUID_SOURCE_MAP:
-            raise ValueError(f"liquid_source 必须为 {list(self.LIQUID_SOURCE_MAP.keys())}，当前值: {liquid_source}")
-        if column_target not in self.COLUMN_TARGET_MAP:
-            raise ValueError(f"column_target 必须为 {list(self.COLUMN_TARGET_MAP.keys())}，当前值: {column_target}")
-        if volume <= 0:
-            raise ValueError(f"体积必须大于0，当前值: {volume}")
-        if volume > self.max_volume:
-            raise ValueError(f"体积 {volume} mL 超过最大容量 {self.max_volume} mL")
-
-        inlet_port = self.LIQUID_SOURCE_MAP[liquid_source]
-        outlet_port = self.COLUMN_TARGET_MAP[column_target]
-
-        result = {
-            "status": "success",
-            "steps": [],
-            "liquid_source": liquid_source,
-            "column_target": column_target,
-            "volume": volume,
-        }
-
-        try:
-            self.set_max_velocity(self.FIXED_VELOCITY)
-            result["steps"].append(f"设置泵速: {self.FIXED_VELOCITY} mL/s")
-
-            print(f"步骤1: 设置进液阀门到 {liquid_source}（口{inlet_port}）")
-            self.set_valve_position(inlet_port)
-            result["steps"].append(f"设置进液阀门: {liquid_source}（口{inlet_port}）")
-            time.sleep(0.2)
-
-            print(f"步骤2: 吸取 {volume} mL 液体")
-            self.pull_plunger(volume)
-            result["steps"].append(f"吸取液体: {volume} mL")
-            time.sleep(0.3)
-
-            print(f"步骤3: 切换阀门到 {column_target}（口{outlet_port}）")
-            self.set_valve_position(outlet_port)
-            result["steps"].append(f"设置出液阀门: {column_target}（口{outlet_port}）")
-            time.sleep(0.2)
-
-            print(f"步骤4: 排出 {volume} mL 液体")
-            self.push_plunger(volume)
-            result["steps"].append(f"排出液体: {volume} mL")
-            time.sleep(0.3)
-
-            final_position = self.get_position()
-            final_valve = self.get_valve_position()
-            result["final_position"] = final_position
-            result["final_valve"] = final_valve
-            print(f"加液体完成！当前柱塞位置: {final_position:.2f} mL, 阀门位置: {final_valve}")
-
-        except Exception as e:
-            result["status"] = "error"
-            result["error"] = str(e)
-            print(f"加液体操作失败: {e}")
-            raise
-
-        return result
-
-    def add_sample(
-        self,
-        liquid_source: str,
-        column_target: str,
-        volume: float,
-    ):
-        """
-        加样品操作：从指定样品口吸取样品，注入指定柱子。
-        泵速固定为 5 mL/s。
-
-        Args:
-            liquid_source (str): 样品来源，可选 "液体1" / "液体2" / "液体3"
-            column_target (str): 目标柱子，可选 "柱1" / "柱2" / "柱3"
-            volume (float): 样品体积，单位：mL
-
-        Returns:
-            dict: 包含操作状态的字典
-        """
-        if liquid_source not in self.LIQUID_SOURCE_MAP:
-            raise ValueError(f"liquid_source 必须为 {list(self.LIQUID_SOURCE_MAP.keys())}，当前值: {liquid_source}")
-        if column_target not in self.COLUMN_TARGET_MAP:
-            raise ValueError(f"column_target 必须为 {list(self.COLUMN_TARGET_MAP.keys())}，当前值: {column_target}")
-        if volume <= 0:
-            raise ValueError(f"体积必须大于0，当前值: {volume}")
-        if volume > self.max_volume:
-            raise ValueError(f"体积 {volume} mL 超过最大容量 {self.max_volume} mL")
-
-        inlet_port = self.LIQUID_SOURCE_MAP[liquid_source]
-        outlet_port = self.COLUMN_TARGET_MAP[column_target]
-
-        result = {
-            "status": "success",
-            "steps": [],
-            "liquid_source": liquid_source,
-            "column_target": column_target,
-            "volume": volume,
-        }
-
-        try:
-            self.set_max_velocity(self.FIXED_VELOCITY)
-            result["steps"].append(f"设置泵速: {self.FIXED_VELOCITY} mL/s")
-
-            print(f"步骤1: 设置进样阀门到 {liquid_source}（口{inlet_port}）")
-            self.set_valve_position(inlet_port)
-            result["steps"].append(f"设置进样阀门: {liquid_source}（口{inlet_port}）")
-            time.sleep(0.2)
-
-            print(f"步骤2: 吸取 {volume} mL 样品")
-            self.pull_plunger(volume)
-            result["steps"].append(f"吸取样品: {volume} mL")
-            time.sleep(0.5)
-
-            print(f"步骤3: 切换阀门到 {column_target}（口{outlet_port}）")
-            self.set_valve_position(outlet_port)
-            result["steps"].append(f"设置出样阀门: {column_target}（口{outlet_port}）")
-            time.sleep(0.2)
-
-            print(f"步骤4: 排出 {volume} mL 样品")
-            self.push_plunger(volume)
-            result["steps"].append(f"排出样品: {volume} mL")
-            time.sleep(0.5)
-
-            final_position = self.get_position()
-            final_valve = self.get_valve_position()
-            result["final_position"] = final_position
-            result["final_valve"] = final_valve
-            print(f"加样品完成！当前柱塞位置: {final_position:.2f} mL, 阀门位置: {final_valve}")
-
-        except Exception as e:
-            result["status"] = "error"
-            result["error"] = str(e)
-            print(f"加样品操作失败: {e}")
-            raise
-
-        return result
-
     def wait_error(self):
         self._error_event.wait()
 
@@ -583,7 +384,243 @@ class RunzeSyringePump:
         for item in serial.tools.list_ports.comports():
             yield RunzeSyringePumpInfo(port=item.device)
 
+    def sample_loading(
+        self,
+        inlet_valve_position: Union[int, str, float],
+        outlet_valve_position: Union[int, str, float],
+        volume: float,
+        aspirate_velocity: float = None,
+        dispense_velocity: float = None,
+        wait_time_after_aspirate: float = 0.5,
+        wait_time_after_dispense: float = 0.5
+    ):
+        """
+        执行上样操作：设置阀门位置 -> 吸取液体 -> 切换阀门 -> 排出液体
+        
+        Args:
+            inlet_valve_position (Union[int, str, float]): 进液阀门位置
+                - int: 0-9 的位置编号
+                - str: "I", "O", "E" 等字符位置
+                - float: 角度值(会转换为最近的位置)
+            outlet_valve_position (Union[int, str, float]): 出液阀门位置
+            volume (float): 液体体积，单位：mL
+            aspirate_velocity (float, optional): 吸取速度，单位：mL/s。默认使用当前设置
+            dispense_velocity (float, optional): 排出速度，单位：mL/s。默认使用当前设置
+            wait_time_after_aspirate (float, optional): 吸取后等待时间，单位：秒。默认0.5秒
+            wait_time_after_dispense (float, optional): 排出后等待时间，单位：秒。默认0.5秒
+            
+        Returns:
+            dict: 包含操作状态的字典
+            
+        Raises:
+            ValueError: 如果体积超过最大容量
+            RunzeSyringePumpConnectionError: 如果设备连接失败
+            
+        Example:
+            >>> pump.sample_loading(
+            ...     inlet_valve_position="I",
+            ...     outlet_valve_position="O", 
+            ...     volume=5.0,
+            ...     aspirate_velocity=2.0,
+            ...     dispense_velocity=3.0
+            ... )
+        """
+        # 参数验证
+        if volume <= 0:
+            raise ValueError(f"体积必须大于0，当前值: {volume}")
+        if volume > self.max_volume:
+            raise ValueError(f"体积 {volume} mL 超过最大容量 {self.max_volume} mL")
+        
+        result = {
+            "status": "success",
+            "steps": [],
+            "inlet_valve": inlet_valve_position,
+            "outlet_valve": outlet_valve_position,
+            "volume": volume,
+            "aspirate_velocity": aspirate_velocity,
+            "dispense_velocity": dispense_velocity
+        }
+        
+        try:
+            # 步骤1: 设置进液阀门位置
+            print(f"步骤1: 设置进液阀门位置到 {inlet_valve_position}")
+            self.set_valve_position(inlet_valve_position)
+            result["steps"].append(f"设置进液阀门: {inlet_valve_position}")
+            time.sleep(0.2)  # 短暂等待阀门切换完成
+            
+            # 步骤2: 吸取液体
+            print(f"步骤2: 吸取 {volume} mL 液体")
+            if aspirate_velocity is not None:
+                self.set_max_velocity(aspirate_velocity)
+                result["steps"].append(f"设置吸取速度: {aspirate_velocity} mL/s")
+            
+            self.pull_plunger(volume)
+            result["steps"].append(f"吸取液体: {volume} mL")
+            time.sleep(wait_time_after_aspirate)
+            
+            # 步骤3: 切换到出液阀门位置
+            print(f"步骤3: 切换阀门位置到 {outlet_valve_position}")
+            self.set_valve_position(outlet_valve_position)
+            result["steps"].append(f"设置出液阀门: {outlet_valve_position}")
+            time.sleep(0.2)
+            
+            # 步骤4: 排出液体
+            print(f"步骤4: 排出 {volume} mL 液体")
+            if dispense_velocity is not None:
+                self.set_max_velocity(dispense_velocity)
+                result["steps"].append(f"设置排出速度: {dispense_velocity} mL/s")
+            
+            self.push_plunger(volume)
+            result["steps"].append(f"排出液体: {volume} mL")
+            time.sleep(wait_time_after_dispense)
+            
+            # 获取最终状态
+            final_position = self.get_position()
+            final_valve = self.get_valve_position()
+            result["final_position"] = final_position
+            result["final_valve"] = final_valve
+            
+            print(f"上样完成！当前柱塞位置: {final_position:.2f} mL, 阀门位置: {final_valve}")
+            
+        except Exception as e:
+            result["status"] = "error"
+            result["error"] = str(e)
+            print(f"上样操作失败: {e}")
+            raise
+        
+        return result
+
+    def blow_dry(
+        self,
+        air_inlet_valve_position: Union[int, str, float],
+        air_outlet_valve_position: Union[int, str, float],
+        volume: float,
+        cycles: int = 1,
+        aspirate_velocity: float = None,
+        dispense_velocity: float = None,
+        wait_time_after_aspirate: float = 0.2,
+        wait_time_after_dispense: float = 0.2,
+        wait_time_between_cycles: float = 0.1
+    ):
+        """
+        执行吹干操作：从指定阀门吸气 -> 从指定阀门吹气，可循环多次
+        
+        Args:
+            air_inlet_valve_position (Union[int, str, float]): 进气阀门位置
+                - int: 0-9 的位置编号
+                - str: "I", "O", "E" 等字符位置
+                - float: 角度值(会转换为最近的位置)
+            air_outlet_valve_position (Union[int, str, float]): 出气阀门位置
+            volume (float): 每次吸气/吹气的体积，单位：mL
+            cycles (int, optional): 吹干循环次数。默认1次
+            aspirate_velocity (float, optional): 吸气速度，单位：mL/s。默认使用当前设置
+            dispense_velocity (float, optional): 吹气速度，单位：mL/s。默认使用当前设置
+            wait_time_after_aspirate (float, optional): 吸气后等待时间，单位：秒。默认0.2秒
+            wait_time_after_dispense (float, optional): 吹气后等待时间，单位：秒。默认0.2秒
+            wait_time_between_cycles (float, optional): 循环间隔时间，单位：秒。默认0.1秒
+            
+        Returns:
+            dict: 包含操作状态的字典
+            
+        Raises:
+            ValueError: 如果体积超过最大容量或循环次数无效
+            RunzeSyringePumpConnectionError: 如果设备连接失败
+            
+        Example:
+            >>> pump.blow_dry(
+            ...     air_inlet_valve_position="I",
+            ...     air_outlet_valve_position="O",
+            ...     volume=10.0,
+            ...     cycles=3,
+            ...     aspirate_velocity=5.0,
+            ...     dispense_velocity=8.0
+            ... )
+        """
+        # 参数验证
+        if volume <= 0:
+            raise ValueError(f"体积必须大于0，当前值: {volume}")
+        if volume > self.max_volume:
+            raise ValueError(f"体积 {volume} mL 超过最大容量 {self.max_volume} mL")
+        if cycles <= 0:
+            raise ValueError(f"循环次数必须大于0，当前值: {cycles}")
+        
+        result = {
+            "status": "success",
+            "steps": [],
+            "air_inlet_valve": air_inlet_valve_position,
+            "air_outlet_valve": air_outlet_valve_position,
+            "volume": volume,
+            "cycles": cycles,
+            "aspirate_velocity": aspirate_velocity,
+            "dispense_velocity": dispense_velocity,
+            "completed_cycles": 0
+        }
+        
+        try:
+            print(f"开始吹干操作，共 {cycles} 个循环")
+            
+            for cycle in range(1, cycles + 1):
+                print(f"\n=== 循环 {cycle}/{cycles} ===")
+                
+                # 步骤1: 设置进气阀门位置
+                print(f"步骤1: 设置进气阀门位置到 {air_inlet_valve_position}")
+                self.set_valve_position(air_inlet_valve_position)
+                result["steps"].append(f"循环{cycle} - 设置进气阀门: {air_inlet_valve_position}")
+                time.sleep(0.2)  # 短暂等待阀门切换完成
+                
+                # 步骤2: 吸气
+                print(f"步骤2: 吸入 {volume} mL 气体")
+                if aspirate_velocity is not None:
+                    self.set_max_velocity(aspirate_velocity)
+                    if cycle == 1:  # 只在第一次循环记录速度设置
+                        result["steps"].append(f"设置吸气速度: {aspirate_velocity} mL/s")
+                
+                self.pull_plunger(volume)
+                result["steps"].append(f"循环{cycle} - 吸入气体: {volume} mL")
+                time.sleep(wait_time_after_aspirate)
+                
+                # 步骤3: 切换到出气阀门位置
+                print(f"步骤3: 切换阀门位置到 {air_outlet_valve_position}")
+                self.set_valve_position(air_outlet_valve_position)
+                result["steps"].append(f"循环{cycle} - 设置出气阀门: {air_outlet_valve_position}")
+                time.sleep(0.2)
+                
+                # 步骤4: 吹气
+                print(f"步骤4: 吹出 {volume} mL 气体")
+                if dispense_velocity is not None:
+                    self.set_max_velocity(dispense_velocity)
+                    if cycle == 1:  # 只在第一次循环记录速度设置
+                        result["steps"].append(f"设置吹气速度: {dispense_velocity} mL/s")
+                
+                self.push_plunger(volume)
+                result["steps"].append(f"循环{cycle} - 吹出气体: {volume} mL")
+                time.sleep(wait_time_after_dispense)
+                
+                result["completed_cycles"] = cycle
+                
+                # 如果不是最后一个循环，等待一段时间
+                if cycle < cycles:
+                    time.sleep(wait_time_between_cycles)
+            
+            # 获取最终状态
+            final_position = self.get_position()
+            final_valve = self.get_valve_position()
+            result["final_position"] = final_position
+            result["final_valve"] = final_valve
+            
+            print(f"\n吹干操作完成！完成 {cycles} 个循环")
+            print(f"当前柱塞位置: {final_position:.2f} mL, 阀门位置: {final_valve}")
+            
+        except Exception as e:
+            result["status"] = "error"
+            result["error"] = str(e)
+            result["failed_at_cycle"] = result["completed_cycles"] + 1
+            print(f"吹干操作在第 {result['failed_at_cycle']} 个循环失败: {e}")
+            raise
+        
+        return result
+
 
 if __name__ == "__main__":
-    r = RunzeSyringePump("COM5", "1", 25.0)
+    r = RunzeSyringePump("COM7", "3", 25.0)
     r.initialize()

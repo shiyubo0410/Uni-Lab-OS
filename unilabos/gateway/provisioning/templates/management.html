@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLab 网关管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 640px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-card {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        .info-card .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-card .label {
+            color: #888;
+            flex-shrink: 0;
+        }
+
+        .info-card .value {
+            font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+            word-break: break-all;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f4ff;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        label .hint {
+            font-weight: 400;
+            color: #999;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            background: white;
+            font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.35);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(245, 87, 108, 0.35);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .danger-zone {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 2px dashed #f0d4d4;
+        }
+
+        .danger-zone .section-title {
+            color: #c0392b;
+            border-bottom-color: #fadbd8;
+        }
+
+        .danger-zone .desc {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: none;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠 UniLab 网关管理</h1>
+            <p>修改实验室凭证 / 重置 WiFi 配置</p>
+        </div>
+
+        <div class="info-card" id="infoCard">
+            <div class="row"><span class="label">网关名</span><span class="value" id="iMachineName">—</span></div>
+            <div class="row"><span class="label">主机名</span><span class="value" id="iHostname">—</span></div>
+            <div class="row"><span class="label">局域网 IP</span><span class="value" id="iLanIp">—</span></div>
+            <div class="row"><span class="label">当前 WiFi</span><span class="value" id="iWifi">—</span></div>
+            <div class="row"><span class="label">配网热点</span><span class="value" id="iApSsid">—</span></div>
+            <div class="row"><span class="label">配置文件</span><span class="value" id="iEnvFile">—</span></div>
+        </div>
+
+        <form id="cfgForm">
+            <div class="section-title">实验室凭证 (AK / SK)</div>
+
+            <div class="form-group">
+                <label for="ak">AK <span class="hint">access key，必填</span></label>
+                <input type="text" id="ak" name="ak" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sk">SK <span class="hint">secret key，必填</span></label>
+                <input type="text" id="sk" name="sk" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mount_uuid">Mount UUID <span class="hint">实验室 UUID，从控制台 URL /laboratory/&lt;uuid&gt;/ 复制</span></label>
+                <input type="text" id="mount_uuid" name="mount_uuid" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="ws_url">WS URL <span class="hint">可选，留空走默认 Bohrium 地址</span></label>
+                <input type="text" id="ws_url" name="ws_url" placeholder="wss://...">
+            </div>
+
+            <div class="form-group">
+                <label for="http_url">HTTP URL <span class="hint">可选，留空走默认 Bohrium 地址</span></label>
+                <input type="text" id="http_url" name="http_url" placeholder="https://...">
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="saveBtn">
+                ✓ 保存并重启网关服务
+            </button>
+        </form>
+
+        <div class="danger-zone">
+            <div class="section-title">⚠ 危险操作</div>
+            <p class="desc">
+                重置 WiFi 会清除已保存的 WiFi 配置并重启网关，重启后会回到 AP 配网模式
+                （热点：<span id="dApSsid">—</span>）。<br>
+                <strong>重置后必须重新配网</strong>，本管理后台的访问地址也会失效。
+            </p>
+            <button type="button" class="btn btn-danger" id="resetBtn">
+                ⟲ 重置 WiFi 配置
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p id="loadingText">正在处理，请稍候...</p>
+        </div>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('cfgForm');
+        const saveBtn = document.getElementById('saveBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const message = document.getElementById('message');
+
+        const fields = ['ak', 'sk', 'mount_uuid', 'ws_url', 'http_url'];
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = 'message ' + type;
+            message.style.display = 'block';
+        }
+
+        function hideMessage() {
+            message.style.display = 'none';
+        }
+
+        function showLoading(text) {
+            loading.style.display = 'block';
+            loadingText.textContent = text || '正在处理，请稍候...';
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+
+        async function loadInfo() {
+            try {
+                const resp = await fetch('/api/info');
+                const data = await resp.json();
+                if (data.success) {
+                    document.getElementById('iMachineName').textContent = data.machine_name || '—';
+                    document.getElementById('iHostname').textContent = data.hostname || '—';
+                    document.getElementById('iLanIp').textContent = data.lan_ip || '—';
+                    document.getElementById('iWifi').textContent = data.wifi_ssid || '(未连)';
+                    document.getElementById('iApSsid').textContent = data.ap_ssid || '—';
+                    document.getElementById('iEnvFile').textContent = data.env_file || '—';
+                    document.getElementById('dApSsid').textContent = data.ap_ssid || '—';
+                }
+            } catch (e) {
+                console.error('loadInfo failed', e);
+            }
+        }
+
+        async function loadConfig() {
+            try {
+                const resp = await fetch('/api/config');
+                const data = await resp.json();
+                if (data.success && data.config) {
+                    fields.forEach(k => {
+                        const el = document.getElementById(k);
+                        if (el) el.value = data.config[k] || '';
+                    });
+                    if (data.warning) {
+                        showMessage('⚠ ' + data.warning, 'warning');
+                    }
+                } else if (data.error) {
+                    showMessage('读取当前配置失败：' + data.error, 'error');
+                }
+            } catch (e) {
+                showMessage('读取当前配置异常：' + e.message, 'error');
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessage();
+
+            const payload = {};
+            fields.forEach(k => {
+                const el = document.getElementById(k);
+                payload[k] = (el && el.value || '').trim();
+            });
+
+            if (!payload.ak || !payload.sk) {
+                showMessage('AK 和 SK 是必填项', 'error');
+                return;
+            }
+
+            saveBtn.disabled = true;
+            resetBtn.disabled = true;
+            showLoading('正在保存并重启网关服务...');
+
+            try {
+                const resp = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload),
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                } else {
+                    showMessage('保存失败：' + (data.error || '未知错误'), 'error');
+                    saveBtn.disabled = false;
+                    resetBtn.disabled = false;
+                }
+            } catch (e) {
+                showMessage('请求异常：' + e.message, 'error');
+                saveBtn.disabled = false;
+                resetBtn.disabled = false;
+            } finally {
+                hideLoading();
+            }
+        });
+
+        resetBtn.addEventListener('click', async () => {
+            const apSsid = document.getElementById('iApSsid').textContent;
+            const ok = confirm(
+                '⚠ 确认重置 WiFi 配置？\n\n' +
+                '将会：\n' +
+                '1. 清除所有已保存的 WiFi\n' +
+                '2. 重启网关进入 AP 配网模式（热点 ' + apSsid + '）\n' +
+                '3. 本页面将无法继续访问，需要重新配网才能再次使用\n\n' +
+                '继续吗？'
+            );
+            if (!ok) return;
+
+            hideMessage();
+            saveBtn.disabled = true;
+            resetBtn.disabled = true;
+            showLoading('正在重置 WiFi 配置...');
+
+            try {
+                const resp = await fetch('/api/reset', {method: 'POST'});
+                const data = await resp.json();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                } else {
+                    showMessage('重置失败：' + (data.error || '未知错误'), 'error');
+                    saveBtn.disabled = false;
+                    resetBtn.disabled = false;
+                }
+            } catch (e) {
+                showMessage('请求异常：' + e.message, 'error');
+                saveBtn.disabled = false;
+                resetBtn.disabled = false;
+            } finally {
+                hideLoading();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            loadInfo();
+            loadConfig();
+        });
+    </script>
+</body>
+</html>

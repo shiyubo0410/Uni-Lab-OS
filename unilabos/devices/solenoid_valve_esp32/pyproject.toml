@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unilab-device-solenoid-valve-esp32"
+version = "0.3.0"
+description = "ESP32 五路电磁阀控制器 Uni-Lab-OS 设备驱动包, 通过串口控制 GPIO 高低电平实现 5 路阀门开关。"
+requires-python = ">=3.10"
+license = { text = "DP Technology Proprietary License" }
+authors = [{ name = "The unilabos developers" }]
+keywords = ["unilab", "unilabos", "valve", "solenoid-valve", "esp32", "wxf", "serial"]
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[tool.setuptools]
+py-modules = ["solenoid_valve_esp32"]
+
+[tool.unilabos.registry]
+paths = ["."]

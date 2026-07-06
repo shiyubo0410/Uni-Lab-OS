@@ -1,0 +1,315 @@
+# 设备指纹库
+#
+# 每条记录定义一种设备的自动识别规则：
+# - name: 指纹名称（唯一标识）
+# - driver: Python 驱动类路径
+# - driver_url: 驱动包下载地址（可选，指向 .tar.gz）。本地缺少 driver 对应的
+#     Python 模块时，网关会自动从此地址下载并解压到 unilabos/devices/ 后再加载。
+#     压缩包顶层须为包目录，如 ika/ika.py（可含 ika.json / pyproject.toml）。
+#     这样以后只需维护指纹库，驱动按需自动下载。
+# - driver_version: 期望驱动版本（可选，= 包 pyproject.toml 的 [project].version）。
+#     配了此项后，网关本地虽已装该驱动、但版本与此值不一致时，会自动删旧包按
+#     driver_url 重新下载新版，实现驱动热更新（不配则命中即用、不校验版本）。
+# - registry_class: 云端注册类型（决定前端图标/schema）
+# - probe: 探测规则
+#     baudrate: 波特率
+#     bytesize: 数据位（默认 8）
+#     parity: 校验位（默认 N）
+#     stopbits: 停止位（默认 1）
+#     commands: 探测命令序列（按顺序尝试，全部匹配才算成功）
+#       - send: 发送的字节串（支持 \r\n 等转义）
+#         expect_prefix: 期望响应前缀（可选，不填则只要有响应即可）
+#         expect_regex: 期望响应正则（可选，与 expect_prefix 二选一）
+#         timeout: 单次命令超时（秒）
+# - init_template: 驱动初始化参数模板（port 会自动填充）
+# - properties: 要轮询的属性列表
+# - poll_interval: 轮询间隔（秒）
+# - report_unchanged: 是否上报未变化的值（默认 false）
+
+# =============================================================================
+# 润泽 SY-03B 注射泵（带切换阀）
+# =============================================================================
+- name: runze_sy03b
+  driver: unilabos.devices.pump_and_valve.runze_backbone.RunzeSyringePump
+  registry_class: syringe_pump_with_valve.runze.SY03B-T06
+  probe:
+    baudrate: 9600
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      # 查询地址 1 的状态，期望返回 Idle 状态码 0x60 (`)
+      - send: "/1Q\r\n"
+        expect_prefix: "\xff/0`"
+        timeout: 1.0
+  init_template:
+    address: "1"
+    max_volume: 25.0
+  properties:
+    - status
+    - position
+    - valve_position
+    - max_velocity
+  poll_interval: 1.5
+  report_unchanged: true
+
+# =============================================================================
+# 蠕动泵控制器 (Modbus RTU, 9600 8N1)
+# 必须放在 xkc_y28 之前: 蠕动泵恰好响应 xkc_y28 的 probe (读 0x0001 长度 2),
+# 会被电导传感器指纹误命中。本指纹连续读两个蠕动泵特有寄存器 (0x07 角度 + 0x09
+# 脱机使能), 电导传感器没有这两个寄存器, 不会响应合法 Modbus 0x03 数据帧.
+# 全部用读功能码 0x03 (无副作用), 避免写 EEPROM.
+# =============================================================================
+- name: peristaltic_pump
+  driver: unilabos.devices.pump_and_valve.pump_controller.PeristalticPumpController
+  registry_class: pump.peristaltic
+  probe:
+    baudrate: 9600
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      # 第一条: 读角度寄存器 0x07, 长度 1 (蠕动泵特有, 电导传感器没有)
+      # 发送: 01 03 00 07 00 01 35 CB
+      # 期望响应: 01 03 02 [2字节数据] [2字节CRC]
+      - send: "\x01\x03\x00\x07\x00\x01\x35\xcb"
+        expect_prefix: "\x01\x03\x02"
+        timeout: 1.0
+      # 第二条: 读脱机使能寄存器 0x09, 长度 1 (蠕动泵特有, 电导传感器没有)
+      # 发送: 01 03 00 09 00 01 54 08
+      # 期望响应: 01 03 02 [2字节数据] [2字节CRC]
+      - send: "\x01\x03\x00\x09\x00\x01\x54\x08"
+        expect_prefix: "\x01\x03\x02"
+        timeout: 1.0
+  init_template:
+    device_id: 1
+    baudrate: 9600
+    ml_per_rotation: 1.0    # 根据泵管规格调整 (mL/圈), 用于 run_with_volume 换算
+    response_delay: 0.1
+  properties:
+    # 不要加 is_connected（纯缓存属性永不抛异常, 会让网关判断不出掉线）
+    - status                # 心跳点: 每 3s 读一次 0x02 运行状态, 无副作用
+    - current_speed_rpm     # 当前转速 (软件缓存)
+    - direction             # 当前方向 (软件缓存)
+  poll_interval: 3.0
+  report_unchanged: true
+
+# =============================================================================
+# XKC-Y28 电导率/液位传感器
+# =============================================================================
+- name: xkc_y28
+  driver: unilabos.devices.sensor.xkc_y28.XKC_Y28
+  registry_class: sensor.xkc.y28
+  probe:
+    baudrate: 9600
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      # Modbus 读取: 站号 1, 功能码 0x03, 地址 0x0001, 长度 2
+      # 发送: 01 03 00 01 00 02 95 CB
+      # 期望响应: 01 03 04 [4字节数据] [2字节CRC]
+      # 注意: 此 probe 较宽松, 任何支持 Modbus 0x03 读 0x0001 长度 2 的设备
+      # (如蠕动泵控制器) 都会命中。必须把更精确的指纹 (如 peristaltic_pump)
+      # 放在此指纹之前, 利用 probe_port 的"先匹配先返回"特性避免误识别。
+      - send: "\x01\x03\x00\x01\x00\x02\x95\xcb"
+        expect_prefix: "\x01\x03\x04"
+        timeout: 1.0
+  init_template:
+    device_id: 1
+  properties:
+    - liquid_detected
+    - rssi
+  poll_interval: 1.0
+  report_unchanged: true
+
+# =============================================================================
+# 俏优灵 YL B 系列步进电机（YL42B / YL57B）
+# =============================================================================
+- name: youling_motor
+  driver: unilabos.devices.motor.youling_motor.YoulingStepperMotor
+  registry_class: motor.youling.yl42b
+  probe:
+    baudrate: 115200
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      # Modbus RTU 读寄存器: 站号 1, 功能码 0x03, 地址 0x0000 (状态), 数量 1
+      # 发送: 01 03 00 00 00 01 84 0A
+      # 期望响应: 01 03 02 [状态值高] [状态值低] [CRC_LO] [CRC_HI]
+      - send: "\x01\x03\x00\x00\x00\x01\x84\x0a"
+        expect_prefix: "\x01\x03\x02"
+        timeout: 1.0
+  init_template:
+    device_id: 1
+    baudrate: 115200
+    steps_per_rev: 1600
+    lead_mm: 4.0
+  properties:
+    - status            # 电机状态: STANDBY / RUNNING / COLLISION_STOP / ...
+    - actual_steps      # 实际步数 (32 位有符号)
+    - actual_speed      # 实际速度 rpm
+    - current_ma        # 工作电流 mA
+  poll_interval: 1.0
+  report_unchanged: false
+
+# =============================================================================
+# IKA RCT 5 digital / RCT digital 加热磁力搅拌仪 (NAMUR ASCII via USB CDC-ACM)
+# =============================================================================
+- name: ika_rct5_digital
+  driver: unilabos.devices.ika.ika.IKARCT5Digital
+  driver_url: https://uni-lab-test.oss-cn-zhangjiakou.aliyuncs.com/default/e77764ea-41b3-4f57-9687-0c0a7afcc4b0/ika-0.1.0.tar.gz
+  registry_class: heaterstirrer_ika_rct5_digital
+  probe:
+    baudrate: 9600
+    bytesize: 7        # IKA 用 7E1, 与 8N1 不同, 必须明确指定
+    parity: E
+    stopbits: 1
+    commands:
+      # NAMUR ASCII: 读设备名; 返回 "RCT digital\r\n" (足够独特, 不会和别的 NAMUR 设备误识别)
+      - send: "IN_NAME\r\n"
+        expect_prefix: "RCT"
+        timeout: 1.5
+  init_template:
+    baudrate: 9600
+    timeout: 1.0
+    auto_connect: true
+  properties:
+    # 注意: 不要把 is_connected 这种纯缓存 property 放进列表——它从不抛异常，
+    # 会让"读成功就清零 _io_error_count"的逻辑把真实串口故障掩盖掉，导致拔 USB
+    # 后永远触发不了 reconnect / device_lost。在线/离线由 device_lost 机制管。
+    - status
+    - temp
+    - temp_plate
+    - stir_speed
+    - temp_target
+    - stir_target
+  poll_interval: 2.0
+  report_unchanged: false
+
+# =============================================================================
+# 简美 JourneyMan 蠕动泵 (M/L 型基本型系列, RS-485 Modbus RTU, 9600 8E1)
+# 注意: 本机用偶校验 (E), 与总线上 8N1 的蠕动泵/传感器天然区分, 不会互相误识别;
+# 探测读运行状态寄存器 0x0002 (功能码 0x03, 无副作用, 不动电机)。
+# =============================================================================
+- name: journeyman_peristaltic_pump
+  driver: unilabos.devices.journeyman.journeymanpump.JourneymanPump
+  # 把打包好的 .tar.gz 地址填到 driver_url, 网关即可在本地缺驱动时按需自动下载:
+  driver_url: https://uni-lab-test.oss-cn-zhangjiakou.aliyuncs.com/default/f5e2d275-fd4f-4eec-beb9-b76d390e1236/unilab_device_journeyman-0.1.0.tar.gz
+  registry_class: journeyman_peristaltic_pump
+  probe:
+    baudrate: 9600
+    bytesize: 8
+    parity: E          # 简美手册: 偶校验 (与多数 8N1 设备不同, 是关键区分点)
+    stopbits: 1
+    commands:
+      # Modbus 读运行状态寄存器 0x0002, 长度 1 (无副作用)
+      # 发送: 01 03 00 02 00 01 25 CA
+      # 期望响应: 01 03 02 [2字节数据] [2字节CRC]
+      - send: "\x01\x03\x00\x02\x00\x01\x25\xca"
+        expect_prefix: "\x01\x03\x02"
+        timeout: 1.0
+  init_template:
+    device_id: 1
+    baudrate: 9600
+    max_rpm: 600       # L600 默认上限, 按实际型号调整
+  properties:
+    - status
+    - speed_rpm
+    - direction
+  poll_interval: 2.0
+  report_unchanged: false
+
+# =============================================================================
+# 润泽 SV07M 多通道切换阀 (RUNZE 自定义二进制协议, 9600 8N1)
+# 注意: 帧头固定 0xCC, 帧尾 0xDD, 2 字节小端和校验。本机用二进制帧, 与总线上
+# 走 OEM/ASCII 协议的润泽注射泵 (runze_sy03b, "/1Q\r\n") 天然区分, 不会互相误识别;
+# 探测发"查询当前通道位置 0x3E"(无副作用, 不动电机), 期望响应以 0xCC + 地址 0x00 开头。
+# 出厂默认地址 0x00、默认 RUNZE 协议; 若设备被切到 ASCII 协议则探测不到。
+# =============================================================================
+- name: runze_sv07m_valve
+  driver: unilabos.devices.runze_sv07m.runze_sv07m.RunzeSV07MValve
+  driver_url: https://uni-lab-test.oss-cn-zhangjiakou.aliyuncs.com/default/cea19ee2-a384-4911-978e-b5e1f4710bbe/runze_sv07m-1.0.0.tar.gz
+  # 驱动单独成包 unilabos/devices/runze_sv07m/runze_sv07m.py。随核心部署即可用。
+  # 若要走按需下载, driver_url 指向的 .tar.gz 顶层须为 runze_sv07m/runze_sv07m.py
+  # (解压到 unilabos/devices/ 后正好得 unilabos.devices.runze_sv07m.runze_sv07m)。
+  registry_class: pump_and_valve_runze_sv07m
+  probe:
+    baudrate: 9600
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      # 查询当前通道位置: 地址 0x00, 功能码 0x3E, 参数 0x00 0x00 (无副作用)
+      # 发送: CC 00 3E 00 00 DD E7 01  (和校验 = 0xCC+0x3E+0xDD = 0x01E7, 小端 E7 01)
+      # 期望响应: CC 00 <状态> <孔位> 00 DD <校验低> <校验高>, 以 CC 00 开头
+      - send: "\xcc\x00\x3e\x00\x00\xdd\xe7\x01"
+        expect_prefix: "\xcc\x00"
+        timeout: 1.0
+  init_template:
+    address: 0
+    max_channels: 8
+    baudrate: 9600
+  properties:
+    # motor_status_code 会真实查询 0x4A (读串口), 作心跳点用于掉线检测;
+    # valve_position / status 为软件缓存, 仅做状态展示。
+    - motor_status_code
+    - valve_position
+    - status
+  poll_interval: 2.0
+  report_unchanged: true
+
+# =============================================================================
+# ESP32 五路电磁阀控制器 (ASCII 协议, 115200 8N1)
+# 固件需支持握手命令 PING\n -> 回 ESP32_VALVE\n (无副作用, 不动 GPIO)。
+# 用独特的 ESP32_VALVE 前缀识别, 不会和别的 ASCII/Modbus 设备误撞。
+# 注意: ESP32 开串口时 DTR/RTS 可能触发自动复位; 排在前面的指纹会反复开这个口,
+# 若探测不稳定, 可把本条尽量往前放, 或固件里禁用自动复位 (EN/GPIO0 不接 DTR/RTS)。
+# =============================================================================
+- name: solenoid_valve_esp32
+  driver: unilabos.devices.solenoid_valve_esp32.solenoid_valve_esp32.ESP32ValveController
+  driver_url: https://uni-lab-test.oss-cn-zhangjiakou.aliyuncs.com/default/ecca3b8d-2ecd-42cb-a12c-10d288039881/unilab_device_solenoid_valve_esp32-0.3.0.tar.gz
+  # driver_version: 期望驱动版本(= 包 pyproject.toml 的 [project].version)。
+  # 网关本地已装但版本对不上时, 会自动删旧包按 driver_url 重下, 实现驱动热更新。
+  driver_version: "0.3.0"
+  registry_class: solenoid_valve_esp32
+  probe:
+    baudrate: 115200
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      # 握手: 发 PING, 期望固件回 ESP32_VALVE (无副作用, 不动阀门)
+      - send: "PING\n"
+        expect_prefix: "ESP32_VALVE"
+        timeout: 1.5
+  init_template:
+    baudrate: 115200
+    timeout: 1.0
+  properties:
+    # firmware_alive 会真实发 PING 读回执 (读串口), 作心跳点用于掉线检测;
+    # valve_states 为软件缓存, 仅做状态展示。不要用 is_connected 做心跳。
+    - firmware_alive
+    - valve_states
+  poll_interval: 3.0
+  report_unchanged: true
+
+# =============================================================================
+# 其他设备指纹（按需添加）
+# =============================================================================
+
+# # 大龙磁力搅拌器
+# - name: dalong_stirrer
+#   driver: unilabos.devices.heaterstirrer.dalong.HeaterStirrer_DaLong
+#   registry_class: heaterstirrer.dalong
+#   probe:
+#     baudrate: 9600
+#     commands:
+#       - send: "RS\r\n"
+#         expect_regex: "^[0-9]+"
+#         timeout: 1.0
+#   init_template:
+#     temp_warning: 80.0
+#   properties: [status, stir_speed, temp]
+#   poll_interval: 1.0

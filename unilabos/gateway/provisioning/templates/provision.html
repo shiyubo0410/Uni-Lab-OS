@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLab 网关配网</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 480px;
+            width: 100%;
+            padding: 40px 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* 自定义 SSID 下拉选择器 */
+        .ssid-select {
+            position: relative;
+        }
+
+        .ssid-select input {
+            padding-right: 44px;
+        }
+
+        .ssid-toggle {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: #667eea;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            padding: 0;
+        }
+
+        .ssid-toggle:hover {
+            background: #f0f4ff;
+        }
+
+        .ssid-toggle svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.2s;
+        }
+
+        .ssid-select.open .ssid-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        .ssid-list {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            list-style: none;
+            padding: 4px 0;
+            margin: 0;
+            display: none;
+            z-index: 100;
+        }
+
+        .ssid-select.open .ssid-list {
+            display: block;
+        }
+
+        .ssid-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #333;
+            user-select: none;
+        }
+
+        .ssid-item:hover {
+            background: #f0f4ff;
+        }
+
+        .ssid-item .lock {
+            flex-shrink: 0;
+            font-size: 13px;
+            opacity: 0.7;
+        }
+
+        .ssid-item .ssid-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ssid-item .signal-bars {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .signal-bars span {
+            display: block;
+            width: 3px;
+            background: #d8d8d8;
+            border-radius: 1px;
+        }
+
+        .signal-bars span:nth-child(1) { height: 4px; }
+        .signal-bars span:nth-child(2) { height: 7px; }
+        .signal-bars span:nth-child(3) { height: 10px; }
+        .signal-bars span:nth-child(4) { height: 13px; }
+
+        .signal-bars.s1 span:nth-child(-n+1),
+        .signal-bars.s2 span:nth-child(-n+2),
+        .signal-bars.s3 span:nth-child(-n+3),
+        .signal-bars.s4 span:nth-child(-n+4) {
+            background: #667eea;
+        }
+
+        .ssid-empty {
+            padding: 16px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: none;
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 UniLab 网关</h1>
+            <p>WiFi 配网向导</p>
+        </div>
+
+        <div class="status">
+            📡 当前热点：<strong>{{ ap_ssid }}</strong><br>
+            💡 找不到要连的 WiFi？可以直接<strong>手动输入 SSID</strong>
+        </div>
+
+        <form id="wifiForm">
+            <div class="form-group">
+                <label for="ssid">WiFi 名称（SSID）</label>
+                <div class="ssid-select" id="ssidSelect">
+                    <input
+                        type="text"
+                        id="ssid"
+                        name="ssid"
+                        placeholder="点击选择，或直接输入 SSID"
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="button" class="ssid-toggle" id="ssidToggle" aria-label="展开 WiFi 列表">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <ul class="ssid-list" id="ssidList"></ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">WiFi 密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+
+            <button type="submit" class="btn">
+                ✓ 连接并保存
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在处理，请稍候...</p>
+        </div>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('wifiForm');
+        const ssidSelect = document.getElementById('ssidSelect');
+        const ssidInput = document.getElementById('ssid');
+        const ssidToggle = document.getElementById('ssidToggle');
+        const ssidList = document.getElementById('ssidList');
+        const passwordInput = document.getElementById('password');
+        const loading = document.getElementById('loading');
+        const message = document.getElementById('message');
+
+        let scannedWifi = [];
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // 信号百分比 → 1~4 档
+        function signalLevel(s) {
+            if (s >= 75) return 4;
+            if (s >= 50) return 3;
+            if (s >= 25) return 2;
+            return 1;
+        }
+
+        function renderSsidList(filter = '') {
+            ssidList.innerHTML = '';
+            const f = filter.trim().toLowerCase();
+            const items = scannedWifi.filter(w => !f || w.ssid.toLowerCase().includes(f));
+
+            if (items.length === 0) {
+                const li = document.createElement('li');
+                li.className = 'ssid-empty';
+                if (scannedWifi.length === 0) {
+                    li.textContent = '正在扫描…';
+                } else {
+                    li.textContent = '没有匹配的 WiFi，可直接输入 SSID';
+                }
+                ssidList.appendChild(li);
+                return;
+            }
+
+            items.forEach(wifi => {
+                const li = document.createElement('li');
+                li.className = 'ssid-item';
+                const lock = wifi.security !== 'Open' ? '<span class="lock">🔒</span>' : '<span class="lock"></span>';
+                const lvl = signalLevel(wifi.signal);
+                li.innerHTML =
+                    lock +
+                    `<span class="ssid-name">${escapeHtml(wifi.ssid)}</span>` +
+                    `<span class="signal-bars s${lvl}" title="信号 ${wifi.signal}%">` +
+                    '<span></span><span></span><span></span><span></span></span>';
+                // 用 mousedown 防止 input 因失焦先触发外部关闭
+                li.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                });
+                li.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    ssidInput.value = wifi.ssid;
+                    closeList();
+                    passwordInput.focus();
+                });
+                ssidList.appendChild(li);
+            });
+        }
+
+        function openList() {
+            renderSsidList(ssidInput.value);
+            ssidSelect.classList.add('open');
+        }
+
+        function closeList() {
+            ssidSelect.classList.remove('open');
+        }
+
+        function toggleList() {
+            if (ssidSelect.classList.contains('open')) {
+                closeList();
+            } else {
+                openList();
+            }
+        }
+
+        ssidToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleList();
+            if (ssidSelect.classList.contains('open')) {
+                ssidInput.focus();
+            }
+        });
+
+        ssidInput.addEventListener('focus', openList);
+
+        ssidInput.addEventListener('input', () => {
+            if (!ssidSelect.classList.contains('open')) {
+                openList();
+            } else {
+                renderSsidList(ssidInput.value);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.ssid-select')) {
+                closeList();
+            }
+        });
+
+        // 获取预扫描结果
+        async function loadWifiList() {
+            try {
+                const response = await fetch('/api/scan');
+                const data = await response.json();
+                if (data.success) {
+                    scannedWifi = data.wifi_list || [];
+                    if (ssidSelect.classList.contains('open')) {
+                        renderSsidList(ssidInput.value);
+                    }
+                    if (scannedWifi.length > 0) {
+                        showMessage(`扫描到 ${scannedWifi.length} 个 WiFi（也可手动输入 SSID）`, 'success');
+                    } else {
+                        showMessage('未扫描到 WiFi，请直接在 SSID 框里手动输入', 'error');
+                    }
+                } else {
+                    showMessage('扫描失败: ' + data.error + '（可手动输入 SSID）', 'error');
+                }
+            } catch (error) {
+                showMessage('扫描失败: ' + error.message + '（可手动输入 SSID）', 'error');
+            }
+        }
+
+        // 提交连接
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const ssid = ssidInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!ssid) {
+                showMessage('请输入 WiFi 名称', 'error');
+                return;
+            }
+
+            showLoading('正在连接 WiFi...');
+            hideMessage();
+
+            try {
+                const response = await fetch('/api/connect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ssid, password }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('✓ 已收到配网信息，正在切换 WiFi...', 'success');
+                    form.style.display = 'none';
+
+                    setTimeout(() => {
+                        showMessage(
+                            '⚙️ 网关正在切换到您填写的 WiFi。本配网热点会在几秒内消失，' +
+                            '您的手机会自动切回正常的网络。' +
+                            '\n\n大约 30 秒后请到 Uni-Lab 控制台查看网关是否上线。' +
+                            '\n\n如果密码错误，本热点 (UniLab-Gateway-...) 会在约 1 分钟后重新出现，' +
+                            '届时可重新连接并重试。',
+                            'success'
+                        );
+                    }, 1500);
+                } else {
+                    showMessage('✗ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('连接失败: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        function showLoading(text) {
+            loading.style.display = 'block';
+            if (text) {
+                loading.querySelector('p').textContent = text;
+            }
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = 'message ' + type;
+            message.style.display = 'block';
+        }
+
+        function hideMessage() {
+            message.style.display = 'none';
+        }
+
+        // 页面加载时拉取一次预扫描结果
+        window.addEventListener('load', () => {
+            setTimeout(loadWifiList, 300);
+        });
+    </script>
+</body>
+</html>

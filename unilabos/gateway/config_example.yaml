@@ -1,0 +1,96 @@
+# Uni-Lab IoT 网关配置示例
+#
+# 用法:
+#   python -m unilabos.gateway.main --config config_example.yaml --register \
+#       --ws-url wss://leap-lab.test.bohrium.com/api/v1/ws/schedule \
+#       --http-url https://leap-lab.test.bohrium.com/api/v1 \
+#       --ak XXX --sk YYY
+#
+# ak/sk 通过 --ak/--sk 命令行参数或 UNILABOS_BASICCONFIG_AK/SK 环境变量提供，
+# 不要写在这里以免误提交。
+
+# 机器名，云端用来识别这台网关
+machine_name: gw-001
+
+devices:
+  # ==========================================================================
+  # 兰格 SY-03B 注射泵（带切换阀）  - USB 转 RS-485
+  # ==========================================================================
+  # 默认地址 1，最大量程 25 mL；如果是 5/10 mL 量程的泵，把 max_volume 改掉。
+  # registry_class 是云端认可的设备类别名，决定前端图标 / 默认 schema。
+  - device_id: pump-sy03b-001
+    name: SY-03B 注射泵
+    driver: unilabos.devices.pump_and_valve.runze_backbone.RunzeSyringePump
+    registry_class: syringe_pump_with_valve.runze.SY03B-T06
+    init:
+      port: /dev/ttyUSB0
+      address: "1"
+      max_volume: 25.0
+    properties:
+      # 这些名字对应驱动里的 get_<name>() 方法（device.py 自动识别），
+      # 每个轮询周期会调一次 get_xxx() 拿真实硬件值并上报。
+      - status            # Idle / Busy
+      - position          # 当前柱塞体积，单位 mL
+      - valve_position    # 阀位，"1"-"6" 等
+      - max_velocity      # 最大速度，单位 mL/s
+    poll_interval: 1.5    # 秒。注射泵是慢速器件，1-2 秒足够
+    report_unchanged: false   # 仅值变化时上报；改 true 可看到周期心跳
+
+    # 稳定性保护（避免设备异常状态时拖死网关）
+    property_timeout: 5.0     # 单次属性读超时；超过则跳过这次轮询，告警，不卡死
+    action_timeout: 120.0     # 单次动作执行超时；initialize/移动可能要几十秒，建议>60s
+
+  # ==========================================================================
+  # 下面是其它常用驱动的模板（按需启用）
+  # ==========================================================================
+
+  # ----- Mock 设备：用于不接真实硬件时的链路自检 -----
+  # - device_id: mock-temp-001
+  #   driver: MOCK
+  #   properties: [temperature, counter]
+  #   poll_interval: 2.0
+  #   report_unchanged: false
+
+  # ----- 俏优灵 YL42B / YL57B 步进电机 (RS-485 / 115200 8N1, Modbus RTU) -----
+  # - device_id: motor-yl42b-001
+  #   name: 俏优灵 YL42B 步进电机
+  #   driver: unilabos.devices.motor.youling_motor.YoulingStepperMotor
+  #   registry_class: motor.youling.yl42b   # 或 motor.youling.yl57b
+  #   init:
+  #     port: /dev/ttyUSB1
+  #     baudrate: 115200
+  #     device_id: 1            # Modbus 站号 (1-254), 多电机共线时改成不同值
+  #     steps_per_rev: 1600     # 默认 1600，按驱动器实际细分写
+  #     lead_mm: 4.0            # 丝杠导程 mm/圈，move_distance 用得到
+  #   properties:
+  #     - status                # STANDBY / RUNNING / COLLISION_STOP ...
+  #     - actual_steps
+  #     - actual_speed
+  #     - current_ma
+  #   poll_interval: 1.0
+  #   report_unchanged: false
+
+  # ----- 大龙搅拌器 (RS-232 / 9600 8N1) -----
+  # - device_id: stirrer-001
+  #   name: 大龙磁力搅拌器
+  #   driver: unilabos.devices.heaterstirrer.dalong.HeaterStirrer_DaLong
+  #   registry_class: heaterstirrer.dalong
+  #   init:
+  #     port: /dev/ttyUSB1
+  #     baudrate: 9600
+  #     temp_warning: 80.0
+  #   properties: [status, stir_speed, temp]
+  #   poll_interval: 1.0
+
+  # ----- 梅特勒 XPR 天平 (USB-CDC, ASCII) -----
+  # - device_id: balance-001
+  #   name: Mettler XPR 分析天平
+  #   driver: unilabos.devices.balance.mettler_toledo_xpr.mettler_toledo_xpr.MettlerToledoXPR
+  #   # 注意: balance.yaml 当前为空，registry 暂未注册此类型。
+  #   # 不填 registry_class 会自动降级为 host_node, 仍能注册到资源树, 只是图标/schema 不准。
+  #   # registry_class: balance.mettler.xpr
+  #   init:
+  #     port: /dev/ttyACM0
+  #     baudrate: 9600
+  #   properties: [weight, stable]
+  #   poll_interval: 0.5
