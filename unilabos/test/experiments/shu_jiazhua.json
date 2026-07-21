@@ -1,0 +1,53 @@
+{
+    "nodes": [
+        {
+            "id": "electrolytic_cell_gripper",
+            "uuid": "b2d3f4a5-6c7e-4b8f-9a01-223344556677",
+            "name": "electrolytic_cell_gripper",
+            "description": "电解池夹爪工作站 (X/Z轴=Zeta步进电机, 夹爪=PGE平行夹爪), 共用一条RS485总线, 统一9600bps",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "type": "device",
+            "class": "electrolytic_cell_gripper",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 100.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "baudrate": 9600,
+                "timeout": 0.5,
+                "motor1_slave_id": 1,
+                "motor2_slave_id": 2,
+                "gripper_slave_id": 5
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

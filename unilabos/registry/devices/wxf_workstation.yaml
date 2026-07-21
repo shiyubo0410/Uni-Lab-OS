@@ -1,0 +1,519 @@
+wxf.workstation:
+  category:
+  - workstation
+  - wxf
+  - wxf_workstation
+  class:
+    action_value_mappings:
+      add_liquid:
+        feedback: {}
+        goal:
+          column_target: 柱1
+          liquid_source: 液体1
+          pump_address: '1'
+          volume: 1.0
+        goal_default:
+          column_target: 柱1
+          liquid_source: 液体1
+          pump_address: '1'
+          volume: 1.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 加液操作（吸液→切阀→排液）
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                column_target:
+                  default: 柱1
+                  description: 目标柱子
+                  type: string
+                liquid_source:
+                  default: 液体1
+                  description: 液体来源
+                  type: string
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+                volume:
+                  default: 1.0
+                  description: 体积 (mL)
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: add_liquid参数
+          type: object
+        type: UniLabJsonCommand
+      add_sample:
+        feedback: {}
+        goal:
+          column_target: 柱1
+          liquid_source: 液体1
+          pump_address: '1'
+          volume: 1.0
+        goal_default:
+          column_target: 柱1
+          liquid_source: 液体1
+          pump_address: '1'
+          volume: 1.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 加样品操作（吸样→切阀→排样）
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                column_target:
+                  default: 柱1
+                  description: 目标柱子
+                  type: string
+                liquid_source:
+                  default: 液体1
+                  description: 样品来源
+                  type: string
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+                volume:
+                  default: 1.0
+                  description: 体积 (mL)
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: add_sample参数
+          type: object
+        type: UniLabJsonCommand
+      auto-connect:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: connect参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disconnect:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: disconnect参数
+          type: object
+        type: UniLabJsonCommand
+      auto-execute_command_from_outer:
+        feedback: {}
+        goal: {}
+        goal_default:
+          command_dict: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                command_dict:
+                  type: object
+              required:
+              - command_dict
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: execute_command_from_outer参数
+          type: object
+        type: UniLabJsonCommand
+      continuous_monitor:
+        feedback: {}
+        goal:
+          device_id: 1
+          duration: 0
+          interval: 0.5
+          threshold: 0
+        goal_default:
+          device_id: 1
+          duration: 0
+          interval: 0.5
+          threshold: 0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 对指定传感器进行连续液位检测，达到阈值时自动停止
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                device_id:
+                  default: 1
+                  description: 传感器站号
+                  type: integer
+                duration:
+                  default: 0
+                  description: 持续时长（秒），0 = 无限运行直到检测到液位
+                  type: integer
+                interval:
+                  default: 0.5
+                  description: 检测间隔（秒）
+                  type: number
+                threshold:
+                  default: 0
+                  description: RSSI 阈值（大于此值判定有液，0 = 使用硬件检测）
+                  type: integer
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: continuous_monitor参数
+          type: object
+        type: UniLabJsonCommand
+      pump_initialize:
+        feedback: {}
+        goal:
+          pump_address: '1'
+        goal_default:
+          pump_address: '1'
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 初始化指定注射泵
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pump_initialize参数
+          type: object
+        type: UniLabJsonCommand
+      pump_pull:
+        feedback: {}
+        goal:
+          pump_address: '1'
+          volume: 1.0
+        goal_default:
+          pump_address: '1'
+          volume: 1.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 泵吸液
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+                volume:
+                  default: 1.0
+                  description: 吸液体积 (mL)
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pump_pull参数
+          type: object
+        type: UniLabJsonCommand
+      pump_push:
+        feedback: {}
+        goal:
+          pump_address: '1'
+          volume: 1.0
+        goal_default:
+          pump_address: '1'
+          volume: 1.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 泵排液
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+                volume:
+                  default: 1.0
+                  description: 排液体积 (mL)
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pump_push参数
+          type: object
+        type: UniLabJsonCommand
+      pump_set_valve:
+        feedback: {}
+        goal:
+          position: 1
+          pump_address: '1'
+        goal_default:
+          position: 1
+          pump_address: '1'
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 设置泵阀门位置
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                position:
+                  default: 1
+                  description: 阀门端口号 (1-6)
+                  type: integer
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pump_set_valve参数
+          type: object
+        type: UniLabJsonCommand
+      pump_set_velocity:
+        feedback: {}
+        goal:
+          pump_address: '1'
+          velocity: 5.0
+        goal_default:
+          pump_address: '1'
+          velocity: 5.0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 设置泵速
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+                velocity:
+                  default: 5.0
+                  description: 泵速 (mL/s)
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pump_set_velocity参数
+          type: object
+        type: UniLabJsonCommand
+      pump_stop:
+        feedback: {}
+        goal:
+          pump_address: '1'
+        goal_default:
+          pump_address: '1'
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 停止泵
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pump_address:
+                  default: '1'
+                  description: 泵地址
+                  type: string
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pump_stop参数
+          type: object
+        type: UniLabJsonCommand
+      read_sensor:
+        feedback: {}
+        goal:
+          device_id: 1
+        goal_default:
+          device_id: 1
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 立即读取指定站号传感器数据
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                device_id:
+                  default: 1
+                  description: 传感器站号
+                  type: integer
+              required: []
+              type: object
+            result:
+              type: object
+          required:
+          - goal
+          title: read_sensor参数
+          type: object
+        type: UniLabJsonCommand
+      set_threshold:
+        feedback: {}
+        goal:
+          threshold: 0
+        goal_default:
+          threshold: 0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 设置 RSSI 阈值（0 = 使用硬件检测）
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                threshold:
+                  default: 0
+                  description: RSSI 阈值
+                  type: integer
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_threshold参数
+          type: object
+        type: UniLabJsonCommand
+    module: unilabos.devices.wxf.workstation:WxfWorkstation
+    status_types:
+      is_connected: bool
+      liquid_detected: bool
+      rssi: int
+    type: python
+  config_info: []
+  description: WXF 工作站（2台润泽注射泵 + 2个XKC液位传感器，共享RS485总线）
+  displayname: wxf.workstation
+  handles: []
+  icon: ''
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        baudrate:
+          default: 9600
+          type: integer
+        poll_interval:
+          default: 0.5
+          type: number
+        port:
+          default: COM9
+          type: string
+        pump_addresses:
+          items:
+            type: string
+          type: array
+        pump_max_volume:
+          default: 25.0
+          type: number
+        sensor_ids:
+          items:
+            type: integer
+          type: array
+        threshold:
+          default: 0
+          type: integer
+        timeout:
+          default: 3.0
+          type: number
+      required: []
+      type: object
+    data:
+      properties:
+        is_connected:
+          type: boolean
+        liquid_detected:
+          type: boolean
+        rssi:
+          type: integer
+      required:
+      - is_connected
+      - liquid_detected
+      - rssi
+      type: object
+  version: 1.0.0

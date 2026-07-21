@@ -1,0 +1,945 @@
+connectable,conn,framework,probe_cmd,source,name,folder
+YES,MODBUS,modbus,,core,coin_cell_assembly,workstation/coin_cell_assembly/coin_cell_assembly.py
+YES,MODBUS,modbus,,community,DISCONTINUED: EZ-ZONE? PM Panel Mount Controller,gh_watlow_ez_zone_pm
+YES,MODBUS,modbus,,community,Eurotherm 3500/3504,community_github_pyhys_minimalmodbus
+YES,MODBUS,modbus,,community,Eurotherm 3500/3504,gh_eurotherm_3500
+YES,MODBUS,modbus,,community,Modbus Client,modbus_client
+YES,MODBUS,modbus,,community,Modbus Server,modbus_server
+YES,MODBUS,modbus,,core,opsky_ATR30007,opsky_Raman/opsky_ATR30007.py
+YES,MODBUS,modbus,,community,Robotiq 夹爪控制器 机械臂 控制器,gripper_controller
+YES,MODBUS,modbus,,community,Sdm630,sdm630
+YES,MODBUS,modbus-tcp,,community,Siemens LOGO! PLC控制器,logo
+YES,MODBUS,modbus,,community,Watlow Watlow Electric Asyncio Modbus Client,asyncio_modbus_client
+YES,SERIAL,pyserial,*IDN?,community,3通道开环压电控制器,d_663
+YES,SERIAL,pyserial,*IDN?,community,4通道开环压电控制器,d_664
+YES,SERIAL,pyserial,SYST:ERR?,community,"6632B 100 Watt System Power Supply, 20V, 5A [Obsolete]",hp6632b
+YES,SERIAL,pyserial,?turret,community,Acton/Princeton Instruments SpectraPro 2150i 光谱仪,d_173
+YES,SERIAL,pyserial,?turret,community,Acton/Princeton Instruments SpectraPro 2300i 光谱仪,d_174
+YES,SERIAL,pyserial,BAU,community,Alcatel ACM 1000 真空计控制器,d_377
+YES,SERIAL,pyserial,ID,community,Anaheim Automation SMC40 步进电机控制器/索引器,anaheim_automation_smc40
+YES,SERIAL,pyserial,?%s\r\n,community,Coherent,coherent
+YES,SERIAL,pyserial,SHUTTER,community,cornerstone7400,cornerstone7400
+YES,SERIAL,pyserial,W?,community,DD-100 Variable Attenuator,d_710
+YES,SERIAL,pyserial,*IDN?,community,DPS 3005 可编程降压直流电源模块,d_318
+YES,SERIAL,pyserial,W0/?,community,Ekspla NT340系列高能量宽调谐纳秒激光器,d_431
+YES,SERIAL,pyserial,M,community,Emc20,emc20
+YES,SERIAL,pyserial,W?,community,EPC-04 Electronic Polarization Controller,d_711
+YES,SERIAL,pyserial,:UNIT:FLUX?,community,F.W. Bell 5080 手持式高斯计,d_824
+YES,SERIAL,pyserial,pos?\r,community,fw102_b,fw102_b
+YES,SERIAL,pyserial,SET TBAND,community,GERSTEL 可选择性一维/二维气相色谱-嗅闻-质谱系统,cryo_tel_gt
+YES,SERIAL,pyserial,?,core,grbl_async,cnc/grbl_async.py
+YES,SERIAL,pyserial,?,core,grbl_sync,cnc/grbl_sync.py
+YES,SERIAL,pyserial,*IDN?,community,GW Instek GPP-4323四通道可编程直流电源,d_195
+YES,SERIAL,pyserial,*IDN?,community,Hameg HM8118 可编程LCR电桥,d_210
+YES,SERIAL,pyserial,*IDN?,community,HP E3631A 80W三路输出直流电源,d_409
+YES,SERIAL,pyserial,*IDN?,community,It63 XX,it63_xx
+YES,SERIAL,pyserial,VERSION,community,Julabo FP51-SL,gh_julabo_fp51_sl
+YES,SERIAL,pyserial,version,community,Julabo HL-4 HighTech可编程加热循环器,d_59
+YES,SERIAL,pyserial,GET_BATH_TEMP,community,Julabo Presto A40 高动态温控系统,d_61
+YES,SERIAL,pyserial,*IDN?,community,K2015,k2015
+YES,SERIAL,pyserial,*IDN?,community,Keithley 2000 6.5位数字万用表,d_233
+YES,SERIAL,pyserial,*IDN?,community,Keithley 6485 皮安计,d_237
+YES,SERIAL,pyserial,*IDN?,community,Keithley 6487 皮安计/电压源,d_238
+YES,SERIAL,pyserial,READ?,community,Keysight 34401A 6.5位数字万用表,d_228
+YES,SERIAL,pyserial,*IDN?,community,Keysight B2981A 飞安/皮安电流计,d_800
+YES,SERIAL,pyserial,*IDN?,community,Keysight B2981A 飞安/皮安计,d_232
+YES,SERIAL,pyserial,*IDN?,community,Keysight E3632A 双量程直流电源,d_200
+YES,SERIAL,pyserial,*IDN?,community,KORAD KD3005P 可编程线性直流电源,d_202
+YES,SERIAL,pyserial,*IDN%s?,community,KORAD KWR100系列 可编程直流电源,d_203
+YES,SERIAL,pyserial,INPUT? {},community,Lake Shore 218低温温度监测仪,d_681
+YES,SERIAL,pyserial,INPUT? {},community,Lake Shore 235低温温度控制器,d_682
+YES,SERIAL,pyserial,*IDN?,community,Lambda ZUP 可编程直流电源,d_319
+YES,SERIAL,pyserial,S,community,Linkam TMS94热分析温度控制器,d_184
+YES,SERIAL,pyserial,S,community,Linkam TMS94温度控制器/程序升温仪,d_181
+YES,SERIAL,pyserial,CHAN?,community,LM-510 Liquid Level Monitor,d_704
+YES,SERIAL,pyserial,*IDN?,community,Look again,gh_radwag_r
+YES,SERIAL,pyserial,TMN?,community,mercury_stepper,mercury_stepper
+YES,SERIAL,pyserial,*IDN?,community,Model 891,gh_bk_precision_891
+YES,SERIAL,pyserial,*IDN?,community,Newport 1835-C 高性能光功率计,d_270
+YES,SERIAL,pyserial,?,community,Open GRBL Motor Driver,grbl_driver
+YES,SERIAL,pyserial,light_sensor_gain?,community,OpenFlexure Nano Motor Stage 电机 自动化设备 位移台,open_flexure_stage
+YES,SERIAL,pyserial,M115,community,Opentrons Temperature Module,gh_opentrons_temperature_module
+YES,SERIAL,pyserial,WFMPRE:XINCR?\n,community,Oscilloscope Device,oscilloscope_device
+YES,SERIAL,pyserial,?CNT1,community,OWIS PS 10-32 单轴位置控制单元,d_299
+YES,SERIAL,pyserial,LOn,community,phoxx_laser,phoxx_laser
+YES,SERIAL,pyserial,*IDN?,community,piezo_c867,piezo_c867
+YES,SERIAL,pyserial,*IDN?,community,piezo_c867_t,piezo_c867_t
+YES,SERIAL,pyserial,POS?\n,community,piezo_e662,piezo_e662
+YES,SERIAL,pyserial,*IDN?,community,piezo_e709,piezo_e709
+YES,SERIAL,pyserial,*IDN?,community,piezo_e709_t,piezo_e709_t
+YES,SERIAL,pyserial,POS? A\n,community,piezo_e816,piezo_e816
+YES,SERIAL,pyserial,*IDN?,community,piezo_e816_t,piezo_e816_t
+YES,SERIAL,pyserial,POS? A\n,community,piezo_e816b,piezo_e816b
+YES,SERIAL,pyserial,?turret,community,Princeton Instruments SpectraPro SP-2150i Spectrograph,d_766
+YES,SERIAL,pyserial,?turret,community,Princeton Instruments SpectraPro SP-2300i Spectrograph,d_767
+YES,SERIAL,pyserial,?turret,community,Princeton Instruments SpectraPro SP-2500i Spectrograph,d_768
+YES,SERIAL,pyserial,?turret,community,Princeton Instruments SpectraPro SP-2750i Spectrograph,d_769
+YES,SERIAL,pyserial,*IDN?,community,R&S NRT 功率反射计,d_248
+YES,SERIAL,pyserial,*IDN?,community,Rohde & Schwarz HMP4000系列 多通道直流电源,d_205
+YES,SERIAL,pyserial,*IDN?,community,Rohde & Schwarz ZNLE3 矢量网络分析仪,d_623
+YES,SERIAL,pyserial,*IDN?,community,Rohde & Schwarz ZNLE4 矢量网络分析仪,d_624
+YES,SERIAL,pyserial,*IDN?,community,Rohde & Schwarz ZNLE6 矢量网络分析仪,d_625
+YES,SERIAL,pyserial,?28,core,runze_async,pump_and_valve/runze_async.py
+YES,SERIAL,pyserial,?28,core,runze_backbone,pump_and_valve/runze_backbone.py
+YES,SERIAL,pyserial,*IDN?,community,Scientific Instruments Model 9700 低温温度控制器,d_258
+YES,SERIAL,pyserial,*IDN?,community,scpi_device_searcher,scpi_device_searcher
+YES,SERIAL,pyserial,Q28,core,sopa_pipette_driver,liquid_handling/laiyu/drivers/sopa_pipette_driver.py
+YES,SERIAL,pyserial,?IDN\r,community,Spectra-Physics Millennia eV连续波DPSS绿色激光器,d_446
+YES,SERIAL,pyserial,SET TBAND,community,Sunpower CryoTel GT 斯特林低温制冷机,d_420
+YES,SERIAL,pyserial,*IDN?,community,TDK-Lambda Genesys系列 可编程直流电源,d_208
+YES,SERIAL,pyserial,W?,community,TF-100 Tunable Filter,d_709
+YES,SERIAL,pyserial,ic,community,Thermo Cytomat 自动化培养箱 培养箱 培养箱,cytomat_backend
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs BDC101 单通道台式直流伺服电机控制器,d_642
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs BMS001 单通道台式步进电机控制器,d_640
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs BMS002 双通道台式步进电机控制器,d_641
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs BNT001 台式NanoTrak控制器,d_639
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs BPC001 单通道台式压电控制器,d_635
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs BPC002 双通道台式压电控制器,d_636
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs KBD101 K-Cube无刷直流伺服电机控制器,d_630
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs KLS101 K-Cube LED/光源驱动器,d_646
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs KNA101 K-Cube NanoTrak自动对准控制器,d_647
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs KSG101 K-Cube应变片读数器,d_648
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs MFF102 电动滤光片翻转架,d_645
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs TPA101 T-Cube光束位置对准器,d_643
+YES,SERIAL,pyserial,*IDN?,community,Thorlabs TQD001 T-Cube PSD自动对准四象限探测器控制器,d_644
+YES,SERIAL,pyserial,*IDN?,community,单光子计数器（TCSPC）德国picoquant,pico_motor_controller8742
+YES,SERIAL,pyserial,,community,3216 IGES file,gh_eurotherm_3216
+YES,SERIAL,pyserial,,community,A Star Speed,a_star_speed
+YES,SERIAL,pyserial,,community,A&D GX-K/GF-K 系列精密工业天平,d_156
+YES,SERIAL,pyserial,,community,A&D GX-K/GF-K系列精密天平,d_1005
+YES,SERIAL,pyserial,,community,aa_opto_mds,aa_opto_mds
+YES,SERIAL,pyserial,,community,Acrichi PTC-86全自动固液一体吹扫捕集仪,ric
+YES,SERIAL,pyserial,,community,Admiral Instruments Squidstat Plus/Prime 电化学工作站,d_42
+YES,SERIAL,pyserial,,community,Afms,afms
+YES,SERIAL,pyserial,,community,Agilent V-Spin Microplate Centrifuge,gh_agilent_vspin
+YES,SERIAL,pyserial,,community,Aisa Kestrel Camera,aisa_kestrel_camera
+YES,SERIAL,pyserial,,community,Amplitude Satsuma 工业飞秒激光器,d_332
+YES,SERIAL,pyserial,,community,ams OSRAM is a global leader in innovative light and sensor solutions,as7341
+YES,SERIAL,pyserial,,community,Analytical Balances,gh_mettler_toledo_xs204mt_sics
+YES,SERIAL,pyserial,,community,Applied ASI Tiger Controller 控制器,tiger_controller
+YES,SERIAL,pyserial,,community,Arduino Encoder,arduino_encoder
+YES,SERIAL,pyserial,,community,Artifex Engineering OPM150 光功率计,d_278
+YES,SERIAL,pyserial,,community,Artifex Engineering TZA500 跨阻放大器,d_279
+YES,SERIAL,pyserial,,community,ASI Controller,_asi_controller
+YES,SERIAL,pyserial,,community,ASI MS-2000 XYZ自动化载物台,d_16
+YES,SERIAL,pyserial,,community,Attocube ANC150压电步进运动控制器,d_386
+YES,SERIAL,pyserial,,community,Automated Sample Storage,access2_backend
+YES,SERIAL,pyserial,,community,AXIS-TEC激光晶圆划片机AX-LS100,ascii_axis
+YES,SERIAL,pyserial,,community,Azenta a4S,gh_azenta_a4s
+YES,SERIAL,pyserial,,community,BelektroniG BTC-LAB 台式温度控制器,d_260
+YES,SERIAL,pyserial,,community,Bench-Top Type Temperature (& Humidity) Chamber | Environmental Test Chambers,gh_espec_p300
+YES,SERIAL,pyserial,,community,Benewake Tf Mini,tf_mini
+YES,SERIAL,pyserial,,community,Bimo,bimo
+YES,SERIAL,pyserial,,community,Binder VD 115真空干燥箱,d_104
+YES,SERIAL,pyserial,,community,Binder VDL 115 安全真空干燥箱,d_107
+YES,SERIAL,pyserial,,community,BIO2.100双轴超低轮廓纳米定位平台,d_354
+YES,SERIAL,pyserial,,community,BioShake iQ,bio_shake
+YES,SERIAL,pyserial,,community,Biotage Extrahera自动化固相萃取仪,d_1041
+YES,SERIAL,pyserial,,community,Biotage Selekt 快速制备色谱系统,d_1044
+YES,SERIAL,pyserial,,community,Biotage TurboVap 氮吹浓缩仪,d_110
+YES,SERIAL,pyserial,,community,BioTek Cytation 5,gh_biotek_cytation_5
+YES,SERIAL,pyserial,,community,BK Precision 178x系列可编程直流电源,d_193
+YES,SERIAL,pyserial,,community,BMG CLARIOstar 多功能酶标仪 酶标仪 酶标仪,clari_ostar_backend
+YES,SERIAL,pyserial,,community,BMG LABTECH CLARIOstar Plus 多功能酶标仪,d_39
+YES,SERIAL,pyserial,,community,Branson SFX250/SFX550 数字超声波处理器,d_1061
+YES,SERIAL,pyserial,,community,Brooks XPeel,gh_brooks_xpeel
+YES,SERIAL,pyserial,,community,Bruker D8 Advance X射线衍射仪,d_38
+YES,SERIAL,pyserial,,community,C-663 Mercury Step步进电机控制器,d_350
+YES,SERIAL,pyserial,,community,C-862 Mercury直流电机控制器,d_352
+YES,SERIAL,pyserial,,community,Camera Interface,camera_interface
+YES,SERIAL,pyserial,,community,Camera Redis Daemon,camera_redis_daemon
+YES,SERIAL,pyserial,,community,Carbolite Gero CWF 1100 箱式电阻炉,d_1046
+YES,SERIAL,pyserial,,community,chemputersoftware__serial_device,chemputersoftware__serial_device
+YES,SERIAL,pyserial,,core,chiller,temperature/chiller.py
+YES,SERIAL,pyserial,,core,chinwe,separator/chinwe.py
+YES,SERIAL,pyserial,,community,Clearpath Robotics Jackal无人地面车辆,d_103
+YES,SERIAL,pyserial,,community,Clearpath Robotics Jackal小型户外无人地面车,d_1032
+YES,SERIAL,pyserial,,community,cobalt_laser,cobalt_laser
+YES,SERIAL,pyserial,,community,cobalt_laser_e,cobalt_laser_e
+YES,SERIAL,pyserial,,community,Cobolt Laser,cobolt_laser
+YES,SERIAL,pyserial,,community,Coherent OBIS智能激光模块系列,d_731
+YES,SERIAL,pyserial,,community,Coherent Sapphire光泵半导体激光器,d_732
+YES,SERIAL,pyserial,,community,coherent_obis_laser,coherent_obis_laser
+YES,SERIAL,pyserial,,community,coherent_sapphire_laser,coherent_sapphire_laser
+YES,SERIAL,pyserial,,community,Cole Parmer? Lab Equipment and Cole Parmer? Essentials Supplies,gh_jenway_6305
+YES,SERIAL,pyserial,,community,COM Port,com_port
+YES,SERIAL,pyserial,,community,Comet cito Plus 1310 射频发生器,d_403
+YES,SERIAL,pyserial,,community,Communication Port,communication_port
+YES,SERIAL,pyserial,,community,Communication Port 通用通信端口,port
+YES,SERIAL,pyserial,,community,Conrad USB/Serial Relay Board,d_723
+YES,SERIAL,pyserial,,community,Cool LED,cool_led
+YES,SERIAL,pyserial,,community,CoolLED pE-300系列显微镜LED光源,d_734
+YES,SERIAL,pyserial,,community,CoolLED pE-4000通用型16波长LED荧光光源,d_735
+YES,SERIAL,pyserial,,community,CreaPhys RCU001 蒸发速率控制单元,d_261
+YES,SERIAL,pyserial,,community,Crsf JOY Bridge,crsf_joy_bridge
+YES,SERIAL,pyserial,,community,Customized sensors - perfectly integrated into your component.,gsv3_usb
+YES,SERIAL,pyserial,,community,cvd_control,cvd_control
+YES,SERIAL,pyserial,,community,Cytek Aurora&trade; Evo 全光谱流式细胞仪,bio_tek_plate_reader_backend
+YES,SERIAL,pyserial,,core,dalong,heaterstirrer/dalong.py
+YES,SERIAL,pyserial,,community,Data Device,data_device
+YES,SERIAL,pyserial,,community,Deformable Mirrors for Wavefront Control,gh_boston_micromachines_
+YES,SERIAL,pyserial,,community,dexarm,dexarm
+YES,SERIAL,pyserial,,community,Digital IO,digital_io
+YES,SERIAL,pyserial,,community,DISCONTINUED: EZ-ZONE? PM 1/4 DIN Panel Mount Controller,watlow
+YES,SERIAL,pyserial,,community,DPS PSU,dps_psu
+YES,SERIAL,pyserial,,community,Dressler Cesar 1312 射频等离子发生器,d_404
+YES,SERIAL,pyserial,,community,driver_interface,driver_interface
+YES,SERIAL,pyserial,,community,DSP7265双相DSP锁相放大器,d_355
+YES,SERIAL,pyserial,,community,Dwyer 16C系列1/16 DIN温度控制器,d_430
+YES,SERIAL,pyserial,,community,Dwyer Series 16B Temperature Controller,gh_dwyer_16b
+YES,SERIAL,pyserial,,community,E-545 PInano压电控制器,d_351
+YES,SERIAL,pyserial,,community,E5CC Temperature Controller,d_712
+YES,SERIAL,pyserial,,community,EA PS 2000B系列可编程直流实验室电源,d_194
+YES,SERIAL,pyserial,,community,eDAQ IsoPod隔离式传感器数据记录仪,d_458
+YES,SERIAL,pyserial,,community,EMF Monitors,narda601
+YES,SERIAL,pyserial,,community,Environmental Test Chambers | Products | Products & Services,gh_espec_
+YES,SERIAL,pyserial,,community,esp300,esp300
+YES,SERIAL,pyserial,,community,Esp32 Device,esp32_device
+YES,SERIAL,pyserial,,community,ESP32-CAM 开发板相机模块,camera_esp32_cam_serial
+YES,SERIAL,pyserial,,community,European XFEL USB Train Id,usb_train_id
+YES,SERIAL,pyserial,,community,EUROSTAR 60 digital,gh_ika_eurostar_60
+YES,SERIAL,pyserial,,community,Eurotherm 2200 温度控制器/编程器,d_255
+YES,SERIAL,pyserial,,community,Eurotherm 2400 温度控制器/编程器,d_256
+YES,SERIAL,pyserial,,community,Eurotherm 2408,gh_eurotherm_2408
+YES,SERIAL,pyserial,,community,Eurotherm 2416,gh_eurotherm_2416
+YES,SERIAL,pyserial,,community,Eurotherm 3200 温度/过程控制器,d_257
+YES,SERIAL,pyserial,,community,eurotherm__instrument,eurotherm__instrument
+YES,SERIAL,pyserial,,community,eurotherm2408,eurotherm2408
+YES,SERIAL,pyserial,,community,Exception,era_synth
+YES,SERIAL,pyserial,,community,Extended Request Support,extended_request_support
+YES,SERIAL,pyserial,,community,Feetech RC Model Feetech Motors Bus,feetech_motors_bus
+YES,SERIAL,pyserial,,community,fiber_shaker,fiber_shaker
+YES,SERIAL,pyserial,,community,Filter Wheel,filter_wheel
+YES,SERIAL,pyserial,,community,fire_sting,fire_sting
+YES,SERIAL,pyserial,,community,Flash Firmware,flash_firmware
+YES,SERIAL,pyserial,,community,furnace,furnace
+YES,SERIAL,pyserial,,community,Fusion 100X Precision Dosing Two-Channel Infusion Syringe Pump,gh_chemyx_fusion
+YES,SERIAL,pyserial,,community,FW102CSix-Position Motorized Filter Wheel for ?1" (?25 mm) Optics,thorlabs_fw102_c
+YES,SERIAL,pyserial,,community,FW212CTwelve-Position Motorized Filter Wheel for ?1/2" (?12.5 mm) Optics,thorlabs_fw212_c
+YES,SERIAL,pyserial,,community,g2_v_sunbrick,g2_v_sunbrick
+YES,SERIAL,pyserial,,community,Generic A4 S Backend 后端控制器,a4_s_backend
+YES,SERIAL,pyserial,,community,Generic Aio Serial 串口设备,aio_serial
+YES,SERIAL,pyserial,,community,Generic Ascii Device,ascii_device
+YES,SERIAL,pyserial,,community,Generic Ascii Serial 串口设备,ascii_serial
+YES,SERIAL,pyserial,,community,Generic Automated Pump Controller 控制器,a_pump
+YES,SERIAL,pyserial,,community,Generic Binary Serial 串口设备,binary_serial
+YES,SERIAL,pyserial,,community,Generic Communication,communication
+YES,SERIAL,pyserial,,community,Generic Miniature Pump 泵,minipump
+YES,SERIAL,pyserial,,community,Generic Mstp Director,mstp_director
+YES,SERIAL,pyserial,,community,Generic Mstp Multiplexer,mstp_multiplexer
+YES,SERIAL,pyserial,,community,Generic Robotic Gripper 夹爪,gripper
+YES,SERIAL,pyserial,,community,Generic Streamer,streamer
+YES,SERIAL,pyserial,,community,Generic Uploader,uploader
+YES,SERIAL,pyserial,,community,Generic Usb Class,usb_class
+YES,SERIAL,pyserial,,community,Generic V Spin Backend 后端控制器,v_spin_backend
+YES,SERIAL,pyserial,,community,Gilson Minipuls 3 蠕动泵,d_68
+YES,SERIAL,pyserial,,community,GQ GMC-300E Plus 盖革计数器辐射监测仪,d_313
+YES,SERIAL,pyserial,,core,Grasp,motor/Grasp.py
+YES,SERIAL,pyserial,,community,Grbl COM Serial,grbl_com_serial
+YES,SERIAL,pyserial,,community,Grbl Controller,grbl_controller
+YES,SERIAL,pyserial,,community,gsioc,gsioc
+YES,SERIAL,pyserial,,community,gsioc_interface,gsioc_interface
+YES,SERIAL,pyserial,,community,Hamamatsu C10600 FESCA-200 Streak Camera,d_754
+YES,SERIAL,pyserial,,community,Hamilton Microlab NIMBUS紧凑型移液工作站,d_1015
+YES,SERIAL,pyserial,,community,Hamilton Microlab VANTAGE自动化移液工作站,d_1014
+YES,SERIAL,pyserial,,community,Hamilton Nimbus液体处理工作站,d_86
+YES,SERIAL,pyserial,,community,Hamilton Tilt Module Backend 后端模块 移液工作站 后端控制器,hamilton_tilt_module_backend
+YES,SERIAL,pyserial,,community,Hamilton Vantage液体处理工作站,d_85
+YES,SERIAL,pyserial,,community,hardpotato__serial,hardpotato__serial
+YES,SERIAL,pyserial,,community,Harvard Apparatus PHD 2000 注射泵,d_49
+YES,SERIAL,pyserial,,community,Heidolph MR Hei-Connect Magnetic Stirrer,gh_heidolph_mr_hei_connect
+YES,SERIAL,pyserial,,community,Heidolph Synthesis 1 平行合成反应仪,d_1045
+YES,SERIAL,pyserial,,community,HepatoChem EvoluChem PhotoRedOx 光化学反应器,d_1043
+YES,SERIAL,pyserial,,core,home_made_raman,raman_uv/home_made_raman.py
+YES,SERIAL,pyserial,,core,homemade_grbl_conductivity,separator/homemade_grbl_conductivity.py
+YES,SERIAL,pyserial,,community,http_connection,http_connection
+YES,SERIAL,pyserial,,community,Huber CC-505 冷热循环器,d_58
+YES,SERIAL,pyserial,,community,I Beam Connection,_i_beam_connection
+YES,SERIAL,pyserial,,community,I Chrome MLE,i_chrome_mle
+YES,SERIAL,pyserial,,community,I Stream,i_stream
+YES,SERIAL,pyserial,,core,iCL42,motor/iCL42.py
+YES,SERIAL,pyserial,,community,IDEX MX Series II 多位置选择阀,d_73
+YES,SERIAL,pyserial,,community,IDEX MXII Multi-Position Valve 阀门,mx_valve
+YES,SERIAL,pyserial,,community,IKA ElectraSyn 2.0 有机电合成反应器,d_1052
+YES,SERIAL,pyserial,,community,IKA RET control-visc 加热磁力搅拌器,new_5
+YES,SERIAL,pyserial,,community,IKA RV 10 旋转蒸发仪,d_75
+YES,SERIAL,pyserial,,community,IL570 Overview,gh_intellemetrics_il800
+YES,SERIAL,pyserial,,community,Imagine Optic Mirao 52e,gh_imagine_optic_mirao_52e
+YES,SERIAL,pyserial,,community,INDUCTION LAUNCHER,gh_openids_openids_v1
+YES,SERIAL,pyserial,,community,Inheco CPAC加热和制冷模块,inheco_incubator_shaker_unit
+YES,SERIAL,pyserial,,community,Inheco CPAC加热和制冷模块,inheco_incubator_shaker_stack_backend
+YES,SERIAL,pyserial,,community,Instru Socket,instru_socket
+YES,SERIAL,pyserial,,community,Integra VOYAGER II 电动移液器,d_140
+YES,SERIAL,pyserial,,community,io_slave,io_slave
+YES,SERIAL,pyserial,,community,io_slave_always_open,io_slave_always_open
+YES,SERIAL,pyserial,,community,Iseg HV,iseg_hv
+YES,SERIAL,pyserial,,community,JEVATEC JEVAmet VCU 通用真空控制器,d_290
+YES,SERIAL,pyserial,,community,Jubilee Jubilee Multi-Tool Motion Platform,machine
+YES,SERIAL,pyserial,,community,JUMO Quantrol LC100/LC200/LC300 PID控制器,tomato_jumo_0cc24ae2
+YES,SERIAL,pyserial,,community,JUMO Quantrol LC100/LC200/LC300 PID控制器,tomato_jumo__device
+YES,SERIAL,pyserial,,community,"KERN & SOHN: Der Experte für Waagen, Mikroskope & Messger?te",gh_kern_eoc
+YES,SERIAL,pyserial,,community,Kern 572 精密天平,d_295
+YES,SERIAL,pyserial,,community,Kern 573 精密天平,d_296
+YES,SERIAL,pyserial,,community,Kern PCB 2500 精密天平,d_1070
+YES,SERIAL,pyserial,,community,Kern PCB 6000-0精密电子天平,d_1009
+YES,SERIAL,pyserial,,community,Kern PCB 系列精密天平,d_158
+YES,SERIAL,pyserial,,community,Kessil PR160L LED光化学反应灯,d_1042
+YES,SERIAL,pyserial,,community,Keyboard Listener,keyboard_listener
+YES,SERIAL,pyserial,,community,Konica Minolta CS-100A 亮度色度计,d_281
+YES,SERIAL,pyserial,,community,Kvaser Bus,kvaser_bus
+YES,SERIAL,pyserial,,community,Laboratory Balances & Scales,gh_sartorius_ea
+YES,SERIAL,pyserial,,core,laiyu,powder_dispense/laiyu.py
+YES,SERIAL,pyserial,,core,LaiYu_Liquid,liquid_handling/laiyu/core/LaiYu_Liquid.py
+YES,SERIAL,pyserial,,community,Lambda OMNICOLL可编程馏分收集器,d_1028
+YES,SERIAL,pyserial,,community,Lambda OMNICOLL馏分收集器,d_99
+YES,SERIAL,pyserial,,community,Lauda Ecoline RE300 低温恒温循环槽,d_259
+YES,SERIAL,pyserial,,community,Lauda LOOP L250 帕尔贴循环恒温器,d_63
+YES,SERIAL,pyserial,,community,Lauda Proline RP 845 制冷加热循环浴,d_62
+YES,SERIAL,pyserial,,community,Legato? 100 Syringe Pump,gh_kd_scientific_legato_100
+YES,SERIAL,pyserial,,community,Leybold Combivac CM31 真空计控制器,d_293
+YES,SERIAL,pyserial,,community,Linkam T95热分析系统温度控制器,d_185
+YES,SERIAL,pyserial,,community,Linkam T95系统温度控制器,d_182
+YES,SERIAL,pyserial,,community,Linkam T96热分析温度控制器,d_183
+YES,SERIAL,pyserial,,community,Linkam T96通用系统温度控制器,d_180
+YES,SERIAL,pyserial,,community,LUDL MAC2000模块化显微镜自动化控制器,d_736
+YES,SERIAL,pyserial,,community,LUDL MAC6000 显微镜自动化控制器,d_17
+YES,SERIAL,pyserial,,community,Lumencor Spectra III 固态光源引擎,d_737
+YES,SERIAL,pyserial,,community,Lumencor SPECTRA X Light Engine,d_753
+YES,SERIAL,pyserial,,community,Maestro,maestro
+YES,SERIAL,pyserial,,community,Magician Robot,gh_dobot_magician
+YES,SERIAL,pyserial,,community,Magnetrührer Heizrührer Laborrührer Rührer Mischen,gh_ika_plate_rct_digital
+YES,SERIAL,pyserial,,community,Manson HCS-3000 可编程直流电源,d_204
+YES,SERIAL,pyserial,,community,Masterflex (Cole-Parmer) L/S 07523系列,gh_masterflex_cole_parmer_l
+YES,SERIAL,pyserial,,community,Masterflex L/S 蠕动泵系统,d_65
+YES,SERIAL,pyserial,,community,Masterflex Serial,masterflex_serial
+YES,SERIAL,pyserial,,community,Masterflex&reg; B/T&reg; 变速气动泵 ,masterflex_backend
+YES,SERIAL,pyserial,,core,masterflex_ls,pump_and_valve/masterflex_ls.py
+YES,SERIAL,pyserial,,community,matchbox_laser,matchbox_laser
+YES,SERIAL,pyserial,,community,MATRIX Orbital,gh_ika_matrix_orbital
+YES,SERIAL,pyserial,,community,MBraun LABmaster 惰性气体手套箱工作站,new_4
+YES,SERIAL,pyserial,,community,MBRAUN SCU101 手套箱系统控制器,d_302
+YES,SERIAL,pyserial,,community,mc2000,mc2000
+YES,SERIAL,pyserial,,community,Meter Care Lite,meter_care_lite
+YES,SERIAL,pyserial,,community,Mettler Toledo AG204 分析天平,d_45
+YES,SERIAL,pyserial,,community,Mettler Toledo DE40 数字密度计,d_1056
+YES,SERIAL,pyserial,,community,Mettler Toledo EasyMax 102自动化合成工作站,d_1038
+YES,SERIAL,pyserial,,community,Mettler Toledo EasyMax 402自动化合成工作站,d_1039
+YES,SERIAL,pyserial,,community,Mettler Toledo Quantos Q2,gh_mettler_toledo_quantos_q2
+YES,SERIAL,pyserial,,community,Mettler Toledo XS204,gh_mettler_toledo_xs204_mt_sics
+YES,SERIAL,pyserial,,community,mfc,mfc
+YES,SERIAL,pyserial,,community,Mighty Mini,mighty_mini
+YES,SERIAL,pyserial,,community,Minitel,minitel
+YES,SERIAL,pyserial,,community,Modbus ADU,modbus_adu
+YES,SERIAL,pyserial,,community,Modbus ADU CS,modbus_adu_cs
+YES,SERIAL,pyserial,,community,Modbus Serial Client,modbus_serial_client
+YES,SERIAL,pyserial,,community,Modbus Serial Worker,modbus_serial_worker
+YES,SERIAL,pyserial,,community,Modbus TCP Client,modbus_tcp_client
+YES,SERIAL,pyserial,,community,Model 336 cryogenic temperature controller,lakeshore336
+YES,SERIAL,pyserial,,community,Molecular Molecular Devices Instrument,molecular_devices_backend
+YES,SERIAL,pyserial,,community,MP-285 Motorized Micromanipulator,mp285
+YES,SERIAL,pyserial,,community,mpbcw_laser,mpbcw_laser
+YES,SERIAL,pyserial,,community,MX Class,gh_ssi_teledyne_next_generation
+YES,SERIAL,pyserial,,community,NanoScan? 2s Si/3.5/1.8 Silicon Scanning 1.8 μm Slit Beam Profiler,nano_scan
+YES,SERIAL,pyserial,,community,Nanotec SMCI 步进电机控制器,d_300
+YES,SERIAL,pyserial,,community,Netzsch STA 449 F3 Jupiter 同步热分析仪,d_1058
+YES,SERIAL,pyserial,,community,Newport ESP300通用运动控制器/驱动器,d_397
+YES,SERIAL,pyserial,,community,Newport Oriel Cornerstone 260 单色仪,d_265
+YES,SERIAL,pyserial,,community,next_gen_pump,next_gen_pump
+YES,SERIAL,pyserial,,community,nGauge 原子力显微镜（AFM）｜芯片式AFM｜纳米表面形貌分析仪｜ICSPI便携式原子力显微镜,spi_device
+YES,SERIAL,pyserial,,community,NI-XNET CAN总线,ni_xne_tcan_bus
+YES,SERIAL,pyserial,,community,Obis Laser,obis_laser
+YES,SERIAL,pyserial,,community,Ohaus Defender 5000 (D52) 工业台秤,d_47
+YES,SERIAL,pyserial,,community,Ohaus Explorer EX225D/AD 半微量天平,d_46
+YES,SERIAL,pyserial,,community,olympus_ix81_halogen_lamp,olympus_ix81_halogen_lamp
+YES,SERIAL,pyserial,,community,Omega D8200 USB数据采集接口模块,d_441
+YES,SERIAL,pyserial,,community,OMEGA iSeries Temperature/Process Controller,gh_omega_iseries
+YES,SERIAL,pyserial,,community,Omega iServer DRi/DRE 网络温湿度监测器,d_13
+YES,SERIAL,pyserial,,community,Omega Platinum系列PID温度/过程控制器,d_442
+YES,SERIAL,pyserial,,community,Omicron BrixX Diode Laser,d_751
+YES,SERIAL,pyserial,,community,Omicron DeepStar系列高速调制半导体激光器,d_730
+YES,SERIAL,pyserial,,community,Omicron LedHUB LED Light Engine,d_752
+YES,SERIAL,pyserial,,community,Omicron LuxX 高性能半导体激光器,d_748
+YES,SERIAL,pyserial,,community,Omicron LuxX+ 增强型半导体激光器,d_749
+YES,SERIAL,pyserial,,community,Omicron PhoxX Diode Laser,d_750
+YES,SERIAL,pyserial,,community,OmniCure S2000 UV点固化系统,d_312
+YES,SERIAL,pyserial,,community,Open GRBL Controller Board 控制器,grblboard
+YES,SERIAL,pyserial,,community,Open Standard Serial,serial_controller
+YES,SERIAL,pyserial,,community,Open Standard Serial Bus,serial_bus
+YES,SERIAL,pyserial,,community,OpenBCI Brain-Computer Interface Board 控制板 分析仪器 接口模块,open_bci_board
+YES,SERIAL,pyserial,,community,Opentrons Opentrons Bioshake Driver,bioshake_driver
+YES,SERIAL,pyserial,,community,Opentrons Temperature Module Usb Backend 后端模块 温控设备 后端控制器,opentrons_temperature_module_usb_backend
+YES,SERIAL,pyserial,,community,Opentrons Thermocycler Usb Backend 后端模块 PCR仪 后端控制器,opentrons_thermocycler_usb_backend
+YES,SERIAL,pyserial,,community,Optris CT 系列红外测温仪,d_321
+YES,SERIAL,pyserial,,community,OWIS 精密位移台 自动化设备 位移台,owis
+YES,SERIAL,pyserial,,community,Oxxius 激光器控制器 分析仪器 控制器,oxxius_controller
+YES,SERIAL,pyserial,,community,Pcan BUS,pcan_bus
+YES,SERIAL,pyserial,,community,PEAK PCAN CAN总线适配器,pcan_basic
+YES,SERIAL,pyserial,,community,PepSy 开源自动化多肽合成仪,new_2
+YES,SERIAL,pyserial,,community,petite_fleur_chiller,petite_fleur_chiller
+YES,SERIAL,pyserial,,community,Pfeiffer Rs485 Serial,pfeiffer_rs485_serial
+YES,SERIAL,pyserial,,community,Pfeiffer Vacuum TPG 261 Compact Pressure Gauge,tpg261
+YES,SERIAL,pyserial,,community,Phd2000,phd2000
+YES,SERIAL,pyserial,,community,Photo Research PR-655 SpectraScan 光谱辐射计,d_280
+YES,SERIAL,pyserial,,community,Physik Instrumente C-863 Mercury DC电机伺服控制器,d_349
+YES,SERIAL,pyserial,,community,Physik Instrumente E-816 压电控制器计算机接口子模块,d_348
+YES,SERIAL,pyserial,,community,Physik Physik Instrumente Scpi Functional,scpi_functional
+YES,SERIAL,pyserial,,community,PI E-709 Digital Piezo Controller,d_763
+YES,SERIAL,pyserial,,community,PI E-725 Digital Piezo Controller,d_762
+YES,SERIAL,pyserial,,community,picosecond_delayer,picosecond_delayer
+YES,SERIAL,pyserial,,community,piezo_e255,piezo_e255
+YES,SERIAL,pyserial,,community,PiezoMotor PMD301 Piezo LEGS压电电机控制器,d_778
+YES,SERIAL,pyserial,,community,PiezoMotor PMD401 Piezo LEGS压电电机控制器,d_777
+YES,SERIAL,pyserial,,core,pipette_controller,liquid_handling/laiyu/controllers/pipette_controller.py
+YES,SERIAL,pyserial,,community,pipette_controller,pipette_controller
+YES,SERIAL,pyserial,,community,Port Reader,port_reader
+YES,SERIAL,pyserial,,community,pressure_trans,pressure_trans
+YES,SERIAL,pyserial,,community,Prior,prior
+YES,SERIAL,pyserial,,community,Prior ProScanIII 显微镜自动化控制器,d_738
+YES,SERIAL,pyserial,,community,Prior Scientific ProScan III 多轴显微镜控制器,d_14
+YES,SERIAL,pyserial,,community,Prior Scientific ProScan 显微镜控制器,d_15
+YES,SERIAL,pyserial,,community,prior_lumen,prior_lumen
+YES,SERIAL,pyserial,,community,priorarclampshutter,priorarclampshutter
+YES,SERIAL,pyserial,,community,PRO Scan III,pro_scan_iii
+YES,SERIAL,pyserial,,community,PRO Scan III Connection,__pro_scan_iii_connection
+YES,SERIAL,pyserial,,core,prototype_sensor,temperature/prototype_sensor.py
+YES,SERIAL,pyserial,,community,Pump,pump
+YES,SERIAL,pyserial,,community,PWM Steering,pwm_steering
+YES,SERIAL,pyserial,,community,PWM Throttle,pwm_throttle
+YES,SERIAL,pyserial,,community,Pylon COM,pylon_com
+YES,SERIAL,pyserial,,community,Pylontech,pylontech
+YES,SERIAL,pyserial,,community,Pylontech Rs485,pylontech_rs485
+YES,SERIAL,pyserial,,community,pyro_io,pyro_io
+YES,SERIAL,pyserial,,community,PyroScience FireSting-O2 光纤溶氧仪,d_323
+YES,SERIAL,pyserial,,community,RCT 5 digital,gh_ika_rct_5_digital
+YES,SERIAL,pyserial,,community,Register Interface,register_interface
+YES,SERIAL,pyserial,,community,Reliable EL-FLOW Select mass flow meter/controller,bronkhorst_elflow
+YES,SERIAL,pyserial,,community,Rheodyne MX II Stand-Alone Valves,gh_idex_rheodyne_mx_series_ii
+YES,SERIAL,pyserial,,core,rmaxis_v4,gripper/rmaxis_v4.py
+YES,SERIAL,pyserial,,community,Robotell BUS,robotell_bus
+YES,SERIAL,pyserial,,community,Robotics Masters Robo Hat,robo_hat_driver
+YES,SERIAL,pyserial,,community,Robotics Masters Robo Hat,robo_hat_controller
+YES,SERIAL,pyserial,,community,Rodeostat: open source potentiostat,gh_iorodeo_rodeostat
+YES,SERIAL,pyserial,,community,Rotary Encoder,rotary_encoder
+YES,SERIAL,pyserial,,core,rotavap_one,rotavap/rotavap_one.py
+YES,SERIAL,pyserial,,community,Rotrics DexArm 多功能桌面机械臂,d_294
+YES,SERIAL,pyserial,,community,Routable,routable
+YES,SERIAL,pyserial,,community,RP Lidar,rp_lidar
+YES,SERIAL,pyserial,,community,RP Lidar2,rp_lidar2
+YES,SERIAL,pyserial,,core,runze_multiple_backbone,pump_and_valve/runze_multiple_backbone.py
+YES,SERIAL,pyserial,,community,Sartorius EA/EB/GD/GE/TE系列电子天平,d_8
+YES,SERIAL,pyserial,,community,Sartorius Quintix,gh_sartorius_quintix
+YES,SERIAL,pyserial,,community,Sartorius rLINE,gh_sartorius_rline
+YES,SERIAL,pyserial,,community,Scanner Interface,scanner_interface
+YES,SERIAL,pyserial,,community,Scientific Industries Vortex-Genie 2 涡旋混合器,d_1051
+YES,SERIAL,pyserial,,community,sdk_wrapper,sdk_wrapper
+YES,SERIAL,pyserial,,core,sealer,sealer/sealer.py
+YES,SERIAL,pyserial,,community,Search,gh_wpi_al1000
+YES,SERIAL,pyserial,,community,Seeed Studio Seeed Bus,seeed_bus
+YES,SERIAL,pyserial,,community,Sensirion AG Sensirion Sensor Bridge,sensirion_sensor_bridge
+YES,SERIAL,pyserial,,core,sensor_node,temperature/sensor_node.py
+YES,SERIAL,pyserial,,community,Serial,serial
+YES,SERIAL,pyserial,,community,Serial Client,serial_client
+YES,SERIAL,pyserial,,community,Serial Device,serial_device
+YES,SERIAL,pyserial,,community,Serial Line Reader,serial_line_reader
+YES,SERIAL,pyserial,,community,Serial Port,serial_port
+YES,SERIAL,pyserial,,community,serial_command_interface,serial_command_interface
+YES,SERIAL,pyserial,,community,serial_connection,serial_connection
+YES,SERIAL,pyserial,,community,serial_data_interface,serial_data_interface
+YES,SERIAL,pyserial,,community,serial_interface,serial_interface
+YES,SERIAL,pyserial,,community,Servo Blaster,servo_blaster
+YES,SERIAL,pyserial,,community,servo_fiber_shaker,servo_fiber_shaker
+YES,SERIAL,pyserial,,community,Shared Serial,shared_serial
+YES,SERIAL,pyserial,,community,Shimadzu GCMS-QP2020 NX 单四极杆气质联用仪,d_1059
+YES,SERIAL,pyserial,,community,Shimadzu Nexera X2超高效液相色谱系统,d_1022
+YES,SERIAL,pyserial,,community,Shimadzu Nexera X2超高效液相色谱仪,d_93
+YES,SERIAL,pyserial,,community,Shimadzu RF-5301PC 荧光分光光度计,d_1066
+YES,SERIAL,pyserial,,community,SI Uart,si_uart
+YES,SERIAL,pyserial,,community,Signal Recovery 7265 双相DSP锁相放大器,d_214
+YES,SERIAL,pyserial,,community,Signal Recovery 7280 宽带DSP锁相放大器,d_215
+YES,SERIAL,pyserial,,community,Slamtec RPLiDAR Laser Range Scanner 扫描仪,r_py_lidar
+YES,SERIAL,pyserial,,community,Slave Serial Worker,slave_serial_worker
+YES,SERIAL,pyserial,,community,Slcan BUS,slcan_bus
+YES,SERIAL,pyserial,,core,solenoid_valve,pump_and_valve/solenoid_valve.py
+YES,SERIAL,pyserial,,community,Spectra III Light Engine,spectra_iii_light_engine
+YES,SERIAL,pyserial,,community,Standard Infuse/Withdraw PHD 22/2000 Syringe Pumps,gh_harvard_apparatus_pump_11
+YES,SERIAL,pyserial,,community,Stanford Research Systems SR844 射频锁相放大器,d_613
+YES,SERIAL,pyserial,,community,Starna 用于各种光谱仪的石英样品比色池,star_backend
+YES,SERIAL,pyserial,,community,str,gh_montana_instruments_cryostation
+YES,SERIAL,pyserial,,community,str,cesar1312
+YES,SERIAL,pyserial,,community,str,gh_agilent_e4980a
+YES,SERIAL,pyserial,,community,Stream Pipe,stream_pipe
+YES,SERIAL,pyserial,,community,Stream Serial,stream_serial
+YES,SERIAL,pyserial,,community,Stream Socket,stream_socket
+YES,SERIAL,pyserial,,community,String,cito_plus1310
+YES,SERIAL,pyserial,,community,Sutter Device,sutter_device
+YES,SERIAL,pyserial,,community,Sutter Lambda 10-3 光学滤光轮控制器,d_18
+YES,SERIAL,pyserial,,community,Sycon STM-100 薄膜厚度/速率监控仪,d_289
+YES,SERIAL,pyserial,,community,TCP Client,tcp_client
+YES,SERIAL,pyserial,,community,tcpip_connection,tcpip_connection
+YES,SERIAL,pyserial,,community,T-Cube步进电机控制器,d_650
+YES,SERIAL,pyserial,,community,T-Cube激光二极管控制器,d_660
+YES,SERIAL,pyserial,,community,T-Cube无刷直流电机控制器,d_653
+YES,SERIAL,pyserial,,community,T-Cube压电控制器,d_651
+YES,SERIAL,pyserial,,community,Tecan Tecan Group Liquid Level,liquid_level
+YES,SERIAL,pyserial,,community,Tecan Tecan Group Ptc,ptc
+YES,SERIAL,pyserial,,community,Teledyne Isco 260D,gh_teledyne_isco_260d
+YES,SERIAL,pyserial,,community,Teledyne SSI ReaXus LD Class低死体积双柱塞HPLC泵,d_177
+YES,SERIAL,pyserial,,community,Thermo Heraeus Cytomat 培养箱 培养箱 培养箱,heraeus_cytomat_backend
+YES,SERIAL,pyserial,,community,Thermo NESLAB RTE-740/RTE-111 制冷加热循环浴,d_64
+YES,SERIAL,pyserial,,community,Thermo Scientific ThermoFlex 循环冷水机,d_11
+YES,SERIAL,pyserial,,community,Thorlabs BSC201单通道台式步进电机控制器,d_447
+YES,SERIAL,pyserial,,community,Thorlabs BSC203三通道台式步进电机控制器,d_448
+YES,SERIAL,pyserial,,community,Thorlabs ELL12 六位电动光学滑块,d_741
+YES,SERIAL,pyserial,,community,Thorlabs Filter Wheel,thorlabs_filter_wheel
+YES,SERIAL,pyserial,,community,Thorlabs MPC320电动光纤偏振控制器,d_452
+YES,SERIAL,pyserial,,community,Thorlabs PAX1000系列高动态范围偏振分析仪,d_454
+YES,SERIAL,pyserial,,community,toptica_i_beam_laser,toptica_i_beam_laser
+YES,SERIAL,pyserial,,community,Trinamic TMCM-1110 StepRocker单轴步进电机控制器/驱动器,d_697
+YES,SERIAL,pyserial,,community,Trinamic TMCM-1140 Stepper Motor Controller/Driver Module,d_771
+YES,SERIAL,pyserial,,community,Trinamic TMCM-1211 STEPROCKER Stepper Motor Controller/Driver Module,d_773
+YES,SERIAL,pyserial,,community,Trinamic TMCM-3110三轴步进电机控制器/驱动器模块,d_698
+YES,SERIAL,pyserial,,community,Trinamic TMCM-3214 3-Axis Stepper Motor Controller,d_772
+YES,SERIAL,pyserial,,community,Trinamic TMCM-6110六轴步进电机控制器/驱动器模块,d_699
+YES,SERIAL,pyserial,,community,UFACTORY UFACTORY Uxbus Cmd,uxbus_cmd
+YES,SERIAL,pyserial,,community,Uniblitz VLM1 电磁光学快门,d_373
+YES,SERIAL,pyserial,,community,Universal Real-Time Data Exchange Protocol,rtde
+YES,SERIAL,pyserial,,community,Universal Robots UR16e重载协作机器人,d_1012
+YES,SERIAL,pyserial,,community,UR16e重载协作机械臂,d_83
+YES,SERIAL,pyserial,,community,USBtin CAN总线适配器,us_btin
+YES,SERIAL,pyserial,,community,UXC 1000,gh_specs_xrc1000
+YES,SERIAL,pyserial,,community,VICI Valco Cheminert E90电动执行器,d_105
+YES,SERIAL,pyserial,,community,VICI Valco E90 Cheminert电动多通阀,d_1034
+YES,SERIAL,pyserial,,community,VICI Valco 多位置选择阀,d_72
+YES,SERIAL,pyserial,,community,VICI Valco两位多通阀,d_456
+YES,SERIAL,pyserial,,community,Voltcraft K204 四通道热电偶温度记录仪,d_322
+YES,SERIAL,pyserial,,core,xpeel,xpeel/xpeel.py
+YES,SERIAL,pyserial,,core,xyz_controller,liquid_handling/laiyu/controllers/xyz_controller.py
+YES,SERIAL,pyserial,,core,xyz_stepper_driver,liquid_handling/laiyu/drivers/xyz_stepper_driver.py
+YES,SERIAL,pyserial,,community,y_serial_port,y_serial_port
+YES,SERIAL,pyserial,,community,YD Lidar,yd_lidar
+YES,SERIAL,pyserial,,community,Zaber Binary协议电机控制器,d_457
+YES,SERIAL,pyserial,,community,Zaber Connection,__zaber_connection
+YES,SERIAL,pyserial,,community,Zaber Daisy Chain,zaber_daisy_chain
+YES,SERIAL,pyserial,,community,Zaber LED Controller,__zaber_led_controller
+YES,SERIAL,pyserial,,community,Zaber Nucleus X-LCA4 四通道LED控制器,d_739
+YES,SERIAL,pyserial,,community,Zaber T-NA 微型电动线性致动器,d_374
+YES,SERIAL,pyserial,,community,Zaber X-ADR130 线性电机扫描显微镜台,d_19
+YES,SERIAL,pyserial,,community,Zeiss SmartSEM,d_759
+YES,SERIAL,pyserial,,community,ZwickRoell zwickiLine 万能试验机,d_137
+YES,SERIAL,pyserial,,community,艾立本Aliben- LT.D00台式激光诱导击穿光谱仪,lib_ftdi
+YES,SERIAL,pyserial,,community,单通道压电控制器,d_655
+YES,SERIAL,pyserial,,community,电动4位置滤光片滑块,d_666
+YES,SERIAL,pyserial,,community,电动双位置滑块,d_665
+YES,SERIAL,pyserial,,community,电动旋转台,d_667
+YES,SERIAL,pyserial,,community,韩国ilSHinBioBase 进口深冷冻箱 GUDERO CHEST系列,base_streamer
+YES,SERIAL,pyserial,,community,模块化机架步进电机控制器,d_656
+YES,SERIAL,pyserial,,community,模块化机架压电控制器,d_657
+YES,SERIAL,pyserial,,community,纳米定位器控制器,d_658
+YES,SERIAL,pyserial,,community,通用串口仪器接口,basic_serial_instrument
+YES,SERIAL,pyserial,,community,无法访问此网站,gh_zke_ebc_a05
+YES,SERIAL,pyserial,,community,直流伺服电机控制器,d_659
+YES,VISA_SCPI,scpi-framework,*IDN?,community,2600B Series SMU,gh_keithley_2601b
+YES,VISA_SCPI,scpi-framework,*IDN?,community,2600B Series SMU,gh_keithley_2602b
+YES,VISA_SCPI,scpi-framework,*IDN?,community,2600B Series SMU,gh_keithley_2614b
+YES,VISA_SCPI,scpi-framework,*IDN?,community,2600B Series SMU,gh_keithley_2636b
+YES,VISA_SCPI,scpi-framework,*IDN?,community,2600B Series SMU,gh_keithley_2604b
+YES,VISA_SCPI,scpi-framework,OUTP:LOAD?,community,"33220A Function / Arbitrary Waveform Generator, 20 MHz [Obsolete]",agilent33220a
+YES,VISA_SCPI,scpi-framework,*IDN?,community,3325A Synthesizer/Function Generator [Obsolete],hp3325a
+YES,VISA_SCPI,scpi-framework,DATA:POIN?,community,"34410A Digital Multimeter, 6? Digit [Obsolete]",agilent34410a
+YES,VISA_SCPI,scpi-framework,:PAGE:SCON:MEAS:SING; *OPC?,community,4156C Precision Semiconductor Parameter Analyzer [Obsolete],gh_agilent_4156
+YES,VISA_SCPI,scpi-framework,?,community,437B High Performance Single Channel Average Power Meter [Obsolete],hp437_b
+YES,VISA_SCPI,scpi-framework,*ID?,community,59501B D/A CONVERTER [Obsolete],hp59501_b
+YES,VISA_SCPI,scpi-framework,SOURce:FREQuency:MODE?,community,85645A 300 kHz to 26.5 GHz tracking source [Obsolete],hp85645_a
+YES,VISA_SCPI,scpi-framework,OPC?;PRES,community,8753D RF矢量网络分析仪,d_485
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,A&D G系列,gh_ad_g
+YES,VISA_SCPI,lantz/VISA,MEAS:VOLT:DC?,community,A/D Sense Board 传感板,a2_d_sense_board
+YES,VISA_SCPI,lantz/VISA,B,community,Accretech UF200/UF300 晶圆探针台,d_262
+YES,VISA_SCPI,lantz/VISA,MEAS:VOLT?,community,Advanced ATE System Power Supplies,n8700
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Advantest R3767CG 矢量网络分析仪,d_790
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Advantest R6245 直流电压/电流源监测器,d_791
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Advantest R6246 双通道直流电压/电流源监测器,d_792
+YES,VISA_SCPI,scpi-framework,*OPC?,community,AFG3152C任意函数发生器,d_885
+YES,VISA_SCPI,lantz/VISA,*OPC?,community,Agilent/Keysight 33500系列 Trueform波形发生器,d_793
+YES,VISA_SCPI,lantz/VISA,STAT:OPER?,community,Agilent/Keysight 4284A 精密LCR表,d_796
+YES,VISA_SCPI,scpi-framework,OUTPERRO?,community,Agilent/Keysight 4294A 精密阻抗分析仪,d_797
+YES,VISA_SCPI,lantz/VISA,POIN?,community,Agilent/Keysight 8722ES 矢量网络分析仪,d_799
+YES,VISA_SCPI,lantz/VISA,RAMP:RATE:UNITS?,community,AMI Model 430 Power Supply Programmer,ami430
+YES,VISA_SCPI,lantz/VISA,display:global:{}:state?,community,AMPTEK AMPTEK FASTSDD DP5-X,tek_series_curve_feat
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Andeen-Hagerling AH 2700A Capacitance Bridge,gh_andeen_hagerling_ah_2700a
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Andeen-Hagerling AH 2700A Capacitance Bridge,gh_andeen_hagerling_ah2700a
+YES,VISA_SCPI,scpi-framework,:OUTPUT?,community,Anritsu MG3692C 微波信号发生器,d_811
+YES,VISA_SCPI,scpi-framework,*OPC?,community,Anritsu MS9710C 光谱分析仪,d_817
+YES,VISA_SCPI,scpi-framework,OS;E,community,AQ6373B可见光波长光谱分析仪,d_899
+YES,VISA_SCPI,scpi-framework,OS;E,community,AQ6373可见光波长光谱分析仪,d_898
+YES,VISA_SCPI,lantz/VISA,INSTR:IO:READ:ANA? (@{ch}),community,Arduino I/O 控制器 实验设备 控制器,arduino_io
+YES,VISA_SCPI,scpi-framework,TE,community,AXIS-TEC激光晶圆划片机AX-LS100,axis
+YES,VISA_SCPI,lantz/VISA,MEAS:VOLT:DC?,community,B&K Precision 8601 DC Electronic Load,bk8600
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,B&K Precision 9103 Multi-Range DC Power Supply,bk9100
+YES,VISA_SCPI,scpi-framework,MEASure:SCALar:VOLTage:DC?,community,BK Precision 9130B 三路输出可编程直流电源,d_819
+YES,VISA_SCPI,lantz/VISA,1UNIT?,community,BX53 Semi-Motorized Fluorescence Microscope | Evident Scientific | Olympus,bx2_a
+YES,VISA_SCPI,lantz/VISA,gsn?,community,Cobolt 06-01 Series Diode Laser,cobolt0601
+YES,VISA_SCPI,lantz/VISA,PRINT {},community,Coherent Innova 300C 氩离子激光器,argon_innova300_c
+YES,VISA_SCPI,lantz/VISA,PRINT {},community,Coherent Innova 300C 氩离子激光器 分析仪器 激光器,innova300_c
+YES,VISA_SCPI,scpi-framework,(param-set! ,community,Communicates with a `Toptica Topmode`_ instrument,top_mode
+YES,VISA_SCPI,scpi-framework,*OPC?;SYST:PRES,community,Copper Mountain S5048 矢量网络分析仪,d_568
+YES,VISA_SCPI,lantz/VISA,GET VL,community,Cryogenic SMS120C 超导磁铁电源,d_569
+YES,VISA_SCPI,scpi-framework,{}.units?,community,Cryogenic Temperature Controller - CTC100,gh_stanford_research_systems_ctc100
+YES,VISA_SCPI,scpi-framework,MEAS? 1,community,Cryomagnetics LM-500 液态低温液位计,d_570
+YES,VISA_SCPI,scpi-framework,UNITS?,community,Cryomagnetics Model 4G 超导磁铁电源,d_571
+YES,VISA_SCPI,scpi-framework,*IDN?,community,CS580 Current Source,gh_stanford_research_systems_cs580
+YES,VISA_SCPI,scpi-framework,PO,community,Danfysik System 8500 电流稳定高性能电源,d_820
+YES,VISA_SCPI,lantz/VISA,TIM:OFFS?,community,DHO4000,rigol_ds4043
+YES,VISA_SCPI,scpi-framework,DISP?,community,Digital Delay/Pulse Generator - DG645,srsdg645
+YES,VISA_SCPI,lantz/VISA,:MEAS:VOLT:DC?,community,DL3000,dl3000
+YES,VISA_SCPI,lantz/VISA,:MEAS:VOLT?,community,DP800,dp800
+YES,VISA_SCPI,scpi-framework,:ACQ:AVER?,community,DS1000Z-E,rigol_ds1000_series
+YES,VISA_SCPI,lantz/VISA,MEAS:VOLT?,community,"E3631A 80W Triple Output Power Supply, 6V, 5A & ±25V, 1A [Obsolete]",e3631_a
+YES,VISA_SCPI,scpi-framework,SYSTem:ERRor?,community,"E4406A VSA Transmitter Tester, 7 MHz to 4 GHz [Obsolete]",agilent_e4406_a
+YES,VISA_SCPI,scpi-framework,:INST:SEL?,community,"E4432B ESG-D Series Digital RF Signal Generator, 3 GHz [Obsolete]",agilent_e44nn
+YES,VISA_SCPI,scpi-framework,CALC1:PAR:CAT?,community,"E8357A PNA Network Analyzer, 300 kHz to 6 GHz [Obsolete]",agilent_e8357_a
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Enumerate,enumerate
+YES,VISA_SCPI,scpi-framework,:INST:SEL?,community,Expert Signal Analyzers: N9030B,keysight_n90nn_b
+YES,VISA_SCPI,scpi-framework,AMPL?,community,Function Generator - DS345,srs345
+YES,VISA_SCPI,lantz/VISA,INSTR:READ:ANA? (@{ch}),community,Generic A/D DAQ Module 数据采集模块,a2_d_daq
+YES,VISA_SCPI,lantz/VISA,INSTR:RS485?,community,Generic A/D Electronic Load 电子负载,a2_d__eload
+YES,VISA_SCPI,lantz/VISA,MEAS:VOLT:DC?,community,Generic A/D Power Board 电源板,a2_d_power_board
+YES,VISA_SCPI,lantz/VISA,INSTR:DAQ:GET:NCHS?,community,Generic A/D Relay Board 继电器板,a2_d__relay__board
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic A2023a,a2023a
+YES,VISA_SCPI,scpi-framework,#NAME?,community,Generic Gpib Communicator GPIB设备,gpib_communicator
+YES,VISA_SCPI,lantz/VISA,{} !RFGAIN,community,Generic High Resolution Imager,hri
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic Ieee4882 Driver,ieee4882_driver
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic LCR Meter Measurement Backend 后端控制器,lcr__backend
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic Measurement Instrument Interface 接口模块,measurement
+YES,VISA_SCPI,lantz/VISA,VOUT?,community,Generic MP71025-X Motion Controller 运动控制器,mp71025_x
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic Programmable Power Supply 电源,power_supply_device
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic Pyroelectric Measurement Backend 后端控制器,pyroelectric_backend
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic RT Measurement Backend (Active) 后端控制器,rt__backend__active
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic RT Measurement Backend (Passive) 后端控制器,rt__backend__passive
+YES,VISA_SCPI,scpi-framework,INF6,community,Generic TC038 Temperature Controller 温度控制器,tc038
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic Variable Temperature Backend (Passive) 后端控制器,vt__backend__passive
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Generic Variable Temperature Measurement Backend 后端控制器,vt__backend
+YES,VISA_SCPI,lantz/VISA,GETMODEL,community,Generic Visible Fiber Laser 激光器,vfl
+YES,VISA_SCPI,scpi-framework,*VER,community,Gentec Maestro 激光功率能量计,d_573
+YES,VISA_SCPI,scpi-framework,*GAN,community,Gentec-EO BLU 无线激光功率计,d_405
+YES,VISA_SCPI,scpi-framework,V,community,Glassman FR系列高压直流电源,d_426
+YES,VISA_SCPI,scpi-framework,V,community,Glassman Glassman Fr,glassman_fr
+YES,VISA_SCPI,scpi-framework,SOUR:VOLT?,community,Hewlett-Packard HP E3631A Triple Output Power Supply 电源,h_pe3631a
+YES,VISA_SCPI,lantz/VISA,:{}:FREQ?,community,Holzworth HS9008B 多通道相位相干射频合成器,d_575
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,HP 4395A Network/Spectrum/Impedance Analyzer,hp4395_a
+YES,VISA_SCPI,scpi-framework,SOURce:FUNCtion:SHAPe?,community,HP 8116A 50 MHz Pulse/Function Generator,hp8116_a
+YES,VISA_SCPI,scpi-framework,ID?,community,HP 8594E 便携式频谱分析仪,d_577
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,HP 8753E RF矢量网络分析仪,d_832
+YES,VISA_SCPI,scpi-framework,ID,community,HP 8901B 调制分析仪,hp8901_b
+YES,VISA_SCPI,scpi-framework,CST,community,Hp8903 B,hp8903_b
+YES,VISA_SCPI,lantz/VISA,RERR,community,IPG Photonics YAR 掺镱连续光纤放大器,d_839
+YES,VISA_SCPI,lantz/VISA,MEAS:VOLT:DC?,community,ITECH IT8500+ 可编程直流电子负载,it8500
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,JA Visa,ja_visa
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 2100 6.5位USB数字万用表,d_326
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 2110 5.5位双显示数字万用表,d_327
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 236精密源表,d_186
+YES,VISA_SCPI,scpi-framework,:READ?,community,Keithley 2400 Standard Series SMU,gh_keithley_2401
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 2700 万用表/数据采集/开关系统,d_234
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 2701 以太网万用表/数据采集系统,d_328
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 2750 万用表/开关系统,d_329
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keithley 4200A-SCS半导体参数分析仪,d_187
+YES,VISA_SCPI,scpi-framework,U0X,community,Keithley 485 Autoranging Picoammeter,keithley485
+YES,VISA_SCPI,scpi-framework,:READ?,community,Keithley 6430,gh_keithley_6430
+YES,VISA_SCPI,scpi-framework,FETC?,community,Keithley 6514,gh_keithley_6514
+YES,VISA_SCPI,scpi-framework,FETC?,community,Keithley 6514 System Electrometer,keithley6514
+YES,VISA_SCPI,lantz/VISA,:MEAS:VOLT?,community,KEL100 Series DC Electronic Load,kel10_x
+YES,VISA_SCPI,scpi-framework,:channel%d?,community,Keysight DSOX1102G InfiniiVision示波器,d_849
+YES,VISA_SCPI,scpi-framework,:TRACE:DATA? TRACE%d;,community,Keysight E4408B ESA-L 基础频谱分析仪,d_804
+YES,VISA_SCPI,lantz/VISA,CALC{ch}:PARameter:COUNt?,community,Keysight E5062A ENA-L RF网络分析仪,d_805
+YES,VISA_SCPI,scpi-framework,SENS:SWE:POIN?,community,Keysight FieldFox N9914A 手持式RF分析仪,keysight_field_fox
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Keysight Infinii Vision X,keysight_infinii_vision_x
+YES,VISA_SCPI,lantz/VISA,MEASure:RESults?,community,Keysight InfiniiVision MSOX3000 X-Series Mixed Signal Oscilloscope,msox3000
+YES,VISA_SCPI,lantz/VISA,DISPlay:BOOKmark1:XPOSition?,community,Keysight 仪器通用接口 分析仪器 Keysight,keysight
+YES,VISA_SCPI,lantz/VISA,VOUT1?,community,Korad KAxxxxP 可编程直流电源 实验设备 电源,kaxxxxp
+YES,VISA_SCPI,lantz/VISA,r?,community,Kuhne Electronic KUSG 245-250A微波信号发生器,d_853
+YES,VISA_SCPI,scpi-framework,RDGFIELD?,community,Lake Shore 475 DSP高斯计,d_411
+YES,VISA_SCPI,lantz/VISA,PHAS?,community,Lock In Amplifier - SR830,sr830
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Marconi 2030/2031/203N 信号发生器,marconi_instruments203_n
+YES,VISA_SCPI,scpi-framework,?,community,Marconi 6960B RF功率计,mi6960
+YES,VISA_SCPI,scpi-framework,RDGFIELD?,community,Model 336 cryogenic temperature controller,gh_lakeshore_336
+YES,VISA_SCPI,scpi-framework,RDGFIELD?,community,Model 340 Cryogenic Temperature Controller,gh_lakeshore_340
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Model 350 cryogenic temperature controller,lakeshore350
+YES,VISA_SCPI,scpi-framework,RDGFIELD?,community,Model 370 AC Resistance Bridge,gh_lakeshore_370
+YES,VISA_SCPI,scpi-framework,UNITS?,community,Model 4G 双极性超导磁铁电源,d_481
+YES,VISA_SCPI,scpi-framework,TE,community,"Motor Controller, Piezo, 2 Axis, Agilis?, Hand-held",aguc2
+YES,VISA_SCPI,lantz/VISA,A?,community,Newport 1830-C Optical Power Meter,power_meter1830c
+YES,VISA_SCPI,lantz/VISA,A?,community,Newport 1830-C 光功率计 分析仪器 功率计,powermeter1830c
+YES,VISA_SCPI,lantz/VISA,ECHO?,community,Newport 2832-C Dual-Channel Optical Power Meter,newport2832c
+YES,VISA_SCPI,scpi-framework,TB?,community,"Newport ESP301 Motion Controller/Driver, 3-Axis, USB, RS232",d_770
+YES,VISA_SCPI,scpi-framework,TB?,community,Newport ESP-301 三轴集成运动控制器/驱动器,d_414
+YES,VISA_SCPI,scpi-framework,TB?,community,Newport ESP301 运动控制器,newport_esp301
+YES,VISA_SCPI,scpi-framework,TIMERS?,community,Novanta FPU60激光电源单元,d_861
+YES,VISA_SCPI,lantz/VISA,1UNIT?,community,Olympus IX/BX 系列显微镜 光学显微镜 显微镜,ixbx
+YES,VISA_SCPI,lantz/VISA,1UNIT?,community,Olympus IX2系列倒置研究显微镜,ix2
+YES,VISA_SCPI,scpi-framework,rstli?,community,Ondax SureLock LM系列波长稳定激光模块,d_415
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Open Standard IEEE 488 functions,ieee488
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Oxford Instruments ILM200 智能低温液位计,d_591
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Oxford Instruments Kelvinox IGH 稀释制冷机智能气体处理系统,d_593
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Oxford Instruments Triton,gh_oxford_instruments_triton
+YES,VISA_SCPI,scpi-framework,TASF,community,Parker GV6伺服电机控制器,d_864
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,PeakTech 15xx系列线性稳压直流电源,d_595
+YES,VISA_SCPI,scpi-framework,FORM:SMAX?,community,Pendulum CNT-91定时器/计数器/分析仪,d_865
+YES,VISA_SCPI,scpi-framework,4,community,Phase Matrix QuickSyn FSW-0020 频率合成器,d_418
+YES,VISA_SCPI,scpi-framework,#NAME?,community,Philips PM6669高精度频率计数器,d_866
+YES,VISA_SCPI,scpi-framework,RES?,community,Picowatt AVS-47B 交流电阻桥,d_419
+YES,VISA_SCPI,scpi-framework,*IDN?,community,PL068,ttipl330_p
+YES,VISA_SCPI,scpi-framework,*OPC?,community,Positioners Archives,ets2090
+YES,VISA_SCPI,lantz/VISA,BAUD,community,Prior Scientific Nano Scan Z,nano_scan_z
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Products and Solutions｜ADVANTEST CORPORATION,gh_advantest_r624x
+YES,VISA_SCPI,lantz/VISA,k;,community,Qcodes/src/qcodes/instrument_drivers/Harvard/Decadac.py at main · microsoft/Qcodes,decadac
+YES,VISA_SCPI,lantz/VISA,syst:err:all?,community,QDevil QDAC-II 24通道超低噪声精密DAC,q_dac2
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Quantum Design DynaCool 物性测量系统,d_531
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Quantum Design OptiCool,gh_quantum_design_opticool
+YES,VISA_SCPI,scpi-framework,GATE?,community,Qubitekk CC1 Coincidence Counter,cc1
+YES,VISA_SCPI,scpi-framework,POSI?,community,Qubitekk MC1 Motor Controller,mc1
+YES,VISA_SCPI,scpi-framework,*IDN?,community,QuTech CC-Light 中央控制器 分析仪器 控制器,ccl
+YES,VISA_SCPI,scpi-framework,*IDN?,community,QuTech QCC 中央控制器 分析仪器 控制器,qcc
+YES,VISA_SCPI,scpi-framework,wlist:name? %d,community,QuTech Qu Tech Awg,qu_tech_awg__module
+YES,VISA_SCPI,scpi-framework,*IDN?,community,QuTech QuTech DD MQ Module,dd_mq
+YES,VISA_SCPI,scpi-framework,STOP;*OPC?,community,R&amp;S?RTO2000 oscilloscope,rto1024_scope
+YES,VISA_SCPI,scpi-framework,SOURce:AFGenerator:PRIMary:LEVel?,community,R&S CMU200,ra_scmu200_audio
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,R&S FPC 频谱分析仪,d_254
+YES,VISA_SCPI,scpi-framework,T2,community,Racal 1992 通用计数器,racal1992
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,RIGOL DS1052E Digital Oscilloscope,ds1052e
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Rigol DSG3136B 射频信号发生器,d_597
+YES,VISA_SCPI,lantz/VISA,DISPlay:BOOKmark1:XPOSition?,community,RIGOL Rigol,rigol
+YES,VISA_SCPI,scpi-framework,:FETCH:POW:ACP?,community,Rohde & Schwarz FSV3013 信号与频谱分析仪,d_598
+YES,VISA_SCPI,scpi-framework,SOUR:FREQ?,community,Rohde & Schwarz SMR40 微波信号发生器,d_605
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Rohde & Schwarz SMW200A 矢量信号发生器,d_606
+YES,VISA_SCPI,scpi-framework,INST?,community,Rohde & Schwarz ZVL13 矢量网络分析仪,d_607
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Rohde & Schwarz 通用仪器接口,rs_instrument
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Rohde R&S RTO Series Real-Time Oscilloscope 示波器,rto_scope
+YES,VISA_SCPI,scpi-framework,ZV,community,Rohde Schwarz Nrvs,rohde_schwarz_nrvs
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Scpi Instrument,scpi__instrument
+YES,VISA_SCPI,lantz/VISA,DM?,community,SDL Atlas 自动起球评级系统,mini_las_evo
+YES,VISA_SCPI,scpi-framework,:WAVeform:PREamble?,community,SDS1000X-HD系列数字示波器,d_875
+YES,VISA_SCPI,scpi-framework,OPTN? 2,community,SG380系列射频信号发生器,d_880
+YES,VISA_SCPI,scpi-framework,C{ch}:WF? ALL,community,Siglent SDS1072CML数字示波器,d_874
+YES,VISA_SCPI,scpi-framework,C{ch}:WF? ALL,community,Siglent SPD1305X线性可编程直流电源,d_873
+YES,VISA_SCPI,lantz/VISA,ERROR:CODE?,community,Sirah Matisse连续波单频可调谐环形激光器,d_687
+YES,VISA_SCPI,lantz/VISA,CURR?,community,SPD1168X,spd1000
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Stanford Research Systems SIM928 隔离直流电压源,d_612
+YES,VISA_SCPI,scpi-framework,SRAT?,community,Stanford Research Systems Srs830 系统 分析仪器 透射电子显微镜,srs830
+YES,VISA_SCPI,lantz/VISA,PHAS?,community,Stanford SRS SR830 Lock-In Amplifier (GPIB) 锁相放大器,sr830_gpib
+YES,VISA_SCPI,lantz/VISA,PHAS?,community,Stanford SRS SR830 Lock-In Amplifier (Serial) 锁相放大器,sr830_serial
+YES,VISA_SCPI,lantz/VISA,t,community,Stpdrv,stpdrv
+YES,VISA_SCPI,scpi-framework,*IDN?,community,str,aim_t_ti_el302_p
+YES,VISA_SCPI,scpi-framework,TAC,community,str,gh_mettler_toledo_mt_sics
+YES,VISA_SCPI,scpi-framework,id?,community,str,sc10
+YES,VISA_SCPI,scpi-framework,*IDN?,community,str,hp6652a
+YES,VISA_SCPI,scpi-framework,*IDN?,community,str,lcc25
+YES,VISA_SCPI,scpi-framework,SEN,community,str,tpg36x
+YES,VISA_SCPI,scpi-framework,TAC,community,String,mtsics
+YES,VISA_SCPI,lantz/VISA,:TRAC:ACT:STAR?,community,TA Instruments SDT 650 同步热分析仪,d_1057
+YES,VISA_SCPI,scpi-framework,*IDN?,community,"TC200DiscontinuedTemperature Controller, 120 VAC Power Cord",gh_thorlabs_tc200
+YES,VISA_SCPI,scpi-framework,AWGC:RSTATE?,community,Tektronix AWG520 任意波形发生器,d_615
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Tektronix TDS1002B Digital Storage Oscilloscope,tds1002b
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Tektronix TDS1012 Digital Storage Oscilloscope,tds1012
+YES,VISA_SCPI,lantz/VISA,ID?,community,Tektronix TDS2024 Digital Storage Oscilloscope,tds2024
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Tektronix(泰克)AFG3021B 任意波函数发生器,afg3021b
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Teledyne LeCroy MAUI Oscilloscope 示波器,maui
+YES,VISA_SCPI,scpi-framework,RF?,community,Test and measurement,rohde_schwarz_shm52
+YES,VISA_SCPI,lantz/VISA,U,community,Thermotek,gh_thermotek_t255p
+YES,VISA_SCPI,scpi-framework,rstli?,community,Thorlabs Laser Module 模块 分析仪器 激光器,lm
+YES,VISA_SCPI,scpi-framework,SYST:SENSOR:IDN?,community,Thorlabs PM100USB Power and Energy Meter Interface,pm100_usb
+YES,VISA_SCPI,scpi-framework,*IDN?,community,Thorlabs TC200 Temperature Controller,tc200
+YES,VISA_SCPI,scpi-framework,MEAS? A,community,TM620 低温温度监测仪,d_482
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Usbtmclight,usbtmclight
+YES,VISA_SCPI,scpi-framework,FMA OFV,community,Vector Network Analyzer,wiltron360
+YES,VISA_SCPI,lantz/VISA,"<1,RS,??>",community,Watson-Marlow 520/530 蠕动泵,d_67
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,WIGGENS  WHT-150恒温恒湿箱,func_gen
+YES,VISA_SCPI,scpi-framework,OUTPut:STATe?,community,Wiltron 6672B 扫频合成器,wiltron6672_b
+YES,VISA_SCPI,scpi-framework,OUTPut:STATe?,community,Wiltron360 Ss69,wiltron360_ss69
+YES,VISA_SCPI,lantz/VISA,30,community,XRV系列工业X射线发生器,d_878
+YES,VISA_SCPI,scpi-framework,OS;E,community,Yokogawa AQ6375 Long Wavelength Optical Spectrum Analyzer,d_900
+YES,VISA_SCPI,scpi-framework,OS;E,community,Yokogawa AQ6375B Long Wavelength Optical Spectrum Analyzer,d_901
+YES,VISA_SCPI,scpi-framework,:SENS?,community,Yokogawa GS200 DC Voltage/Current Source,gh_yokogawa_gs200
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Zurich Instruments UHF Lock-in Amplifier 仪器 分析仪器 锁相放大器,uhf_device
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Zurich Zurich Instruments HD Device,hd_device
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,Zurich Zurich Instruments Shell Device,zi_shell_device
+YES,VISA_SCPI,scpi-framework,*GAN,community,代理德国BlueSens 生物发酵系统,blu
+YES,VISA_SCPI,lantz/VISA,*IDN?,community,韩国ilSHinBioBase 进口深冷冻箱 GUDERO CHEST系列,base_instrument
+YES,VISA_SCPI,scpi-framework,SYST:SENSOR:IDN?,community,紧凑型光功率计,d_662
+YES,VISA_SCPI,scpi-framework,,community,2600B Series SMU,gh_keithley_2600
+YES,VISA_SCPI,scpi-framework,,community,"3488A Switch/Control Unit Operating, Programming, and Configuration Manual",hp3488_a
+YES,VISA_SCPI,scpi-framework,,community,"6624A DC Power Supply, Quad-Output, 2 Outputs at 7V/5A, 2 Outputs at 20V/2A,",hp6624a
+YES,VISA_SCPI,scpi-framework,,community,83650A 合成扫频信号发生器,d_484
+YES,VISA_SCPI,scpi-framework,,community,8800 Controller,gh_thermotron_3800
+YES,VISA_SCPI,lantz/VISA,,community,A&D G系列,community_github_djorlando24_pylabdatalogger
+YES,VISA_SCPI,lantz/VISA,,community,AADCO零气发生器737-14,a2_d_4_ch__isolated_adc
+YES,VISA_SCPI,lantz/VISA,,community,Active Technologies ARB Rider AWG-401x 任意波形发生器,d_788
+YES,VISA_SCPI,scpi-framework,,community,Agilent/Keysight 34450A 5.5位数字万用表,d_795
+YES,VISA_SCPI,scpi-framework,,community,Agilent/Keysight 8257D PSG模拟信号发生器,d_798
+YES,VISA_SCPI,lantz/VISA,,community,Aim-TTi LD400P 可编程直流电子负载,d_807
+YES,VISA_SCPI,lantz/VISA,,community,"AJA International, Inc. Sputtering Tools and Systems",gh_aja_international_dcxs_750
+YES,VISA_SCPI,lantz/VISA,,community,"AJA International, Inc. Sputtering Tools and Systems",gh_aja_dcxs
+YES,VISA_SCPI,scpi-framework,,community,Ametek 7270 DSP锁相放大器,d_566
+YES,VISA_SCPI,scpi-framework,,community,AnaPico APSIN12G 模拟信号发生器,d_809
+YES,VISA_SCPI,scpi-framework,,community,Andeen-Hagerling AH 2500A Capacitance Bridge,gh_andeen_hagerling_ah2500a
+YES,VISA_SCPI,scpi-framework,,community,Andeen-Hagerling AH 2500A Capacitance Bridge,gh_andeen_hagerling_ah_2500a
+YES,VISA_SCPI,scpi-framework,,community,Andeen-Hagerling AH2500A 超精密自动电容电桥,d_810
+YES,VISA_SCPI,scpi-framework,,community,Anritsu MS2090A Field Master Pro 便携式频谱分析仪,d_812
+YES,VISA_SCPI,scpi-framework,,community,Anritsu MS4642B VectorStar 矢量网络分析仪,d_813
+YES,VISA_SCPI,scpi-framework,,community,Anritsu MS4644B VectorStar 矢量网络分析仪,d_814
+YES,VISA_SCPI,scpi-framework,,community,Anritsu MS4645B VectorStar 矢量网络分析仪,d_815
+YES,VISA_SCPI,scpi-framework,,community,Anritsu MS4647B VectorStar 矢量网络分析仪,d_816
+YES,VISA_SCPI,scpi-framework,,community,Anritsu MS9740A 光谱分析仪,d_818
+YES,VISA_SCPI,scpi-framework,,community,B1500A Semiconductor Device Parameter Analyzer / Semiconductor Characterization,gh_keysight_b1500
+YES,VISA_SCPI,scpi-framework,,community,B2962A 6.5-Digit Low Noise Power Source [Discontinued],gh_keysight_b2962a
+YES,VISA_SCPI,scpi-framework,,community,"B2985A Electrometer / High Resistance Meter, 0.01 fA [Discontinued]",gh_agilent_b298x
+YES,VISA_SCPI,scpi-framework,,community,Benchtop LCR Meters: E4980A,gh_agilent_e4980
+YES,VISA_SCPI,scpi-framework,,community,Benchtop LCR Meters: E4980A,gh_keysight_e4980a
+YES,VISA_SCPI,lantz/VISA,,community,Cobolt0601 F2,cobolt0601_f2
+YES,VISA_SCPI,scpi-framework,,community,Current-Voltage Analyzers: E5270B,gh_agilent_e5270b
+YES,VISA_SCPI,lantz/VISA,,community,CXN射频溅射电源,d_882
+YES,VISA_SCPI,scpi-framework,,community,Delta Elektronika SM70-45D 可编程直流电源,d_821
+YES,VISA_SCPI,lantz/VISA,,community,DG1000Z,dg1000_z
+YES,VISA_SCPI,scpi-framework,,community,DMM6500 6.5位触摸屏数字万用表,d_492
+YES,VISA_SCPI,scpi-framework,,community,DMM7510 7.5位图形采样万用表,d_493
+YES,VISA_SCPI,lantz/VISA,,community,"DSOX3034A Oscilloscope: 350 MHz, 4 Channels",dsox3xx4_a
+YES,VISA_SCPI,lantz/VISA,,community,ERA Instruments ERASynth+ 开源射频信号发生器,d_626
+YES,VISA_SCPI,lantz/VISA,,community,ERA Instruments ERASynth++ 开源射频信号发生器,d_627
+YES,VISA_SCPI,lantz/VISA,,community,Essential Signal Analyzers: N9020B,n9020b
+YES,VISA_SCPI,lantz/VISA,,community,Eurotest HPP-120-256 高压直流电源,d_823
+YES,VISA_SCPI,lantz/VISA,,community,Expert Benchtop Oscilloscopes,ex_rxx4_a
+YES,VISA_SCPI,lantz/VISA,,community,Expert Benchtop Oscilloscopes,ex_rxx8_a
+YES,VISA_SCPI,scpi-framework,,community,Fluke 3000 FC Series Wireless Multimeter,fluke3000
+YES,VISA_SCPI,lantz/VISA,,community,G2301 Gas Concentration Analyzer,pica_launcher_app
+YES,VISA_SCPI,scpi-framework,,community,Generic File Communicator,file_communicator
+YES,VISA_SCPI,lantz/VISA,,community,Generic I-V Combined Measurement Backend 后端控制器,iv__combined__backend
+YES,VISA_SCPI,scpi-framework,,community,Generic Laboratory Function Generator 函数信号发生器,function_generator
+YES,VISA_SCPI,scpi-framework,,community,Generic Loopback Communicator,loopback_communicator
+YES,VISA_SCPI,lantz/VISA,,community,Generic Message Based Driver,message_based_driver
+YES,VISA_SCPI,lantz/VISA,,community,Generic Message Visa Driver,message_visa_driver
+YES,VISA_SCPI,lantz/VISA,,community,Generic Oscilloscope 示波器,oscilloscope
+YES,VISA_SCPI,lantz/VISA,,community,Generic Serial Driver 串口设备,serial_driver
+YES,VISA_SCPI,lantz/VISA,,community,Generic Serial Visa Driver 串口设备,serial_visa_driver
+YES,VISA_SCPI,scpi-framework,,community,Generic TC038D Temperature Controller 温度控制器,tc038_d
+YES,VISA_SCPI,lantz/VISA,,community,Generic Tcp Raw Driver,tcp_raw_driver
+YES,VISA_SCPI,scpi-framework,,community,Generic Usb Communicator,usb_communicator
+YES,VISA_SCPI,lantz/VISA,,community,Generic Usb Driver,usb_driver
+YES,VISA_SCPI,scpi-framework,,community,Generic Usbtmc Communicator,usbtmc_communicator
+YES,VISA_SCPI,lantz/VISA,,community,Generic Usbtmc Driver,usbtmc_driver
+YES,VISA_SCPI,scpi-framework,,community,Generic Vxi11 Communicator,vxi11_communicator
+YES,VISA_SCPI,lantz/VISA,,community,Generic Vxi11 Driver,vxi11_driver
+YES,VISA_SCPI,scpi-framework,,community,HCP TC038 温度控制器,d_406
+YES,VISA_SCPI,scpi-framework,,community,HCP TC038D 温度控制器,d_407
+YES,VISA_SCPI,scpi-framework,,community,HP 11713A 衰减器/开关驱动器,d_833
+YES,VISA_SCPI,scpi-framework,,community,HP 33120A 函数/任意波形发生器,d_825
+YES,VISA_SCPI,scpi-framework,,community,HP 3437A 系统电压表,d_827
+YES,VISA_SCPI,lantz/VISA,,community,HP 34401A 6?位数字万用表,d_826
+YES,VISA_SCPI,scpi-framework,,community,HP 3456A 6?-Digit Digital Multimeter,hp3456a
+YES,VISA_SCPI,scpi-framework,,community,HP 3478A 5?位数字万用表,d_828
+YES,VISA_SCPI,lantz/VISA,,community,HP 6632A 系统直流电源,d_834
+YES,VISA_SCPI,lantz/VISA,,community,HP 6633A 系统直流电源,d_835
+YES,VISA_SCPI,lantz/VISA,,community,HP 6634A 系统直流电源,d_836
+YES,VISA_SCPI,lantz/VISA,,community,HP 8560A 便携式频谱分析仪,d_829
+YES,VISA_SCPI,lantz/VISA,,community,HP 8561B 便携式频谱分析仪,d_830
+YES,VISA_SCPI,scpi-framework,,community,ILX Lightwave LDP-3811 脉冲激光二极管驱动器,d_837
+YES,VISA_SCPI,lantz/VISA,,community,Inficon IC/5 薄膜沉积控制器,d_54
+YES,VISA_SCPI,lantz/VISA,,community,Inficon SQM-160 薄膜沉积监控仪,d_286
+YES,VISA_SCPI,lantz/VISA,,community,INFICON SQM-160 薄膜沉积速率/厚度监控仪,d_838
+YES,VISA_SCPI,lantz/VISA,,community,Inficon SQM-160/SQC-310 薄膜监控仪/控制器,d_56
+YES,VISA_SCPI,lantz/VISA,,community,Inficon XTM/2 薄膜沉积监控仪,d_288
+YES,VISA_SCPI,lantz/VISA,,community,Infiniium MXR-Series,mx_rxx8_a
+YES,VISA_SCPI,lantz/VISA,,community,Infiniium MXR-Series,mx_rxx4_a
+YES,VISA_SCPI,lantz/VISA,,community,IVI VISA Instrument Communicator,visa_communicator
+YES,VISA_SCPI,scpi-framework,,community,Keithley 195/195A System Digital Multimeter,keithley195
+YES,VISA_SCPI,scpi-framework,,community,Keithley 2182A 双通道纳伏表,d_410
+YES,VISA_SCPI,scpi-framework,,community,Keithley 2400 Standard Series SMU,gh_keithley_2400
+YES,VISA_SCPI,scpi-framework,,community,Keithley 2450,gh_keithley_2450
+YES,VISA_SCPI,scpi-framework,,community,Keithley 2510 TEC源表,d_844
+YES,VISA_SCPI,scpi-framework,,community,Keithley 6220,gh_keithley_6220
+YES,VISA_SCPI,scpi-framework,,community,Keithley 6220 DC Precision Current Source,keithley6220
+YES,VISA_SCPI,scpi-framework,,community,Keithley 6221,gh_keithley_6221
+YES,VISA_SCPI,scpi-framework,,community,Keithley 6517B,gh_keithley_6517b
+YES,VISA_SCPI,scpi-framework,,community,Keithley DMM6500 6.5位触屏数字万用表,d_846
+YES,VISA_SCPI,scpi-framework,,community,Keithley Instruments & Products,keithley79996
+YES,VISA_SCPI,scpi-framework,,community,Keysight 81160A脉冲/函数/任意/噪声发生器,d_848
+YES,VISA_SCPI,scpi-framework,,community,Keysight B2983B 皮安表/飞安表,d_801
+YES,VISA_SCPI,scpi-framework,,community,Keysight B2985B 静电计/高阻计,d_802
+YES,VISA_SCPI,scpi-framework,,community,Keysight B2987B 静电计/高阻计（电池供电型）,d_803
+YES,VISA_SCPI,lantz/VISA,,community,Keysight DSOX Series Oscilloscope 示波器,dsox
+YES,VISA_SCPI,scpi-framework,,community,Keysight E36312A三路输出可编程直流电源,d_850
+YES,VISA_SCPI,lantz/VISA,,community,Keysight EXR Series Real-Time Oscilloscope 示波器,exr
+YES,VISA_SCPI,lantz/VISA,,community,Keysight MSOX Series Mixed Signal Oscilloscope 示波器,msox
+YES,VISA_SCPI,lantz/VISA,,community,Keysight MXR Series Real-Time Oscilloscope 示波器,mxr
+YES,VISA_SCPI,scpi-framework,,community,Keysight N5767A系统直流电源,d_851
+YES,VISA_SCPI,scpi-framework,,community,Keysight N7776C高功率低SSE可调谐激光源,d_852
+YES,VISA_SCPI,lantz/VISA,,community,Keysight N8975A 噪声系数分析仪,d_806
+YES,VISA_SCPI,lantz/VISA,,community,Keysight UXR Series Real-Time Oscilloscope 示波器,uxr
+YES,VISA_SCPI,scpi-framework,,community,Lake Shore 211温度监控仪,d_854
+YES,VISA_SCPI,scpi-framework,,community,Lake Shore 224温度监控仪,d_855
+YES,VISA_SCPI,scpi-framework,,community,Lake Shore 421高斯计,d_856
+YES,VISA_SCPI,scpi-framework,,community,Lake Shore 425高斯计,d_857
+YES,VISA_SCPI,lantz/VISA,,community,Laser Power Control,laser_power_control
+YES,VISA_SCPI,scpi-framework,,community,LDC500激光二极管控制器,d_879
+YES,VISA_SCPI,scpi-framework,,community,Lighthouse Photonics Sprout-G 连续波DPSS绿光激光器,d_586
+YES,VISA_SCPI,scpi-framework,,community,Lighthouse Photonics Sprout-G绿光泵浦激光器,d_684
+YES,VISA_SCPI,scpi-framework,,community,Lumiloop LS Probe,lumiloop_ls_probe
+YES,VISA_SCPI,scpi-framework,,community,M81-SSM Synchronous Source Measure System,gh_lake_shore_m81
+YES,VISA_SCPI,scpi-framework,,community,measurement,arbok_driver
+YES,VISA_SCPI,scpi-framework,,community,MI Wave5nn,mi_wave5nn
+YES,VISA_SCPI,scpi-framework,,community,MingHe MHS-5200A 双通道DDS信号发生器,d_412
+YES,VISA_SCPI,lantz/VISA,,community,MKS 937B数字组合真空计控制器,d_859
+YES,VISA_SCPI,lantz/VISA,,community,MKS 974B QuadMag三合一真空传感器,d_860
+YES,VISA_SCPI,scpi-framework,,community,Model 325 cryogenic temperature controller,gh_lakeshore_model_325
+YES,VISA_SCPI,scpi-framework,,community,Model 331 Cryogenic Temperature Controller,gh_lakeshore_331
+YES,VISA_SCPI,lantz/VISA,,community,Model 335 cryogenic temperature controller,gh_lakeshore_model_335
+YES,VISA_SCPI,scpi-framework,,community,Model 340 Cryogenic Temperature Controller,lakeshore340
+YES,VISA_SCPI,scpi-framework,,community,Model 370 AC Resistance Bridge,lakeshore370
+YES,VISA_SCPI,scpi-framework,,community,Model 580 Micro-ohmmeter Specifications Rev. A,keithley580
+YES,VISA_SCPI,lantz/VISA,,community,Motor Control,motor_control
+YES,VISA_SCPI,scpi-framework,,community,mtiggelman/SPI-rack: Python drivers for the QuTech SPI-rack,qu_tech__control_box
+YES,VISA_SCPI,lantz/VISA,,community,Newport ESP100 通用运动控制器/驱动器,d_343
+YES,VISA_SCPI,lantz/VISA,,community,Newport SMC100 单轴运动控制器,d_346
+YES,VISA_SCPI,scpi-framework,,community,Oxford Instruments ITC503,gh_oxford_instruments_itc503
+YES,VISA_SCPI,scpi-framework,,community,Oxford Instruments ITC503 Intelligent Temperature Controller,oxford_itc503
+YES,VISA_SCPI,lantz/VISA,,community,PerkinElmer Lambda 103 紫外-可见分光光度计,lambda103
+YES,VISA_SCPI,scpi-framework,,community,Piezo Channel 压电通道控制器,piezo_channel
+YES,VISA_SCPI,lantz/VISA,,community,Pro Benchtop Oscilloscopes,ux_rxxx2_a
+YES,VISA_SCPI,lantz/VISA,,community,Pro Benchtop Oscilloscopes,ux_rxxx4_a
+YES,VISA_SCPI,scpi-framework,,community,PRO8000模块化激光驱动器,d_889
+YES,VISA_SCPI,scpi-framework,,community,QuTech CC 中央控制器 分析仪器 控制器,cc
+YES,VISA_SCPI,scpi-framework,,community,QuTech QuTech QWG Qubit Waveform Generator,qwg
+YES,VISA_SCPI,lantz/VISA,,community,Racal-Dana 1992通用频率计数器,d_868
+YES,VISA_SCPI,scpi-framework,,community,Rigol DG1062Z 函数/任意波形发生器,d_532
+YES,VISA_SCPI,scpi-framework,,community,Rigol DG4000系列 函数/任意波形发生器,d_533
+YES,VISA_SCPI,scpi-framework,,community,Rigol DG800系列任意波形发生器,d_869
+YES,VISA_SCPI,scpi-framework,,community,Rigol DP932 三路输出可编程直流电源,d_596
+YES,VISA_SCPI,scpi-framework,,community,Rigol DS1074Z 数字示波器,d_537
+YES,VISA_SCPI,scpi-framework,,community,Rohde & Schwarz FSL频谱分析仪,d_870
+YES,VISA_SCPI,scpi-framework,,community,Rohde & Schwarz FSW信号与频谱分析仪,d_871
+YES,VISA_SCPI,scpi-framework,,community,Rohde & Schwarz NGE100B系列 直流电源,d_206
+YES,VISA_SCPI,scpi-framework,,community,Rohde & Schwarz NGP800 直流电源,d_311
+YES,VISA_SCPI,scpi-framework,,community,Rohde & Schwarz SFM电视测试发射机,d_872
+YES,VISA_SCPI,scpi-framework,,community,Santec TSL-570 高性能可调谐激光器,d_608
+YES,VISA_SCPI,scpi-framework,,community,Santec TSL-580 高性能可调谐激光器,d_609
+YES,VISA_SCPI,lantz/VISA,,community,Smartline V1真空计,d_890
+YES,VISA_SCPI,lantz/VISA,,community,SOCOREX 825可调微量移液器,core_client
+YES,VISA_SCPI,scpi-framework,,community,Source AC,source_ac
+YES,VISA_SCPI,lantz/VISA,,community,Spectrometers,usb4000
+YES,VISA_SCPI,scpi-framework,,community,str,thor_labs_apt
+YES,VISA_SCPI,scpi-framework,,community,TA Instruments DSC 2500 示差扫描量热仪,d_134
+YES,VISA_SCPI,lantz/VISA,,community,TCP/IP VICP Instrument VICP协议仪器接口,tcpip_instr_vicp
+YES,VISA_SCPI,scpi-framework,,community,T-Cube惯性电机控制器,d_661
+YES,VISA_SCPI,scpi-framework,,community,T-Cube应变仪读数器,d_652
+YES,VISA_SCPI,lantz/VISA,,community,"Technical Support: 8657A Synthesized Signal Generator, 100 kHz to 1040 MHz",hp8657_a
+YES,VISA_SCPI,scpi-framework,,community,Tektronix AFG3000系列任意函数发生器,d_614
+YES,VISA_SCPI,scpi-framework,,community,Tektronix FCA3100系列频率计数器/定时器/分析仪,d_616
+YES,VISA_SCPI,lantz/VISA,,community,Teledyne LeCroy WaveRunner 9104 数字示波器,d_341
+YES,VISA_SCPI,scpi-framework,,community,Thorlabs APT Motor Controller 电机 自动化设备 控制器,apt_motor_controller
+YES,VISA_SCPI,scpi-framework,,community,Thorlabs APT Piezo Inertia Actuator 惯性压电驱动器,apt_piezo_inertia_actuator
+YES,VISA_SCPI,lantz/VISA,,community,Valon 5015 高精度频率合成器,d_628
+YES,VISA_SCPI,lantz/VISA,,community,Vdipm5 B,vdipm5_b
+YES,VISA_SCPI,lantz/VISA,,community,Visa,visa
+YES,VISA_SCPI,lantz/VISA,,community,VSH系列真空变送器,d_891
+YES,VISA_SCPI,lantz/VISA,,community,VSM真空测量仪,d_892
+YES,VISA_SCPI,lantz/VISA,,community,VSP真空传感器,d_893
+YES,VISA_SCPI,lantz/VISA,,community,VSR系列真空变送器,d_894
+YES,VISA_SCPI,scpi-framework,,community,wd5gnr/mhs5200a: Shell script and awk program (and spreadsheet) to allow,mhs5200
+YES,VISA_SCPI,scpi-framework,,community,韩国ilSHinBioBase 进口深冷冻箱 GUDERO CHEST系列,zi_base_instrument

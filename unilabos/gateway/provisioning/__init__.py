@@ -6,5 +6,6 @@ WiFi 配网模块
 
 from .wifi_manager import WiFiManager
 from .web_server import ProvisioningServer
+from .ble_server import BLEProvisioningServer
 
-__all__ = ["WiFiManager", "ProvisioningServer"]
+__all__ = ["WiFiManager", "ProvisioningServer", "BLEProvisioningServer"]

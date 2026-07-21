@@ -36,7 +36,9 @@
                 "solid_dispenser_1",
                 "solid_reagent_bottle_1",
                 "solid_reagent_bottle_2",
-                "solid_reagent_bottle_3"
+                "solid_reagent_bottle_3",
+                "试剂1",
+                "柱子1"
             ],
             "parent": null,
             "type": "device",
@@ -65,6 +67,7 @@
                     "HeatChillStartProtocol",
                     "HeatChillStopProtocol",
                     "EvacuateAndRefillProtocol",
+                    "TransferProtocol",
                     "PumpTransferProtocol",
                     "AdjustPHProtocol",
                     "ResetHandlingProtocol",
@@ -88,7 +91,7 @@
                 "z": 0
             },
             "config": {
-                "positions": 8
+                "positions": 9
             },
             "data": {
                 "valve_state": "Ready",
@@ -108,7 +111,7 @@
                 "z": 0
             },
             "config": {
-                "positions": 8
+                "positions": 9
             },
             "data": {
                 "valve_state": "Ready",
@@ -821,6 +824,53 @@
                 "reagent_name": "magnesium_chloride",
                 "physical_state": "solid"
             }
+        },
+        {
+            "id": "试剂1",
+            "name": "试剂1",
+            "children": [],
+            "parent": "OrganicSynthesisStation",
+            "type": "container",
+            "class": "container",
+            "position": {
+                "x": 150,
+                "y": 150,
+                "z": 0
+            },
+            "config": {
+                "max_volume": 1000.0,
+                "type": "RegularContainer",
+                "category": "container",
+                "size_x": 150,
+                "size_y": 150,
+                "size_z": 0
+            },
+            "data": {
+                "liquids": [["reagent_1", 500.0]],
+                "pending_liquids": [["reagent_1", 500.0]]
+            }
+        },
+        {
+            "id": "柱子1",
+            "name": "柱子1",
+            "children": [],
+            "parent": "OrganicSynthesisStation",
+            "type": "device",
+            "class": "virtual_column",
+            "position": {
+                "x": 850,
+                "y": 400,
+                "z": 0
+            },
+            "config": {
+                "column_type": "silica_gel",
+                "length": 30.0,
+                "diameter": 2.5
+            },
+            "data": {
+                "status": "Ready",
+                "loaded": false
+            }
         }
     ],
     "links": [
@@ -1152,6 +1202,26 @@
             "port": {
                 "solid_reagent_bottle_3": "bottom",
                 "solid_dispenser_1": "SolidIn"
+            }
+        },
+        {
+            "id": "link_valve1_reagent_shiji1",
+            "source": "multiway_valve_1",
+            "target": "试剂1",
+            "type": "fluid",
+            "port": {
+                "multiway_valve_1": "9",
+                "试剂1": "top"
+            }
+        },
+        {
+            "id": "link_valve2_column_zhuzi1",
+            "source": "multiway_valve_2",
+            "target": "柱子1",
+            "type": "transport",
+            "port": {
+                "multiway_valve_2": "9",
+                "柱子1": "columnin"
             }
         }
     ]

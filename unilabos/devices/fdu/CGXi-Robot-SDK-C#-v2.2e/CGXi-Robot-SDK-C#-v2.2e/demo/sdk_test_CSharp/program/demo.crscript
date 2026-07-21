@@ -1,0 +1,28 @@
+function mainFuncProgram()
+--start robotConfig
+TCP_1 = {0,0,0,0,0,0}
+set_tcp(TCP_1)
+Payload_1 = {0,{0,0,0}}
+set_tcp_payload(Payload_1[1],Payload_1[2])
+--end robotConfig
+
+function RobotProgram()
+--Script
+joint_positions = get_actual_joint_positions()
+joint_positions[4] = joint_positions[4]+5
+joint_positions[5] = joint_positions[5]+5
+joint_positions[6] = joint_positions[6]+5
+movej(joint_positions,250,1200,0)
+
+sync()  --sync
+end
+RobotProgram_Result=task_create(RobotProgram)
+function PauseFuncProgram()
+while(true)
+do
+wait(100)  --sync
+end
+end
+PauseFuncProgram_Result=task_create(PauseFuncProgram)
+end
+mainFuncProgram_Result=task_create(mainFuncProgram)

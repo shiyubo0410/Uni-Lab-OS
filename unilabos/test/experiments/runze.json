@@ -1,0 +1,50 @@
+{
+    "nodes": [
+        {
+            "id": "runze_pump",
+            "uuid": "a8f2c5d1-3e6b-4a89-b7c4-9d1e2f3a5b6c",
+            "name": "runze_pump",
+            "description": "润泽注射泵（地址3）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "type": "device",
+            "class": "pump_and_valve_runze_sy03b_t06",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 262.8134340992351,
+                    "y": 188.8493856605189,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                } 
+            },
+            "config": {
+                "max_volume": 25.0,
+                "address": "1",
+                "port": "COM5"
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

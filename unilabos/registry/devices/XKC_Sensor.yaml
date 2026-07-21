@@ -1,0 +1,275 @@
+wxf.xkc_sensor:
+  category:
+  - sensor
+  - liquid_level
+  - xkc
+  - XKC_Sensor
+  class:
+    action_value_mappings:
+      auto-connect:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: connect参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disconnect:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: disconnect参数
+          type: object
+        type: UniLabJsonCommand
+      auto-execute_command_from_outer:
+        feedback: {}
+        goal: {}
+        goal_default:
+          command_dict: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                command_dict:
+                  type: object
+              required:
+              - command_dict
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: execute_command_from_outer参数
+          type: object
+        type: UniLabJsonCommand
+      continuous_monitor:
+        feedback: {}
+        goal:
+          device_id: 1
+          duration: 0
+          interval: 0.5
+          threshold: 0
+        goal_default:
+          device_id: 1
+          duration: 0
+          interval: 0.5
+          threshold: 0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 对指定传感器进行连续液位检测，达到阈值时自动停止
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                device_id:
+                  default: 1
+                  description: 传感器站号
+                  type: integer
+                duration:
+                  default: 0
+                  description: 持续时长（秒），0 = 无限运行直到检测到液位
+                  type: integer
+                interval:
+                  default: 0.5
+                  description: 检测间隔（秒）
+                  type: number
+                threshold:
+                  default: 0
+                  description: RSSI 阈值（大于此值判定有液，0 = 使用硬件检测）
+                  type: integer
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: continuous_monitor参数
+          type: object
+        type: UniLabJsonCommand
+      detect:
+        feedback: {}
+        goal:
+          channel: 1
+          interval: 0.5
+          rssi_threshold: 0
+          timeout: 0
+        goal_default:
+          channel: 1
+          interval: 0.5
+          rssi_threshold: 0
+          timeout: 0
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 等待指定通道电导传感器检测到无水后结束
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                channel:
+                  default: 1
+                  description: 传感器通道号 (1-5)
+                  type: integer
+                interval:
+                  default: 0.5
+                  description: 检测间隔（秒）
+                  type: number
+                rssi_threshold:
+                  default: 0
+                  description: RSSI 阈值，低于此值判定为无水（0 = 使用硬件检测）
+                  type: integer
+                timeout:
+                  default: 0
+                  description: 超时时间（秒），0 = 无限等待直到无水
+                  type: integer
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: detect参数
+          type: object
+        type: UniLabJsonCommand
+      read_sensor_by_id:
+        feedback: {}
+        goal:
+          device_id: 1
+        goal_default:
+          device_id: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 立即读取指定站号传感器数据
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                device_id:
+                  description: 传感器站号
+                  type: integer
+              required:
+              - device_id
+              type: object
+            result:
+              type: object
+          required:
+          - goal
+          title: read_sensor_by_id参数
+          type: object
+        type: UniLabJsonCommand
+      set_threshold:
+        feedback: {}
+        goal:
+          threshold: 0
+        goal_default:
+          threshold: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 设置 RSSI 阈值（大于此值判定有液，0 = 使用硬件检测）
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                threshold:
+                  description: RSSI 阈值（0 表示使用传感器硬件检测）
+                  type: integer
+              required:
+              - threshold
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_threshold参数
+          type: object
+        type: UniLabJsonCommand
+    module: unilabos.devices.wxf.XKC_Sensor:XKCSensorDriver
+    status_types:
+      is_connected: bool
+      liquid_detected: bool
+      rssi: int
+    type: python
+  config_info: []
+  description: XKC RS485 非接触式液位传感器（支持多传感器共享总线）
+  displayname: wxf.xkc_sensor
+  handles: []
+  icon: ''
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        baudrate:
+          default: 9600
+          type: integer
+        device_ids:
+          items:
+            type: integer
+          type: array
+        poll_interval:
+          default: 0.5
+          type: number
+        port:
+          default: COM9
+          type: string
+        threshold:
+          default: 0
+          type: integer
+        timeout:
+          default: 3.0
+          type: number
+      required: []
+      type: object
+    data:
+      properties:
+        is_connected:
+          type: boolean
+        liquid_detected:
+          type: boolean
+        rssi:
+          type: integer
+      required:
+      - is_connected
+      - liquid_detected
+      - rssi
+      type: object
+  version: 1.0.0

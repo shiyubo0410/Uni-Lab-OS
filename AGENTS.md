@@ -81,6 +81,35 @@ Example device graphs and experiment configs are in `unilabos/test/experiments/`
 - Dynamic class loading via `utils/import_manager.py` — device classes resolved at runtime from registry YAML paths
 - CLI argument dashes auto-converted to underscores for consistency
 
+## 部署文件 / 远程主机改动规则（important）
+
+修改任何**会被部署到远程主机**（OPi 网关、生产服务器等）的配置或脚本前 — 包括但不限于：
+
+- `unilabos/gateway/ota/*.service` / `*.env*` / `*.sh`（systemd unit、env 模板、迁移脚本）
+- `/etc/` 下任何文件、`/opt/unilab/` 下任何文件
+- 工厂初始化脚本、镜像 provisioning 脚本
+
+必须遵守以下流程：
+
+1. **先拉现状**：SSH 到目标机器把现有版本拉下来对比，**禁止凭印象/记忆重写**。
+   ```bash
+   # 例：
+   ssh orangepi@<ip> 'cat /etc/systemd/system/unilab-gateway.service' > /tmp/current.service
+   diff /tmp/current.service unilabos/gateway/ota/unilab-gateway.service
+   ```
+
+2. **最小化 patch**：只改"必须改"的行（通常是路径、ExecStart、依赖项）。`User` / `Group` / `Restart*` / 端口绑定相关字段**默认保留现状**，要动必须先解释清楚为什么并问用户。
+
+3. **覆盖类操作（`install -m`、`cp` 整体覆盖）需要事先确认**：和 `sed -i` 局部替换比，整体覆盖会丢失现场配置（手动改过的端口、内存限制、capabilities 等）。除非用户明确同意"我用一份新的覆盖掉"，否则用 sed/patch 做局部修改。
+
+4. **改之前打印 diff 让用户 review**：在执行 `systemctl daemon-reload + restart` 之前，把"修改前 vs 修改后"的 diff 输出给用户看一眼。
+
+5. **不要假设 root vs 非 root**：`unilabos/gateway/main.py` 等代码里有 `os.geteuid() == 0 ? port=80 : port=8080` 这种"看 euid 选行为"的逻辑，改 systemd `User` 会触发功能变化，**绝不能为了"安全感"擅自把 root 改成普通用户**。
+
+6. **环境变量 `.env` 文件不进 git**：仓库里只允许 `.env.example`（占位符），真实 env 由工厂工具/手动刷入到 `/etc/`，仓库代码不要尝试覆盖它。
+
+历史教训：D3.B OTA 阶段曾把 `unilab-gateway.service` 的 `User=root` 擅自改成 `User=orangepi`，导致代码自动降级到 8080 端口，破坏了用户裸 URL 访问 80 的体验。来回折腾多次才修回。
+
 ## Licensing
 
 - Framework code: GPL-3.0

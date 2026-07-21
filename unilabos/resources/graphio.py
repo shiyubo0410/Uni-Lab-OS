@@ -180,6 +180,20 @@ def canonicalize_links_ports(links: List[Dict[str, Any]], resource_tree_set: Res
         if target_uuid and target_uuid in uuid_to_id:
             link["target"] = uuid_to_id[target_uuid]
 
+    # 第零遍处理：将前端格式的 sourceHandle/targetHandle 转换为 port 字典
+    # （前端/图编辑器导出的边用 sourceHandle/targetHandle 表达端口，此处补齐为 port）
+    for link in links:
+        if link.get("port") is not None:
+            continue
+        source_handle = link.get("sourceHandle", link.get("source_handle"))
+        target_handle = link.get("targetHandle", link.get("target_handle"))
+        if source_handle is None and target_handle is None:
+            continue
+        link["port"] = {
+            link["source"]: source_handle,
+            link["target"]: target_handle,
+        }
+
     # 第一遍处理：将字符串类型的port转换为字典格式
     for link in links:
         port = link.get("port")

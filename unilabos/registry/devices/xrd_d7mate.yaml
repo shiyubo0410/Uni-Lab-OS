@@ -45,6 +45,33 @@ xrd_d7mate:
           title: connect参数
           type: object
         type: UniLabJsonCommand
+      auto-sample_down:
+        feedback: {}
+        goal: {}
+        goal_default:
+          sample_station: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: sample_down的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                sample_station:
+                  description: 下样工位（1, 2, 3）
+                  type: integer
+              required:
+              - sample_station
+              type: object
+            result:
+              type: object
+          required:
+          - goal
+          title: sample_down参数
+          type: object
+        type: UniLabJsonCommand
       auto-start_from_string:
         feedback: {}
         goal: {}
@@ -485,8 +512,10 @@ xrd_d7mate:
     type: python
   config_info: []
   description: XRD D7-Mate X射线衍射分析设备，通过TCP通信实现远程控制与状态监控，支持自动模式控制、上样流程、数据获取、下样流程和高压电源控制等功能。
+  displayname: xrd_d7mate
   handles: []
   icon: ''
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties:

@@ -1,0 +1,473 @@
+{
+  "nodes": [
+    {
+      "id": "xyz_guangdian_1",
+      "name": "XYZ光电工作台",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "xyz_guangdian",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM3",
+        "baudrate": 9600,
+        "timeout": 2.0,
+        "retry_count": 3,
+        "retry_delay": 0.1
+      },
+      "data": {
+        "status": "Idle",
+        "position_x": 0.0,
+        "position_y": 0.0,
+        "position_z": 0.0,
+        "push_rod_status": "released",
+        "is_enabled": false,
+        "is_homed": false,
+        "velocity_x": 0.0,
+        "velocity_y": 0.0,
+        "velocity_z": 0.0,
+        "temperature": 25.0,
+        "error_code": 0
+      }
+    },
+    {
+      "id": "cni_laser_1",
+      "name": "CNI MSL-U-532 激光器",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "cni_laser_msl_u_532",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM13",
+        "baudrate": 9600,
+        "timeout": 2,
+        "max_power_mw": 50.0
+      },
+      "data": {}
+    },
+    {
+      "id": "electrolytic_cell_gripper_1",
+      "name": "电解池夹爪",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "electrolytic_cell_gripper",
+      "position": {
+        "x": 600,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM4",
+        "baudrate": 9600,
+        "timeout": 0.5,
+        "motor1_slave_id": 1,
+        "motor2_slave_id": 2,
+        "gripper_slave_id": 5
+      },
+      "data": {}
+    },
+    {
+      "id": "daheng_light_1",
+      "name": "大恒光电 GCI-060505 LED 光源",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "daheng_gci060505",
+      "position": {
+        "x": 600,
+        "y": 300,
+        "z": 0
+      },
+      "config": {
+        "port": "COM6",
+        "baudrate": 9600,
+        "timeout": 2
+      },
+      "data": {}
+    },
+    {
+      "id": "cmos_detector_1",
+      "name": "LCAMV8 CMOS Detector",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "cmos_detector",
+      "position": {
+        "x": 0,
+        "y": 600,
+        "z": 0
+      },
+      "config": {
+        "port": "COM8",
+        "save_dir": "./cmos_data"
+      },
+      "data": {}
+    },
+    {
+      "id": "chi760e_1",
+      "name": "辰华CHI760E电化学工作站",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "chi760e",
+      "position": {
+        "x": 300,
+        "y": 600,
+        "z": 0
+      },
+      "config": {
+        "chi_exe_path": "C:/Users/Coslab/Desktop/chi760e/chi760e.exe",
+        "data_folder": "C:/Users/Coslab/Desktop/chi760e_data/automation",
+        "default_sens": 1e-6
+      },
+      "data": {}
+    },
+    {
+      "id": "zolix_omni_lambda_1",
+      "name": "Zolix Omni-λ 光谱仪",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "zolix_omni_lambda",
+      "position": {
+        "x": 600,
+        "y": 600,
+        "z": 0
+      },
+      "config": {
+        "port": "COM10",
+        "baudrate": 19200,
+        "timeout": 5
+      },
+      "data": {}
+    },
+    {
+      "id": "duco_gcr5_1",
+      "name": "新松GCR5机械臂",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "duco_gcr5",
+      "position": {
+        "x": 0,
+        "y": 900,
+        "z": 0
+      },
+      "config": {
+        "ip": "192.168.1.10",
+        "cmd_port": 2000,
+        "status_port": 2001,
+        "timeout": 5.0
+      },
+      "data": {}
+    },
+    {
+      "id": "longer_bt100_1",
+      "name": "兰格蠕动泵BT100-2J",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "longer_bt100",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM5",
+        "baudrate": 1200,
+        "address": 6,
+        "serial_timeout": 0.5
+      },
+      "data": {}
+    },
+    {
+      "id": "daheng_camera_1",
+      "name": "大恒 HD-R630C-U3 工业相机",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "daheng_hd_r630c",
+      "position": {
+        "x": 900,
+        "y": 600,
+        "z": 0
+      },
+      "config": {
+        "cti_path": "C:\\Program Files (x86)\\Do3think\\DVP2 x64\\DVPCameraTL64.cti",
+        "device_index": 0,
+        "default_exposure_time": 10000.0,
+        "default_gain": 0.0
+      },
+      "data": {
+        "status": "Idle",
+        "exposure_time": 10000.0,
+        "gain": 0.0,
+        "frame_rate": 0.0,
+        "image_width": 0,
+        "image_height": 0,
+        "is_streaming": false,
+        "last_frame_id": 0,
+        "level": false,
+        "rssi": 0
+      }
+    },
+    {
+      "id": "jyhsm_temp_1",
+      "name": "JYHSM一体化温度变送器",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "jyhsm_temperature_transmitter",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM4",
+        "baudrate": 9600,
+        "slave_address": 7,
+        "timeout": 1.0,
+        "monitor_interval": 1.0
+      },
+      "data": {
+        "status": "Idle",
+        "value": 0.0,
+        "temperature": 0.0,
+        "target_temperature": -999.0,
+        "tolerance": 0.5,
+        "monitoring": false,
+        "alarm_triggered": false,
+        "alarm_status": "Idle",
+        "offset": 0.0,
+        "unit": "℃",
+        "slave_address": 7.0,
+        "baudrate": 9600.0
+      }
+    },
+    {
+      "id": "dhjf_bath_1",
+      "name": "DHJF-2005A 恒温循环水浴",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "dhjf_circulation_bath",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM3",
+        "slave_id": 5,
+        "baudrate": 9600,
+        "bytesize": 8,
+        "parity": "N",
+        "stopbits": 1,
+        "timeout": 1.0,
+        "key_pulse_sec": 0.3
+      },
+      "data": {}
+    },
+    {
+      "id": "runze_pump_1",
+      "name": "SY-03B注射泵",
+      "children": [],
+      "parent": null,
+      "type": "device",
+      "class": "runze_sy03b_t08",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "config": {
+        "port": "COM4",
+        "address": "8",
+        "max_volume": 25.0
+      },
+      "data": {
+        "status": "Offline",
+        "mode": 0,
+        "max_velocity": 0.5,
+        "velocity_grade": "600",
+        "velocity_init": "600",
+        "velocity_end": "600",
+        "valve_position": "0",
+        "position": 0.0,
+        "plunger_position": "0"
+      }
+    },
+    {
+      "id": "水",
+      "name": "水",
+      "children": [],
+      "parent": null,
+      "type": "container",
+      "class": "container",
+      "position": {
+        "x": -92.77756,
+        "y": -413.28186,
+        "z": 0
+      },
+      "config": {
+        "type": "RegularContainer",
+        "category": "container",
+        "max_volume": 0
+      },
+      "data": {
+        "thing": "get_regular_container_volume_tracker",
+        "liquids": [],
+        "max_volume": 0,
+        "liquid_history": [],
+        "unknown_counter": 0
+      }
+    },
+    {
+      "id": "电解液",
+      "name": "电解液",
+      "children": [],
+      "parent": null,
+      "type": "container",
+      "class": "container",
+      "position": {
+        "x": 280.51578,
+        "y": -418.77554,
+        "z": 0
+      },
+      "config": {
+        "type": "RegularContainer",
+        "category": "container",
+        "max_volume": 0
+      },
+      "data": {
+        "thing": "get_regular_container_volume_tracker",
+        "liquids": [],
+        "max_volume": 0,
+        "liquid_history": [],
+        "unknown_counter": 0
+      }
+    },
+    {
+      "id": "电解池",
+      "name": "电解池",
+      "children": [],
+      "parent": null,
+      "type": "container",
+      "class": "container",
+      "position": {
+        "x": 1053.6703,
+        "y": -31.392193,
+        "z": 0
+      },
+      "config": {
+        "type": "RegularContainer",
+        "category": "container",
+        "max_volume": 0
+      },
+      "data": {
+        "thing": "get_regular_container_volume_tracker",
+        "liquids": [],
+        "max_volume": 0,
+        "liquid_history": [],
+        "unknown_counter": 0
+      }
+    },
+    {
+      "id": "废液",
+      "name": "废液",
+      "children": [],
+      "parent": null,
+      "type": "container",
+      "class": "container",
+      "position": {
+        "x": 1908.9772,
+        "y": -24.842558,
+        "z": 0
+      },
+      "config": {
+        "type": "RegularContainer",
+        "category": "container",
+        "max_volume": 0
+      },
+      "data": {
+        "thing": "get_regular_container_volume_tracker",
+        "liquids": [],
+        "max_volume": 0,
+        "liquid_history": [],
+        "unknown_counter": 0
+      }
+    }
+  ],
+  "links": [
+    {
+      "source": "runze_pump_1",
+      "target": "水",
+      "sourceHandle": "1",
+      "targetHandle": "top",
+      "type": ""
+    },
+    {
+      "source": "runze_pump_1",
+      "target": "电解液",
+      "sourceHandle": "2",
+      "targetHandle": "top",
+      "type": ""
+    },
+    {
+      "source": "runze_pump_1",
+      "target": "电解池",
+      "sourceHandle": "8",
+      "targetHandle": "top",
+      "type": ""
+    },
+    {
+      "source": "电解池",
+      "target": "longer_bt100_1",
+      "sourceHandle": "bottom",
+      "targetHandle": "1",
+      "type": ""
+    },
+    {
+      "source": "longer_bt100_1",
+      "target": "废液",
+      "sourceHandle": "2",
+      "targetHandle": "top",
+      "type": ""
+    },
+    {
+      "source": "dhjf_bath_1",
+      "target": "电解池",
+      "sourceHandle": "1",
+      "targetHandle": "bind",
+      "type": ""
+    },
+    {
+      "source": "jyhsm_temp_1",
+      "target": "电解池",
+      "sourceHandle": "1",
+      "targetHandle": "bind",
+      "type": ""
+    },
+    {
+      "source": "chi760e_1",
+      "target": "电解池",
+      "sourceHandle": "1",
+      "targetHandle": "bind",
+      "type": ""
+    }
+  ],
+  "description": "完整实验室设备",
+  "version": "1.0"
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+current_path=$(pwd)
+
+bashrc_file="$HOME/.bashrc"
+
+if [ -e "$bashrc_file" ]; then
+	if ! grep -q "$current_path" "$bashrc_file"; then
+		echo "export PYTHONPATH=\$PYTHONPATH:$current_path" >> "$bashrc_file"
+		echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$current_path" >> "$bashrc_file"
+	fi
+else
+	echo "$bashrc_file:The file was not found."
+fi

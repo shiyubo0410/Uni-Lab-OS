@@ -1,0 +1,608 @@
+pump_2:
+  category:
+  - pump_and_valve
+  - wxf
+  - runze
+  - pump_2
+  class:
+    action_value_mappings:
+      auto-add_liquid:
+        feedback: {}
+        goal: {}
+        goal_default:
+          column_target: null
+          liquid_source: null
+          volume: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 从指定液体口吸取液体注入指定柱子（泵速固定5mL/s）
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                column_target:
+                  description: 目标柱子，可选 "柱1" / "柱2" / "柱3"
+                  type: string
+                liquid_source:
+                  description: 液体来源，可选 "液体1" / "液体2" / "液体3"
+                  type: string
+                volume:
+                  description: 液体体积，单位：mL
+                  type: number
+              required:
+              - liquid_source
+              - column_target
+              - volume
+              type: object
+            result: {}
+          required:
+          - goal
+          title: add_liquid参数
+          type: object
+        type: UniLabJsonCommand
+      auto-add_sample:
+        feedback: {}
+        goal: {}
+        goal_default:
+          column_target: null
+          liquid_source: null
+          volume: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 从指定样品口吸取样品注入指定柱子（泵速固定5mL/s）
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                column_target:
+                  description: 目标柱子，可选 "柱1" / "柱2" / "柱3"
+                  type: string
+                liquid_source:
+                  description: 样品来源，可选 "液体1" / "液体2" / "液体3"
+                  type: string
+                volume:
+                  description: 样品体积，单位：mL
+                  type: number
+              required:
+              - liquid_source
+              - column_target
+              - volume
+              type: object
+            result: {}
+          required:
+          - goal
+          title: add_sample参数
+          type: object
+        type: UniLabJsonCommand
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: close的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-initialize:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: initialize的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: initialize参数
+          type: object
+        type: UniLabJsonCommand
+      auto-list:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: list的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: list参数
+          type: object
+        type: UniLabJsonCommand
+      auto-pull_plunger:
+        feedback: {}
+        goal: {}
+        goal_default:
+          volume: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: pull_plunger的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                volume:
+                  description: 'absolute position of the plunger, unit: mL'
+                  type: number
+              required:
+              - volume
+              type: object
+            result: {}
+          required:
+          - goal
+          title: pull_plunger参数
+          type: object
+        type: UniLabJsonCommand
+      auto-push_plunger:
+        feedback: {}
+        goal: {}
+        goal_default:
+          volume: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: push_plunger的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                volume:
+                  description: 'absolute position of the plunger, unit: mL'
+                  type: number
+              required:
+              - volume
+              type: object
+            result: {}
+          required:
+          - goal
+          title: push_plunger参数
+          type: object
+        type: UniLabJsonCommand
+      auto-query_aux_input_status_1:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: query_aux_input_status_1的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: query_aux_input_status_1参数
+          type: object
+        type: UniLabJsonCommand
+      auto-query_aux_input_status_2:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: query_aux_input_status_2的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: query_aux_input_status_2参数
+          type: object
+        type: UniLabJsonCommand
+      auto-query_backlash_position:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: query_backlash_position的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: query_backlash_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-query_command_buffer_status:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: query_command_buffer_status的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: query_command_buffer_status参数
+          type: object
+        type: UniLabJsonCommand
+      auto-query_software_version:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: query_software_version的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: query_software_version参数
+          type: object
+        type: UniLabJsonCommand
+      auto-send_command:
+        feedback: {}
+        goal: {}
+        goal_default:
+          full_command: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: send_command的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                full_command:
+                  type: string
+              required:
+              - full_command
+              type: object
+            result: {}
+          required:
+          - goal
+          title: send_command参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_baudrate:
+        feedback: {}
+        goal: {}
+        goal_default:
+          baudrate: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: set_baudrate的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                baudrate:
+                  type: string
+              required:
+              - baudrate
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_baudrate参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_max_velocity:
+        feedback: {}
+        goal: {}
+        goal_default:
+          velocity: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: set_max_velocity的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                velocity:
+                  type: number
+              required:
+              - velocity
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_max_velocity参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_position:
+        feedback: {}
+        goal: {}
+        goal_default:
+          max_velocity: null
+          position: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: set_position的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                max_velocity:
+                  description: 'maximum velocity of the plunger, unit: ml/s'
+                  type: number
+                position:
+                  description: 'absolute position of the plunger, unit: ml'
+                  type: number
+              required:
+              - position
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_valve_position:
+        feedback: {}
+        goal: {}
+        goal_default:
+          position: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: set_valve_position的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                position:
+                  anyOf:
+                  - type: integer
+                  - type: string
+                  - type: number
+              required:
+              - position
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_valve_position参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_velocity_grade:
+        feedback: {}
+        goal: {}
+        goal_default:
+          velocity: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: set_velocity_grade的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                velocity:
+                  anyOf:
+                  - type: integer
+                  - type: string
+              required:
+              - velocity
+              type: object
+            result: {}
+          required:
+          - goal
+          title: set_velocity_grade参数
+          type: object
+        type: UniLabJsonCommand
+      auto-stop_operation:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: stop_operation的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: stop_operation参数
+          type: object
+        type: UniLabJsonCommand
+      auto-wait_error:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: wait_error的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: wait_error参数
+          type: object
+        type: UniLabJsonCommand
+    hardware_interface:
+      name: hardware_interface
+      read: send_command
+      write: send_command
+    module: unilabos.devices.wxf.pump_2:RunzeSyringePump
+    status_types:
+      max_velocity: float
+      mode: int
+      position: float
+      status: str
+      valve_position: str
+      velocity_grade: str
+    type: python
+  config_info: []
+  description: 润泽精密注射泵（wxf驱动），两台泵共享RS485串口，通过地址区分。支持注射泵柱塞控制、多口阀门切换、加液/加样操作。适用于精密液体输送、进样、流速控制等实验室自动化应用。
+  displayname: pump_2
+  handles:
+  - data_key: fluid_port_1
+    data_source: executor
+    data_type: fluid
+    description: 阀门端口1
+    handler_key: '1'
+    io_type: source
+    label: '1'
+    side: NORTH
+  - data_key: fluid_port_2
+    data_source: executor
+    data_type: fluid
+    description: 阀门端口2
+    handler_key: '2'
+    io_type: source
+    label: '2'
+    side: EAST
+  - data_key: fluid_port_3
+    data_source: executor
+    data_type: fluid
+    description: 阀门端口3
+    handler_key: '3'
+    io_type: source
+    label: '3'
+    side: EAST
+  - data_key: fluid_port_4
+    data_source: executor
+    data_type: fluid
+    description: 阀门端口4
+    handler_key: '4'
+    io_type: source
+    label: '4'
+    side: SOUTH
+  - data_key: fluid_port_5
+    data_source: executor
+    data_type: fluid
+    description: 阀门端口5
+    handler_key: '5'
+    io_type: source
+    label: '5'
+    side: SOUTH
+  - data_key: fluid_port_6
+    data_source: executor
+    data_type: fluid
+    description: 阀门端口6
+    handler_key: '6'
+    io_type: source
+    label: '6'
+    side: WEST
+  icon: ''
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        address:
+          default: '1'
+          type: string
+        max_volume:
+          default: 25.0
+          type: number
+        mode:
+          type: object
+        port:
+          type: string
+      required:
+      - port
+      type: object
+    data:
+      properties:
+        max_velocity:
+          type: number
+        mode:
+          type: integer
+        position:
+          type: number
+        status:
+          type: string
+        valve_position:
+          type: string
+        velocity_grade:
+          type: string
+      required:
+      - max_velocity
+      - mode
+      - position
+      - status
+      - valve_position
+      - velocity_grade
+      type: object
+  version: 1.0.0

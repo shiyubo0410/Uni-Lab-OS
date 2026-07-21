@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh *)",
+      "Bash(dir *)",
+      "Bash(pdftotext -layout \"/d/Edge download/Uni-Lab-OS 设备即节点——架构设计与分阶段实施计划 \\(2\\).pdf\" \"/d/Uni-Lab/Uni-Lab-OS/.tmp-doc.txt\")",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 *)"
+    ]
+  }
+}

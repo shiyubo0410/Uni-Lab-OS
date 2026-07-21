@@ -1,0 +1,107 @@
+esp32_controller:
+  category:
+  - esp32
+  class:
+    action_value_mappings:
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-send_off:
+        feedback: {}
+        goal: {}
+        goal_default:
+          pin: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pin:
+                  description: 要关闭的引脚号,如果为 None 则发送 OFF 指令
+                  type: string
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: send_off参数
+          type: object
+        type: UniLabJsonCommand
+      auto-trigger_output:
+        feedback: {}
+        goal: {}
+        goal_default:
+          pin: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pin:
+                  description: 要触发的引脚号,如果为 None 则发送 ON 指令
+                  type: string
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: trigger_output参数
+          type: object
+        type: UniLabJsonCommand
+    module: unilabos.devices.workstation_guozhuji.esp32:ESP32Controller
+    status_types: {}
+    type: python
+  config_info: []
+  description: ''
+  displayname: esp32_controller
+  handles: []
+  icon: ''
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        baudrate:
+          default: 115200
+          description: 波特率
+          type: string
+        port:
+          default: COM7
+          description: 串口端口号
+          type: string
+        timeout:
+          default: 1
+          description: 超时时间(秒)
+          type: string
+      required: []
+      type: object
+    data:
+      properties: {}
+      required: []
+      type: object
+  version: 1.0.0

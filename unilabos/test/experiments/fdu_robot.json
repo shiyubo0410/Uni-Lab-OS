@@ -1,0 +1,27 @@
+{
+    "nodes": [
+        {
+            "id": "fdu_robot",
+            "name": "CGXi 六轴协作机械臂",
+            "description": "FDU 长光希 CGXi 协作机械臂（TCP/IP，ctypes 直连 cr_sdk.dll，内置 waypoints 路点库）",
+            "type": "device",
+            "class": "fdu.robot.cgxi",
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "config": {
+                "ip": "192.168.6.6",
+                "port": 2323,
+                "password": "123",
+                "virtual": false,
+                "default_speed": 20.0,
+                "default_acc": 10.0,
+                "auto_connect": true
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

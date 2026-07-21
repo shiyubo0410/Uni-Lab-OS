@@ -257,6 +257,7 @@ def generate_pump_protocol(
 
     # 验证容器存在
     debug_print(f"🔍 验证源容器 '{from_vessel_id}' 和目标容器 '{to_vessel_id}' 是否存在...")
+    debug_print(f"G.nodes(): {G.nodes()}")
     if from_vessel_id not in G.nodes():
         logger.error(f"源容器 '{from_vessel_id}' 不存在")
         return pump_action_sequence

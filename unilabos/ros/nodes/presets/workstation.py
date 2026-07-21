@@ -6,6 +6,9 @@ from typing import List, Dict, Any, Optional, TYPE_CHECKING
 
 import rclpy
 from rosidl_runtime_py import message_to_ordereddict
+from unilabos_msgs.msg import Resource
+from unilabos_msgs.srv import ResourceUpdate
+from types import SimpleNamespace
 
 from unilabos.messages import *  # type: ignore  # protocol names
 from rclpy.action import ActionServer, ActionClient
@@ -151,7 +154,6 @@ class ROS2WorkstationNode(BaseROS2DeviceNode):
 
     def initialize_device(self, device_id, device_config):
         """初始化设备并创建相应的动作客户端"""
-        # device_id_abs = f"{self.device_id}/{device_id}"
         device_id_abs = f"{device_id}"
         self.lab_logger().info(f"初始化子设备: {device_id_abs}")
         d = self.sub_devices[device_id] = initialize_device_from_dict(device_id_abs, device_config)
@@ -160,6 +162,15 @@ class ROS2WorkstationNode(BaseROS2DeviceNode):
         if d is not None and hasattr(d, "ros_node_instance"):
             node = d.ros_node_instance
             node.resource_tracker = self.resource_tracker  # 站内应当共享资源跟踪器
+            
+            # 🔧 新增：为WorkstationBase子类注入父工作站引用
+            if hasattr(d.driver_instance, 'bind_parent_station'):
+                try:
+                    d.driver_instance.bind_parent_station(self)
+                    self.lab_logger().info(f"✓ 为子设备 {device_id} 注入父工作站引用")
+                except Exception as e:
+                    self.lab_logger().error(f"✗ 为子设备 {device_id} 注入父工作站失败: {e}")
+            
             for action_name, action_mapping in node._action_value_mappings.items():
                 if action_name.startswith("auto-") or str(action_mapping.get("type", "")).startswith(
                     "UniLabJsonCommand"
@@ -354,7 +365,7 @@ class ROS2WorkstationNode(BaseROS2DeviceNode):
                 protocol_steps = protocol_steps_generator(G=physical_setup_graph, **protocol_kwargs)
                 logs = []
                 for step in protocol_steps:
-                    if isinstance(step, dict) and "log_message" in step.get("action_kwargs", {}):
+                    if isinstance(step, dict):
                         logs.append(step)
                     elif isinstance(step, list):
                         logs.append(step)
@@ -474,7 +485,7 @@ class ROS2WorkstationNode(BaseROS2DeviceNode):
                 ]
                 execution_error = f"{traceback.format_exc()}\n\nStep Result: {pformat(str_step_results)}"
                 execution_success = False
-                self.lab_logger().error(f"协议 {protocol_name} 执行出错: {str(e)} \n{traceback.format_exc()}")
+                self.lab_logger().error(f"协议 {protocol_name} 执行出错: {str(e)} \n{str_step_results}")
 
                 # 设置动作失败
                 goal_handle.abort()
@@ -539,60 +550,48 @@ class ROS2WorkstationNode(BaseROS2DeviceNode):
         result_future = await handle.get_result_async()
         ##### self.lab_logger().info(f"动作完成: {action_name}")
 
-        return result_future.result
+        res = result_future.result
+
+        # 针对 SingleJointPosition（如 set_position）单独标准化 return_info 格式
+        try:
+            action_type_name = str(action_client._action_type)[8:-2]
+        except Exception:
+            action_type_name = ""
+
+        has_return_info = hasattr(res, "return_info") and getattr(res, "return_info", None)
+        if not has_return_info:
+            # 尽量从原始结果获取 success 字段
+            suc = getattr(res, "success", True)
+            if "SingleJointPosition" in action_type_name or action_name == "set_position":
+                # 将请求的 position 作为 return_value（回填为字符串或数值）
+                return_value = action_kwargs.get("position", "@")
+            else:
+                return_value = "@"
+
+            ret_info_obj = {"error": "", "suc": suc, "return_value": return_value}
+            ret_info_str = json.dumps(ret_info_obj)
+
+            # 返回一个轻量包装对象，保证上层通过 getattr(..., "return_info") 能拿到标准化字符串
+            wrapper = SimpleNamespace()
+            wrapper.return_info = ret_info_str
+            wrapper.success = suc
+            # 保留原始结果以便需要时访问
+            wrapper._orig_result = res
+            return wrapper
+
+        return res
 
     """还没有改过的部分"""
 
     def _setup_hardware_proxy(
-        self, device: ROS2DeviceNode, communication_device: ROS2DeviceNode, read_method, write_method
+        self, device, communication_device, read_method, write_method
     ):
-        """为设备设置硬件接口代理。
-
-        把 ``device`` 的读/写方法替换为转发到 ``communication_device`` 真实读写函数的闭包，
-        从而让多个设备共享同一个通信端点。
-
-        若 ``device`` 或通信端的 hardware_interface 声明了 ``extra_info``（一组属性名），
-        转发时会从 ``device`` 实例上实时读取这些属性的值，并以 ``属性名=值`` 的形式作为
-        关键字参数注入给通信设备的读写函数（典型用途：Modbus 从站 id、寄存器地址等每个
-        设备固有、但需要交给共享通信端的参数）。调用方显式传入的同名关键字参数优先级更高。
-        """
         comm_hw = communication_device.ros_node_instance._hardware_interface
-        comm_instance = communication_device.driver_instance
-        comm_id = getattr(comm_instance, "device_id", comm_hw.get("name"))
         write_name = comm_hw.get("write")
         read_name = comm_hw.get("read")
-        # 用默认值 getattr 避免端点方法名配错时直接崩溃整站；缺失则给出清晰提示并跳过该方向
-        write_func = getattr(comm_instance, write_name, None) if write_name else None
-        read_func = getattr(comm_instance, read_name, None) if read_name else None
-        if write_name and write_func is None:
-            self.lab_logger().error(
-                f"[硬件代理] 通信设备 {comm_id} 没有 write 方法 '{write_name}'，无法为使用方建立写代理；"
-                f"请在该通信设备的 @device(hardware_interface=...) 中把 write 指向真实方法名"
-            )
-        if read_name and read_func is None:
-            self.lab_logger().error(
-                f"[硬件代理] 通信设备 {comm_id} 没有 read 方法 '{read_name}'，无法为使用方建立读代理；"
-                f"请在该通信设备的 @device(hardware_interface=...) 中把 read 指向真实方法名"
-            )
 
-        # extra_info：需要随读写一起注入的额外参数名（使用方与通信端声明取并集），值从使用方实例读取
-        device_hw = device.ros_node_instance._hardware_interface
-        driver_instance = device.driver_instance
-        display_id = getattr(driver_instance, "device_id", read_method or write_method)
-        extra_names: List[str] = []
-        for name in [*(device_hw.get("extra_info") or []), *(comm_hw.get("extra_info") or [])]:
-            if name in extra_names:
-                continue
-            if hasattr(driver_instance, name):
-                extra_names.append(name)
-            else:
-                self.lab_logger().warning(
-                    f"[硬件代理] 子设备 {display_id} 的 extra_info 声明了属性 '{name}'，"
-                    f"但其实例上不存在该属性，转发时将忽略该参数"
-                )
-
-        def _extra_kwargs() -> Dict[str, Any]:
-            return {name: getattr(driver_instance, name) for name in extra_names}
+        write_func = getattr(communication_device.driver_instance, write_name, None) if write_name else None
+        read_func = getattr(communication_device.driver_instance, read_name, None) if read_name else None
 
         def _read(*args, **kwargs):
             return read_func(*args, **{**_extra_kwargs(), **kwargs})
@@ -600,8 +599,36 @@ class ROS2WorkstationNode(BaseROS2DeviceNode):
         def _write(*args, **kwargs):
             return write_func(*args, **{**_extra_kwargs(), **kwargs})
 
-        if read_method and read_func is not None:
-            setattr(driver_instance, read_method, _read)
+        if read_method and read_func and not hasattr(device.driver_instance, read_method):
+            setattr(device.driver_instance, read_method, _read)
 
-        if write_method and write_func is not None:
-            setattr(driver_instance, write_method, _write)
+        if write_method and write_func and not hasattr(device.driver_instance, write_method):
+            setattr(device.driver_instance, write_method, _write)
+
+        # 优先把通信设备的原生串口句柄塞给子设备
+        comm_iface = getattr(communication_device.driver_instance, "hardware_interface", None)
+        if comm_iface and hasattr(comm_iface, "write"):
+            cur_iface = getattr(device.driver_instance, "hardware_interface", None)
+            if not hasattr(cur_iface, "write"):
+                setattr(device.driver_instance, "hardware_interface", comm_iface)
+            
+                # 🔧 关键修复：统一RS485总线锁
+                # 为所有共享同一串口的设备注入相同的全局锁
+                if not hasattr(self, '_rs485_bus_locks'):
+                    self._rs485_bus_locks = {}
+                
+                # 使用通信设备ID作为锁的key(例如 "serial_pump")
+                comm_device_id = communication_device.ros_node_instance.device_id
+                if comm_device_id not in self._rs485_bus_locks:
+                    from threading import Lock
+                    self._rs485_bus_locks[comm_device_id] = Lock()
+                    self.lab_logger().info(f"创建RS485总线锁: {comm_device_id}")
+                
+                # 替换设备自己的锁为全局总线锁
+                bus_lock = self._rs485_bus_locks[comm_device_id]
+                if hasattr(device.driver_instance, '_serial_lock'):
+                    setattr(device.driver_instance, '_serial_lock', bus_lock)
+                    self.lab_logger().info(f"✓ 为 {device.ros_node_instance.device_id} 注入全局RS485锁")
+                elif hasattr(device.driver_instance, '_query_lock'):
+                    setattr(device.driver_instance, '_query_lock', bus_lock)
+                    self.lab_logger().info(f"✓ 为 {device.ros_node_instance.device_id} 注入全局RS485锁(_query_lock)")

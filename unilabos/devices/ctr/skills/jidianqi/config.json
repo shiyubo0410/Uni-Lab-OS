@@ -1,0 +1,126 @@
+{
+  "name": "科星继电器网络协议技能包",
+  "version": "1.0.0",
+  "description": "科星2-48路网络继电器产品完整协议文档和工具",
+  "author": "AI Assistant",
+  "date": "2026-02-28",
+  "device": {
+    "brand": "科星",
+    "type": "网络继电器",
+    "channels": "2-48路",
+    "firmware": "2024年6月后版本"
+  },
+  "network": {
+    "device_ip": "192.168.1.100",
+    "device_port": 50000,
+    "remote_ip": "192.168.1.10",
+    "gateway": "192.168.1.253",
+    "subnet_mask": "255.255.255.0",
+    "work_mode": "TCP服务器",
+    "mac_address": "06049B28",
+    "ip_mode": "DHCP",
+    "heartbeat_enabled": false,
+    "heartbeat_interval": 15,
+    "heartbeat_content": "设备MAC",
+    "wifi_ssid": "Hgroup",
+    "wifi_password": "hlggroup18",
+    "dns": "114.114.114.114"
+  },
+  "protocols": {
+    "modbus_rtu": {
+      "enabled": true,
+      "description": "标准MODBUS-RTU协议",
+      "baudrate": 9600,
+      "data_bits": 8,
+      "stop_bits": 1,
+      "parity": "None",
+      "function_codes": ["01", "02", "03", "05", "06", "0F", "10"]
+    },
+    "modbus_tcp": {
+      "enabled": true,
+      "description": "基于TCP的MODBUS协议",
+      "port": 50000,
+      "header": "000000000006"
+    },
+    "kexing_private": {
+      "enabled": true,
+      "description": "科星私有场景协议",
+      "frame_head": "CCDD",
+      "frame_end": "DDCC",
+      "function_codes": {
+        "A2": "增强控制",
+        "A3": "常开常闭",
+        "A4": "顺序导通",
+        "A5": "顺序断开",
+        "A6": "倒序断开",
+        "B2": "增强读取",
+        "B3": "读取继电器状态",
+        "C3": "读取开关量状态",
+        "D0": "读取模拟量",
+        "D3": "点动脉冲",
+        "D5": "延迟断开",
+        "F3": "反转"
+      }
+    },
+    "string": {
+      "enabled": true,
+      "description": "JSON字符串协议",
+      "format": "JSON",
+      "encoding": "UTF-8"
+    }
+  },
+  "registers": {
+    "relay_control": {
+      "05_code": {
+        "base": "0000",
+        "pulse_fixed": "3000",
+        "toggle": "5000"
+      },
+      "06_code": {
+        "base": "1000"
+      }
+    },
+    "relay_status": {
+      "01_code": "0000",
+      "03_code": "1000"
+    },
+    "switch_status": {
+      "02_code": "0000",
+      "03_code": "3000"
+    },
+    "analog": {
+      "03_code": "0000"
+    }
+  },
+  "quick_commands": {
+    "modbus_rtu": {
+      "relay_on_ch1": "01050000FF008C3A",
+      "relay_off_ch1": "010500000000CDCA",
+      "relay_pulse_ch1": "01053000FF00833A",
+      "read_relay_8ch": "0101000000083DCC",
+      "read_switch_8ch": "01020000000879CC"
+    },
+    "modbus_tcp": {
+      "relay_on_ch1": "00000000000601050000FF00",
+      "relay_off_ch1": "000000000006010500000000"
+    },
+    "kexing": {
+      "relay_on_ch1": "CCDDA3010000000000010000000000010000A448",
+      "relay_off_ch1": "CCDDA3010000000000000000000000010000A346",
+      "read_relay": "CCDD B301 0000 0DBE7C",
+      "read_switch": "CCDD C301 0000 0DCE9C"
+    },
+    "string": {
+      "relay_on_ch1": "{\"A01\":110000,\"res\":\"123\"}",
+      "relay_off_ch1": "{\"A01\":100000,\"res\":\"123\"}",
+      "read_all": "{\"readall\",\"res\":\"12345\"}"
+    }
+  },
+  "files": {
+    "README.md": "完整协议文档",
+    "SKILL.md": "技能包说明",
+    "relay_utils.py": "Python工具库",
+    "examples.py": "使用示例",
+    "config.json": "配置文件"
+  }
+}

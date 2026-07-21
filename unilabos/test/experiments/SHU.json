@@ -1,0 +1,76 @@
+{
+    "nodes": [
+        {
+            "id": "xyz_guangdian",
+            "uuid": "a1c2e3f4-5b6d-4a7e-8f90-1122334455aa",
+            "name": "xyz_guangdian",
+            "description": "XYZ三维运动平台 (X/Y=雷赛DM2J, Z=俏优灵zeta, 推杆=CX-5208W两路继电器), 共用一条RS485总线, 统一9600bps",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "type": "device",
+            "class": "xyz_guangdian",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 100.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "baudrate": 9600,
+                "timeout": 2.0,
+                "retry_count": 3,
+                "retry_delay": 0.1,
+
+                "addr_x": 2,
+                "addr_y": 3,
+                "addr_z": 1,
+                "addr_push_rod": 4,
+
+                "x_pulses_per_mm": 10000,
+                "y_pulses_per_mm": 10000,
+                "z_steps_per_mm": 2730.6667,
+
+                "default_speed_rpm": 200,
+                "default_speed_yl": 600,
+
+                "dm2j_acc": 50,
+                "dm2j_dec": 50,
+                "yl_acc": 30000,
+                "yl_tolerance": 100,
+
+                "home_speed_yl": 600,
+                "home_wait_s": 5.0,
+                "dm2j_has_home_switch": false,
+
+                "push_rod_coil_extend": 0,
+                "push_rod_coil_retract": 1
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

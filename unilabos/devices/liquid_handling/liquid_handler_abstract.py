@@ -73,6 +73,8 @@ class LiquidHandlerMiddleware(LiquidHandler):
             else:
                 self._simulate_backend = LiquidHandlerChatterboxBackend(channel_num)
             self._simulate_handler = LiquidHandlerAbstract(self._simulate_backend, deck, False)
+        if hasattr(backend, "total_height"):
+            backend.total_height = total_height
         super().__init__(backend, deck)
 
     async def setup(self, **backend_kwargs):
@@ -641,7 +643,6 @@ class LiquidHandlerAbstract(LiquidHandlerMiddleware):
                         module_name = ".".join(components[:-1])
                         try:
                             import importlib
-
                             mod = importlib.import_module(module_name)
                         except ImportError:
                             mod = None
@@ -651,7 +652,6 @@ class LiquidHandlerAbstract(LiquidHandlerMiddleware):
                         # Try pylabrobot style import (if available)
                         try:
                             import pylabrobot
-
                             backend_cls = getattr(pylabrobot, type_str, None)
                         except Exception:
                             backend_cls = None

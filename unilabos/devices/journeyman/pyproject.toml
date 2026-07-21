@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unilab-device-journeyman"
+version = "0.1.0"
+description = "简美 JourneyMan 蠕动泵 (M/L 型基本型系列) Uni-Lab-OS 设备驱动包, RS-485 Modbus RTU (9600 8E1)。"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "DP Technology Proprietary License" }
+authors = [{ name = "The unilabos developers" }]
+keywords = ["unilab", "unilabos", "peristaltic-pump", "journeyman", "modbus", "rs485"]
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[tool.setuptools]
+py-modules = ["journeymanpump"]
+
+[tool.unilabos.registry]
+paths = ["."]

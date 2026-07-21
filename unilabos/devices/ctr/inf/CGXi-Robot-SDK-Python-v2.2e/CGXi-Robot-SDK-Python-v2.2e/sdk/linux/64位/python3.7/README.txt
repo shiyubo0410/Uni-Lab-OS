@@ -1,0 +1,2 @@
+1、在终端下执行：将该目录下所有的库拷贝到Linux下的某个目录中，然后打开终端执行命令：./Build 进行库环境的配置，配置完成后执行 source ~/.bashrc
+2、在PyCharm下执行：依次点击 Run -> Edit Configurations，在弹出的窗口中找到 Environment variables 字段中并添加 LD_LIBRARY_PATH 变量及其值（c库所在目录的绝对路径）

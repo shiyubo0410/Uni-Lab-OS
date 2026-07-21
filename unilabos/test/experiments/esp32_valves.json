@@ -1,0 +1,119 @@
+{
+    "nodes": [
+        {
+            "id": "host_node",
+            "name": "host_node",
+            "type": "device",
+            "class": "host_node",
+            "parent": "",
+            "config": {},
+            "data": {},
+            "position": { "x": 0, "y": 0, "z": 0 }
+        },
+        {
+            "id": "ValveStation",
+            "name": "ESP32阀门工作站",
+            "type": "device",
+            "class": "workstation",
+            "parent": "",
+            "children": [
+                "serial_esp32",
+                "valve_1",
+                "valve_2",
+                "valve_3",
+                "valve_4",
+                "valve_5"
+            ],
+            "config": {
+                "protocol_type": []
+            },
+            "data": {},
+            "position": { "x": 400, "y": 300, "z": 0 }
+        },
+        {
+            "id": "serial_esp32",
+            "name": "serial_esp32",
+            "type": "device",
+            "class": "serial",
+            "parent": "ValveStation",
+            "children": [],
+            "config": {
+                "port": "COM7",
+                "baudrate": 115200
+            },
+            "data": {},
+            "position": { "x": 400, "y": 500, "z": 0 }
+        },
+        {
+            "id": "valve_1",
+            "name": "valve_1",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "ValveStation",
+            "children": [],
+            "config": {
+                "channel": 1,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "position": { "x": 100, "y": 100, "z": 0 }
+        },
+        {
+            "id": "valve_2",
+            "name": "valve_2",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "ValveStation",
+            "children": [],
+            "config": {
+                "channel": 2,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "position": { "x": 250, "y": 100, "z": 0 }
+        },
+        {
+            "id": "valve_3",
+            "name": "valve_3",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "ValveStation",
+            "children": [],
+            "config": {
+                "channel": 3,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "position": { "x": 400, "y": 100, "z": 0 }
+        },
+        {
+            "id": "valve_4",
+            "name": "valve_4",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "ValveStation",
+            "children": [],
+            "config": {
+                "channel": 4,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "position": { "x": 550, "y": 100, "z": 0 }
+        },
+        {
+            "id": "valve_5",
+            "name": "valve_5",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "ValveStation",
+            "children": [],
+            "config": {
+                "channel": 5,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "position": { "x": 700, "y": 100, "z": 0 }
+        }
+    ],
+    "edges": []
+}

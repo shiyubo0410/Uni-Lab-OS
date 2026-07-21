@@ -18,3 +18,4 @@ crcmod-plus
 pymodbus
 matplotlib
 pylibftdi
+aiomqtt>=2.0

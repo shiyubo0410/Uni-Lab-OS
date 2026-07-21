@@ -36,7 +36,12 @@ from unilabos.config.config import BasicConfig, HTTPConfig, WSConfig
 from unilabos.gateway.device import DeviceWorker, MockDevice
 from unilabos.gateway.register import register_async
 from unilabos.gateway.ws import GatewayClient
-from unilabos.gateway.provisioning import WiFiManager, ProvisioningServer
+from unilabos.gateway.ota.selfhosted import SelfHostedOtaAgent
+from unilabos.gateway.provisioning import (
+    WiFiManager,
+    ProvisioningServer,
+    BLEProvisioningServer,
+)
 
 logger = logging.getLogger("gateway")
 
@@ -209,9 +214,9 @@ async def _start_admin_server(
     return server
 
 
-async def _run_provisioning_mode(wifi_mgr: WiFiManager) -> None:
+async def _run_ap_provisioning_mode(wifi_mgr: WiFiManager) -> None:
     """
-    进入 AP 配网模式。
+    进入 AP 配网模式（网页配网，兜底方案）。
 
     启动 AP 热点和 Web 服务器，等待用户配置 WiFi。配网成功后立即触发
     ``reboot_system`` 让系统重启——开机后 NM autoconnect 保存的 WiFi，
@@ -258,6 +263,146 @@ async def _run_provisioning_mode(wifi_mgr: WiFiManager) -> None:
         await asyncio.sleep(60)
 
 
+# bring-up 阶段允许明文 Provision（0x00），方便用 nRF Connect 手测；
+# APP 联调打通、生产发布前应改为 False（只接受 X25519+AES-GCM 加密路径）。
+_BLE_ALLOW_PLAINTEXT = True
+
+
+async def _run_ble_provisioning_mode(
+    wifi_mgr: WiFiManager, machine_name: str
+) -> bool:
+    """进入蓝牙(BLE)配网模式（首选方案，在线试连、**不 reboot**）。
+
+    与 AP 方案的本质区别：蓝牙走独立 BT 射频，全程不碰 wlan0 的 STA 状态，因此配网
+    成功后可直接在本进程继续正常业务，无需整机重启（已在真机 5/5 验证纯 STA 在线
+    切换稳定）。
+
+    :return: True  = 蓝牙配网成功且已联网（调用方继续正常流程，不 reboot）；
+             False = 蓝牙栈起不来（缺 bluez/cryptography / 无蓝牙硬件），需回退 AP。
+    """
+    logger.info("=" * 60)
+    logger.info("[配网] 进入蓝牙(BLE)配网模式（首选，在线配网不 reboot）")
+    logger.info("[配网] 请用 APP / nRF Connect 扫描并连接 UniLab-GW-*")
+    logger.info("=" * 60)
+
+    provisioning_done = asyncio.Event()
+
+    def on_success(ssid: Optional[str] = None):
+        logger.info(f"[配网][BLE] 收到配网成功信号 ssid={ssid}")
+        provisioning_done.set()
+
+    server = BLEProvisioningServer(
+        wifi_mgr,
+        on_success=on_success,
+        machine_name=machine_name,
+        allow_plaintext=_BLE_ALLOW_PLAINTEXT,
+    )
+    try:
+        await server.start()
+    except Exception as e:  # noqa: BLE001
+        logger.warning(
+            f"[配网][BLE] 蓝牙服务启动失败（缺 bluez-peripheral/cryptography 或无蓝牙？）: {e}"
+        )
+        return False
+
+    try:
+        await provisioning_done.wait()
+        # 给 Status(step=10) 的最后一条 notify 一点发送时间，再收摊
+        await asyncio.sleep(1)
+        logger.info("[配网][BLE] 配网成功，已在线，继续启动业务（无需 reboot）")
+        return True
+    finally:
+        await server.stop()
+
+
+async def _run_provisioning_mode(
+    wifi_mgr: WiFiManager, method: str, machine_name: str
+) -> bool:
+    """配网调度器：优先蓝牙，蓝牙不可用则回退 AP 网页。
+
+    :param method: ``auto`` / ``ble`` / ``ap``。
+    :return: True  = 已在线（BLE 成功，调用方继续，不 reboot）；
+             False = 走了 AP 网页路径（该路径内部 reboot，正常不会返回；返回 False
+                     表示 reboot 未生效需由 systemd 兜底重启）。
+    """
+    method = (method or "auto").lower()
+
+    if method in ("auto", "ble"):
+        try:
+            if await _run_ble_provisioning_mode(wifi_mgr, machine_name):
+                return True
+        except Exception as e:  # noqa: BLE001
+            logger.warning(f"[配网] 蓝牙配网异常: {e}")
+        if method == "ble":
+            logger.warning("[配网] 指定了 BLE 但蓝牙不可用，为保证可用性仍回退 AP 网页")
+        else:
+            logger.info("[配网] 蓝牙不可用，回退 AP 网页配网")
+
+    # AP 网页兜底：内部 reboot，正常不返回
+    await _run_ap_provisioning_mode(wifi_mgr)
+    return False
+
+
+# 运行期断网多久就重启进程（重启后启动流程会重新做配网检查）
+_NETWORK_LOSS_RESTART_GRACE = 20.0
+
+
+async def _network_watchdog(
+    client: GatewayClient,
+    wifi_mgr: WiFiManager,
+    grace_seconds: float = _NETWORK_LOSS_RESTART_GRACE,
+    check_interval: float = 5.0,
+) -> None:
+    """运行期断网看门狗：真断网持续超过 ``grace_seconds`` 就重启进程。
+
+    重启后 ``run_gateway`` 启动流程会重新做配网检查:连不上已保存的 WiFi 就重新
+    进入配网(蓝牙/AP)流程。
+
+    判定逻辑(避免"云端故障"误判为"断网"而反复重启):
+    1. WS 还连着 → 一切正常,清零计时;
+    2. WS 断了,但 ``wifi_mgr.is_connected()`` 显示本地仍能出公网 → 只是云端/WS
+       问题,交给 WS 自己重连,不重启;
+    3. WS 断了且本地也出不了公网 → 真断网,开始计时;持续超过 grace 秒 → 重启进程。
+
+    只有在 WS 断开时才会去跑 nmcli 检查,正常联网期间零额外开销、不刷日志。
+    """
+    loop = asyncio.get_running_loop()
+    down_since: Optional[float] = None
+    while True:
+        await asyncio.sleep(check_interval)
+
+        if client.is_connected:
+            if down_since is not None:
+                logger.info("[GW] 网络已恢复，取消重启计划")
+            down_since = None
+            continue
+
+        # WS 断了,进一步确认是不是真断网(区分本地断网 vs 云端故障)
+        try:
+            net_ok = await loop.run_in_executor(None, wifi_mgr.is_connected)
+        except Exception:
+            net_ok = False
+        if net_ok:
+            # 本地网络正常,只是连不上云端 → 交给 WS 内部重连,不重启
+            if down_since is not None:
+                logger.info("[GW] 本地网络正常(仅云端未连上)，取消重启计划")
+            down_since = None
+            continue
+
+        now = loop.time()
+        if down_since is None:
+            down_since = now
+            logger.warning(
+                f"[GW] 检测到断网，{grace_seconds:.0f}s 内未恢复将重启进程重新进入配网流程"
+            )
+        elif now - down_since >= grace_seconds:
+            logger.error(
+                f"[GW] 断网已超过 {grace_seconds:.0f}s，重启进程 → 由 systemd 拉起后重新进入配网流程"
+            )
+            # 硬退出,保证一定重启(依赖 systemd 的 Restart=always/on-failure)
+            os._exit(1)
+
+
 async def run_gateway(
     devices_cfg: List[Dict[str, Any]],
     ws_url: str,
@@ -267,6 +412,7 @@ async def run_gateway(
     http_url: Optional[str] = None,
     mount_uuid: str = "",
     skip_provisioning: bool = False,
+    provision_method: str = "auto",
 ) -> None:
     # WiFiManager 既给配网检查用，也给常驻管理后台 (admin_server) 用，
     # 所以无论是否 skip_provisioning 都先建好。
@@ -287,12 +433,18 @@ async def run_gateway(
                 needs_provisioning = True
 
         if needs_provisioning:
-            await _run_provisioning_mode(wifi_mgr)
-            # _run_provisioning_mode 内部触发 sudo reboot，正常情况这里永远不会执行到
-            # （reboot 会 SIGTERM 我们）。如果走到这里说明 reboot 调用失败，wlan0 已经
-            # 处于 stop_ap 后的 unisoc 卡死态在线救不回，直接退出由 systemd 重启。
-            logger.error("[GW] reboot 未生效，退出由 systemd 重新拉起本进程")
-            sys.exit(1)
+            online = await _run_provisioning_mode(
+                wifi_mgr, provision_method, machine_name
+            )
+            if online:
+                # 蓝牙在线配网成功，本进程直接继续正常业务，不 reboot
+                logger.info("[GW] 配网成功且已联网，继续启动业务")
+            else:
+                # 走了 AP 网页路径，内部会 sudo reboot，正常这里不会执行到
+                # （reboot 会 SIGTERM 我们）。走到这里说明 reboot 未生效，wlan0 处于
+                # stop_ap 后的 unisoc 卡死态在线救不回，直接退出由 systemd 重启。
+                logger.error("[GW] reboot 未生效，退出由 systemd 重新拉起本进程")
+                sys.exit(1)
 
     # 常驻管理后台：联网正常之后启动一个 ProvisioningServer(mode="management")
     # 让用户在同 WiFi 下用浏览器修改 AK/SK / mount_uuid，省掉 ssh + sudo nano
@@ -326,6 +478,15 @@ async def run_gateway(
 
     async def send_fn(msg: Dict[str, Any]) -> None:
         await client.send(msg)
+
+    # 自建 OTA 客户端（对接 uni-lab-backend，见 ota/ota-design.md §13）。
+    # 网关以"一台特殊 device"身份登记：product_key 固定，device_name = hostname 后缀。
+    # 下发本期先走 HTTP 兜底拉取（不依赖 WS 连接类型）；WS ota_cmd 主动推送若能到也一并处理。
+    ota_agent = SelfHostedOtaAgent(
+        send_fn=send_fn,
+        machine_name=machine_name,
+        base_url=http_url,
+    )
 
     async def on_ready() -> Dict[str, Any]:
         devices_payload = []
@@ -371,6 +532,10 @@ async def run_gateway(
             await _handle_job_start(data, workers, client, machine_name)
         elif action == "query_action_state":
             await _handle_query_action_state(data, workers, client)
+        elif action == "ota_cmd":
+            await ota_agent.handle_ota_cmd(data)
+        elif action == "ota_cancel":
+            await ota_agent.handle_ota_cancel(data)
         elif action == "cancel_action" or action == "cancel_task":
             logger.info(f"[GW] 收到取消请求 action={action} data={data}（暂未实现）")
         elif action in ("add_material", "update_material", "remove_material"):
@@ -380,11 +545,20 @@ async def run_gateway(
         else:
             logger.debug(f"[GW] 未处理的下行消息 action={action} keys={list(data.keys())}")
 
+    # WS 握手声明网关身份（ota-design.md §13.1）。ConnType=gateway 是与后端约定的
+    # 专用类型：既保留主机连接语义（不影响真实设备的 job_start 路由，区别于 device 型），
+    # 又让后端据 (ProductKey, DeviceName) 把本网关的 lab_id upsert 进 device 表，
+    # 从而填上设备台账的"实验室"归属。pk/sn 与 OTA 拉取用的一致（见 ota_agent）。
     client = GatewayClient(
         url=ws_url,
         machine_name=machine_name,
         on_message=on_message,
         on_ready=on_ready,
+        extra_headers={
+            "ConnType": "gateway",
+            "ProductKey": ota_agent.product_key,
+            "DeviceName": ota_agent.device_name,
+        },
     )
 
     workers = _build_workers(devices_cfg, send_fn=send_fn, machine_name=machine_name, on_device_lost=on_device_lost)
@@ -401,9 +575,22 @@ async def run_gateway(
         )
     )
 
+    # 启动断网看门狗：运行期真断网超过 20s 就重启进程重新进入配网流程
+    watchdog_task = asyncio.create_task(
+        _network_watchdog(client, wifi_mgr), name="gw-net-watchdog"
+    )
+
+    # 启动自建 OTA 的 HTTP 兜底拉取任务（§13.8）；WS ota_cmd 推送经 on_message 处理。
+    ota_poll_task = asyncio.create_task(
+        ota_agent.http_poll_loop(), name="gw-ota-poll"
+    )
+
     try:
         await client.run()
     finally:
+        ota_agent.stop()
+        ota_poll_task.cancel()
+        watchdog_task.cancel()
         hotplug_task.cancel()
         for worker in workers.values():
             await worker.stop()
@@ -689,7 +876,7 @@ def main() -> None:
         default="",
         help="资源树挂载点 UUID。填你的 lab UUID（从浏览器 URL /laboratory/<uuid>/ 复制）",
     )
-    parser.add_argument("--machine-name", default=None, help="机器名 (默认 gw-<hostname>)")
+    parser.add_argument("--machine-name", default=None, help="机器名 (默认 <hostname>)")
     parser.add_argument("--ak", help="AK，覆盖环境变量与配置文件")
     parser.add_argument("--sk", help="SK，覆盖环境变量与配置文件")
     parser.add_argument(
@@ -706,6 +893,12 @@ def main() -> None:
         "--skip-provisioning",
         action="store_true",
         help="跳过 WiFi 配网检查（已联网或调试时使用）",
+    )
+    parser.add_argument(
+        "--provision-method",
+        default=None,
+        choices=["auto", "ble", "ap"],
+        help="配网方式：auto=优先蓝牙失败回退AP网页(默认) / ble=仅蓝牙 / ap=仅AP网页",
     )
     args = parser.parse_args()
 
@@ -727,7 +920,7 @@ def main() -> None:
 
     ws_url = _resolve_ws_url(args.ws_url)
 
-    machine_name = args.machine_name or f"gw-{socket.gethostname()}"
+    machine_name = args.machine_name or socket.gethostname()
     BasicConfig.machine_name = machine_name
 
     config_path = Path(args.config)
@@ -761,6 +954,9 @@ def main() -> None:
         machine_name = cfg["machine_name"]
         BasicConfig.machine_name = machine_name
 
+    # 配网方式：命令行 > 配置文件 > 默认 auto
+    provision_method = args.provision_method or cfg.get("provision_method") or "auto"
+
     logger.info(
         f"[GW] 启动: machine_name={machine_name} devices={len(devices_cfg)} "
         f"ws={ws_url} register={args.register} reconnect_interval={WSConfig.reconnect_interval}s"
@@ -776,6 +972,7 @@ def main() -> None:
                 http_url=args.http_url,
                 mount_uuid=args.mount_uuid,
                 skip_provisioning=args.skip_provisioning,
+                provision_method=provision_method,
             )
         )
     except KeyboardInterrupt:

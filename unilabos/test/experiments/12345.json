@@ -1,0 +1,96 @@
+{
+    "nodes": [
+        {
+            "id": "simple_station",
+            "uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "name": "simple_station",
+            "description": "",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "workstation",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "protocol_type": "PumpTransferProtocol, EvacuateAndRefillProtocol",
+                "url": ""
+            },
+            "data": {}
+        },
+        {
+            "id": "peristalticpump_A",
+            "uuid": "d1954b5f-10c2-5555-a32e-eb0f4eeb031c",
+            "name": "peristalticpump_A",
+            "description": "蠕动泵A（地址1）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "peristalticpump_A",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 300.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM7",
+                "address": 1,
+                "baudrate": 9600
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

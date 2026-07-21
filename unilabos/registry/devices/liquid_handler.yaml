@@ -4852,8 +4852,10 @@ liquid_handler:
     type: python
   config_info: []
   description: Liquid handler device controlled by pylabrobot
+  displayname: liquid_handler
   handles: []
   icon: icon_yiyezhan.webp
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties:
@@ -5345,13 +5347,13 @@ liquid_handler.biomek:
             handler_key: tip_rack
             label: tip_rack
           output:
-          - data_key: liquid
+          - data_key: sources
             data_source: handle
             data_type: resource
             handler_key: sources_out
             label: sources
-          - data_key: liquid
-            data_source: executor
+          - data_key: targets
+            data_source: handle
             data_type: resource
             handler_key: targets_out
             label: targets
@@ -5811,8 +5813,10 @@ liquid_handler.biomek:
     type: python
   config_info: []
   description: Biomek液体处理器设备，基于pylabrobot控制
+  displayname: liquid_handler.biomek
   handles: []
   icon: icon_yiyezhan.webp
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties: {}
@@ -7008,8 +7012,10 @@ liquid_handler.laiyu:
     type: python
   config_info: []
   description: Laiyu液体处理器设备，基于pylabrobot控制
+  displayname: liquid_handler.laiyu
   handles: []
   icon: icon_yiyezhan.webp
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties:
@@ -7656,10 +7662,48 @@ liquid_handler.prcxi:
           title: move_to参数
           type: object
         type: UniLabJsonCommandAsync
+      auto-plr_pos_to_prcxi:
+        feedback: {}
+        goal: {}
+        goal_default:
+          offset:
+            _call: pylabrobot.resources:Coordinate
+            _pos_0: 0
+            _pos_1: 0
+            _pos_2: 0
+          resource: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                offset:
+                  default:
+                    _call: pylabrobot.resources:Coordinate
+                    _pos_0: 0
+                    _pos_1: 0
+                    _pos_2: 0
+                  type: object
+                resource:
+                  type: object
+              required:
+              - resource
+              type: object
+            result: {}
+          required:
+          - goal
+          title: plr_pos_to_prcxi参数
+          type: object
+        type: UniLabJsonCommand
       auto-run_protocol:
         feedback: {}
         goal: {}
-        goal_default: {}
+        goal_default:
+          protocol_id: null
         handles: {}
         placeholder_keys: {}
         result: {}
@@ -7668,7 +7712,9 @@ liquid_handler.prcxi:
           properties:
             feedback: {}
             goal:
-              properties: {}
+              properties:
+                protocol_id:
+                  type: string
               required: []
               type: object
             result: {}
@@ -8161,6 +8207,7 @@ liquid_handler.prcxi:
           none_keys: none_keys
           offsets: offsets
           targets: targets
+          use_channels: use_channels
         goal_default:
           height_to_bottom: 0.0
           mix_rate: 0.0
@@ -9832,50 +9879,30 @@ liquid_handler.prcxi:
         type: Transfer
       transfer_liquid:
         feedback: {}
-        goal:
-          asp_flow_rates: asp_flow_rates
-          asp_vols: asp_vols
-          blow_out_air_volume: blow_out_air_volume
-          delays: delays
-          dis_flow_rates: dis_flow_rates
-          dis_vols: dis_vols
-          is_96_well: is_96_well
-          liquid_height: liquid_height
-          mix_liquid_height: mix_liquid_height
-          mix_rate: mix_rate
-          mix_stage: mix_stage
-          mix_times: mix_times
-          mix_vol: mix_vol
-          none_keys: none_keys
-          offsets: offsets
-          sources: sources
-          spread: spread
-          targets: targets
-          tip_racks: tip_racks
-          touch_tip: touch_tip
-          use_channels: use_channels
+        goal: {}
         goal_default:
-          asp_flow_rates: []
-          asp_vols: []
-          blow_out_air_volume: []
-          delays: []
-          dis_flow_rates: []
-          dis_vols: []
+          asp_flow_rates: null
+          asp_vols: null
+          blow_out_air_volume: null
+          blow_out_air_volume_before: null
+          delays: null
+          dis_flow_rates: null
+          dis_vols: null
           is_96_well: false
-          liquid_height: []
-          mix_liquid_height: 0.0
-          mix_rate: 0
-          mix_stage: ''
-          mix_times: 0
-          mix_vol: 0
+          liquid_height: null
+          mix_liquid_height: null
+          mix_rate: null
+          mix_stage: none
+          mix_times: null
+          mix_vol: null
           none_keys: []
-          offsets: []
-          sources: []
-          spread: ''
-          targets: []
-          tip_racks: []
+          offsets: null
+          sources: null
+          spread: wide
+          targets: null
+          tip_racks: null
           touch_tip: false
-          use_channels: []
+          use_channels: null
         handles:
           input:
           - data_key: sources
@@ -9888,7 +9915,7 @@ liquid_handler.prcxi:
             data_type: resource
             handler_key: targets_identifier
             label: 转移目标
-          - data_key: tip_rack
+          - data_key: tip_racks
             data_source: handle
             data_type: resource
             handler_key: tip_rack_identifier
@@ -9908,28 +9935,28 @@ liquid_handler.prcxi:
           sources: unilabos_resources
           targets: unilabos_resources
           tip_racks: unilabos_resources
-        result:
-          return_info: return_info
-          success: success
+        result: {}
         schema:
           description: ''
           properties:
-            feedback:
-              additionalProperties: true
-              title: LiquidHandlerTransfer_Feedback
-              type: object
+            feedback: {}
             goal:
-              additionalProperties: false
               properties:
                 asp_flow_rates:
                   items:
                     type: number
                   type: array
                 asp_vols:
+                  anyOf:
+                  - items:
+                      type: number
+                    type: array
+                  - type: number
+                blow_out_air_volume:
                   items:
                     type: number
                   type: array
-                blow_out_air_volume:
+                blow_out_air_volume_before:
                   items:
                     type: number
                   type: array
@@ -9942,306 +9969,320 @@ liquid_handler.prcxi:
                     type: number
                   type: array
                 dis_vols:
-                  items:
-                    type: number
-                  type: array
+                  anyOf:
+                  - items:
+                      type: number
+                    type: array
+                  - type: number
                 is_96_well:
+                  default: false
                   type: boolean
                 liquid_height:
                   items:
                     type: number
                   type: array
                 mix_liquid_height:
-                  maximum: 1.7976931348623157e+308
-                  minimum: -1.7976931348623157e+308
                   type: number
                 mix_rate:
-                  maximum: 2147483647
-                  minimum: -2147483648
                   type: integer
                 mix_stage:
+                  default: none
+                  enum:
+                  - none
+                  - before
+                  - after
+                  - both
                   type: string
                 mix_times:
-                  maximum: 2147483647
-                  minimum: -2147483648
-                  type: integer
+                  items:
+                    type: integer
+                  type: array
                 mix_vol:
-                  maximum: 2147483647
-                  minimum: -2147483648
                   type: integer
                 none_keys:
+                  default: []
                   items:
                     type: string
                   type: array
                 offsets:
                   items:
-                    properties:
-                      x:
-                        type: number
-                      y:
-                        type: number
-                      z:
-                        type: number
-                    required:
-                    - x
-                    - y
-                    - z
                     type: object
                   type: array
                 sources:
                   items:
-                    properties:
-                      category:
-                        type: string
-                      children:
-                        items:
-                          type: string
-                        type: array
-                      config:
-                        type: string
-                      data:
-                        type: string
-                      id:
-                        type: string
-                      name:
-                        type: string
-                      parent:
-                        type: string
-                      pose:
-                        properties:
-                          orientation:
-                            properties:
-                              w:
-                                type: number
-                              x:
-                                type: number
-                              y:
-                                type: number
-                              z:
-                                type: number
-                            required:
-                            - x
-                            - y
-                            - z
-                            - w
-                            title: orientation
-                            type: object
-                          position:
-                            properties:
-                              x:
-                                type: number
-                              y:
-                                type: number
-                              z:
-                                type: number
-                            required:
-                            - x
-                            - y
-                            - z
-                            title: position
-                            type: object
-                        required:
-                        - position
-                        - orientation
-                        title: pose
-                        type: object
-                      sample_id:
-                        type: string
-                      type:
-                        type: string
-                    required:
-                    - id
-                    - name
-                    - sample_id
-                    - children
-                    - parent
-                    - type
-                    - category
-                    - pose
-                    - config
-                    - data
                     type: object
                   type: array
                 spread:
+                  default: wide
+                  enum:
+                  - wide
+                  - tight
+                  - custom
                   type: string
                 targets:
                   items:
-                    properties:
-                      category:
-                        type: string
-                      children:
-                        items:
-                          type: string
-                        type: array
-                      config:
-                        type: string
-                      data:
-                        type: string
-                      id:
-                        type: string
-                      name:
-                        type: string
-                      parent:
-                        type: string
-                      pose:
-                        properties:
-                          orientation:
-                            properties:
-                              w:
-                                type: number
-                              x:
-                                type: number
-                              y:
-                                type: number
-                              z:
-                                type: number
-                            required:
-                            - x
-                            - y
-                            - z
-                            - w
-                            title: orientation
-                            type: object
-                          position:
-                            properties:
-                              x:
-                                type: number
-                              y:
-                                type: number
-                              z:
-                                type: number
-                            required:
-                            - x
-                            - y
-                            - z
-                            title: position
-                            type: object
-                        required:
-                        - position
-                        - orientation
-                        title: pose
-                        type: object
-                      sample_id:
-                        type: string
-                      type:
-                        type: string
-                    required:
-                    - id
-                    - name
-                    - sample_id
-                    - children
-                    - parent
-                    - type
-                    - category
-                    - pose
-                    - config
-                    - data
                     type: object
                   type: array
                 tip_racks:
                   items:
-                    properties:
-                      category:
-                        type: string
-                      children:
-                        items:
-                          type: string
-                        type: array
-                      config:
-                        type: string
-                      data:
-                        type: string
-                      id:
-                        type: string
-                      name:
-                        type: string
-                      parent:
-                        type: string
-                      pose:
-                        properties:
-                          orientation:
-                            properties:
-                              w:
-                                type: number
-                              x:
-                                type: number
-                              y:
-                                type: number
-                              z:
-                                type: number
-                            required:
-                            - x
-                            - y
-                            - z
-                            - w
-                            title: orientation
-                            type: object
-                          position:
-                            properties:
-                              x:
-                                type: number
-                              y:
-                                type: number
-                              z:
-                                type: number
-                            required:
-                            - x
-                            - y
-                            - z
-                            title: position
-                            type: object
-                        required:
-                        - position
-                        - orientation
-                        title: pose
-                        type: object
-                      sample_id:
-                        type: string
-                      type:
-                        type: string
-                    required:
-                    - id
-                    - name
-                    - sample_id
-                    - children
-                    - parent
-                    - type
-                    - category
-                    - pose
-                    - config
-                    - data
                     type: object
                   type: array
                 touch_tip:
+                  default: false
                   type: boolean
                 use_channels:
                   items:
                     type: integer
                   type: array
-              title: LiquidHandlerTransfer_Goal
+              required:
+              - sources
+              - targets
+              - tip_racks
+              - asp_vols
+              - dis_vols
               type: object
             result:
-              additionalProperties: false
+              $defs:
+                ResourceDict:
+                  properties:
+                    barcode:
+                      default: ''
+                      description: Material barcode
+                      title: Barcode
+                      type: string
+                    barcode_symbology:
+                      default: ''
+                      description: Barcode symbology / 码制
+                      title: Barcode Symbology
+                      type: string
+                    class:
+                      description: Resource class name
+                      title: Class
+                      type: string
+                    config:
+                      additionalProperties: true
+                      description: Resource configuration
+                      title: Config
+                      type: object
+                    data:
+                      additionalProperties: true
+                      description: 'Resource data, eg: container liquid data'
+                      title: Data
+                      type: object
+                    description:
+                      default: ''
+                      description: Resource description
+                      title: Description
+                      type: string
+                    extra:
+                      additionalProperties: true
+                      description: 'Extra data, eg: slot index'
+                      title: Extra
+                      type: object
+                    icon:
+                      default: ''
+                      description: Resource icon
+                      title: Icon
+                      type: string
+                    id:
+                      description: Resource ID
+                      title: Id
+                      type: string
+                    machine_name:
+                      default: ''
+                      description: Machine this resource belongs to
+                      title: Machine Name
+                      type: string
+                    model:
+                      additionalProperties: true
+                      description: Resource model
+                      title: Model
+                      type: object
+                    name:
+                      description: Resource name
+                      title: Name
+                      type: string
+                    parent:
+                      anyOf:
+                      - $ref: '#/$defs/ResourceDict'
+                      - type: 'null'
+                      default: null
+                      description: Parent resource object
+                    parent_uuid:
+                      anyOf:
+                      - type: string
+                      - type: 'null'
+                      default: null
+                      description: Parent resource uuid
+                      title: Parent Uuid
+                    pose:
+                      $ref: '#/$defs/ResourceDictPosition'
+                      description: Resource position
+                    schema:
+                      additionalProperties: true
+                      description: Resource schema
+                      title: Schema
+                      type: object
+                    type:
+                      anyOf:
+                      - const: device
+                        type: string
+                      - type: string
+                      description: Resource type
+                      title: Type
+                    uuid:
+                      description: Resource UUID
+                      title: Uuid
+                      type: string
+                  required:
+                  - id
+                  - uuid
+                  - name
+                  - type
+                  - class
+                  - config
+                  - data
+                  - extra
+                  title: ResourceDict
+                  type: object
+                ResourceDictPosition:
+                  properties:
+                    cross_section_type:
+                      default: rectangle
+                      description: Cross section type
+                      enum:
+                      - rectangle
+                      - circle
+                      - rounded_rectangle
+                      title: Cross Section Type
+                      type: string
+                    extra:
+                      anyOf:
+                      - additionalProperties: true
+                        type: object
+                      - type: 'null'
+                      default: null
+                      description: Extra data
+                      title: Extra
+                    layout:
+                      default: x-y
+                      description: Resource layout
+                      enum:
+                      - 2d
+                      - x-y
+                      - z-y
+                      - x-z
+                      title: Layout
+                      type: string
+                    position:
+                      $ref: '#/$defs/ResourceDictPositionObject'
+                      description: Resource position
+                    position3d:
+                      $ref: '#/$defs/ResourceDictPositionObject'
+                      description: Resource position in 3D space
+                    rotation:
+                      $ref: '#/$defs/ResourceDictPositionObject'
+                      description: Resource rotation
+                    scale:
+                      $ref: '#/$defs/ResourceDictPositionScale'
+                      description: Resource scale
+                    size:
+                      $ref: '#/$defs/ResourceDictPositionSize'
+                      description: Resource size
+                  title: ResourceDictPosition
+                  type: object
+                ResourceDictPositionObject:
+                  properties:
+                    x:
+                      default: 0.0
+                      description: X coordinate
+                      title: X
+                      type: number
+                    y:
+                      default: 0.0
+                      description: Y coordinate
+                      title: Y
+                      type: number
+                    z:
+                      default: 0.0
+                      description: Z coordinate
+                      title: Z
+                      type: number
+                  title: ResourceDictPositionObject
+                  type: object
+                ResourceDictPositionScale:
+                  properties:
+                    x:
+                      default: 0.0
+                      description: x scale
+                      title: X
+                      type: number
+                    y:
+                      default: 0.0
+                      description: y scale
+                      title: Y
+                      type: number
+                    z:
+                      default: 0.0
+                      description: z scale
+                      title: Z
+                      type: number
+                  title: ResourceDictPositionScale
+                  type: object
+                ResourceDictPositionSize:
+                  properties:
+                    depth:
+                      default: 0.0
+                      description: Depth
+                      title: Depth
+                      type: number
+                    height:
+                      default: 0.0
+                      description: Height
+                      title: Height
+                      type: number
+                    width:
+                      default: 0.0
+                      description: Width
+                      title: Width
+                      type: number
+                  title: ResourceDictPositionSize
+                  type: object
               properties:
-                return_info:
-                  type: string
-                success:
-                  type: boolean
-              title: LiquidHandlerTransfer_Result
+                sources:
+                  items:
+                    items:
+                      $ref: '#/$defs/ResourceDict'
+                    type: array
+                  title: Sources
+                  type: array
+                targets:
+                  items:
+                    items:
+                      $ref: '#/$defs/ResourceDict'
+                    type: array
+                  title: Targets
+                  type: array
+              required:
+              - sources
+              - targets
+              title: TransferLiquidReturn
               type: object
           required:
           - goal
-          title: LiquidHandlerTransfer
+          title: transfer_liquid参数
           type: object
-        type: LiquidHandlerTransfer
+        type: UniLabJsonCommandAsync
     module: unilabos.devices.liquid_handling.prcxi.prcxi:PRCXI9300Handler
     status_types:
       reset_ok: bool
     type: python
   config_info: []
   description: prcxi液体处理器设备，基于pylabrobot控制
+  displayname: liquid_handler.prcxi
   handles: []
   icon: icon_yiyezhan.webp
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties:
@@ -10256,6 +10297,12 @@ liquid_handler.prcxi:
           type: string
         deck:
           type: object
+        deck_y:
+          default: 400
+          type: string
+        deck_z:
+          default: 300
+          type: string
         host:
           type: string
         is_9320:
@@ -10266,17 +10313,44 @@ liquid_handler.prcxi:
           type: string
         port:
           type: integer
+        rail_interval:
+          default: 0
+          type: string
+        rail_nums:
+          default: 4
+          type: string
+        rail_width:
+          default: 27.5
+          type: string
         setup:
           default: true
           type: string
         simulator:
           default: false
           type: string
+        start_rail:
+          default: 2
+          type: string
         step_mode:
           default: false
           type: string
         timeout:
           type: number
+        x_increase:
+          default: -0.003636
+          type: string
+        x_offset:
+          default: 9.2
+          type: string
+        xy_coupling:
+          default: -0.0045
+          type: string
+        y_increase:
+          default: -0.003636
+          type: string
+        y_offset:
+          default: -27.98
+          type: string
       required:
       - deck
       - host
@@ -10466,8 +10540,10 @@ liquid_handler.revvity:
     type: python
   config_info: []
   description: ''
+  displayname: liquid_handler.revvity
   handles: []
   icon: ''
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties: {}

@@ -1,0 +1,2176 @@
+{
+    "nodes": [
+        {
+            "uuid": "dbfa534f-8d59-4985-afb6-13d08d920da8",
+            "parent_uuid": "",
+            "id": "host_node",
+            "name": "host_node",
+            "type": "device",
+            "class": "host_node",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 0,
+                    "height": 0,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {},
+            "data": {},
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "parent_uuid": "",
+            "id": "OrganicSynthesisStation",
+            "name": "有机化学流程综合测试工作站",
+            "type": "device",
+            "class": "workstation",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 600,
+                    "y": 400,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 3284,
+                    "height": 2357,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": {
+                    "isCustomSize": true
+                },
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "protocol_type": [
+                    "AddProtocol",
+                    "StartStirProtocol",
+                    "StopStirProtocol",
+                    "StirProtocol",
+                    "RunColumnProtocol",
+                    "CentrifugeProtocol",
+                    "FilterProtocol",
+                    "CleanVesselProtocol",
+                    "DissolveProtocol",
+                    "FilterThroughProtocol",
+                    "WashSolidProtocol",
+                    "SeparateProtocol",
+                    "EvaporateProtocol",
+                    "HeatChillProtocol",
+                    "HeatChillStartProtocol",
+                    "HeatChillStopProtocol",
+                    "EvacuateAndRefillProtocol",
+                    "PumpTransferProtocol",
+                    "AdjustPHProtocol",
+                    "ResetHandlingProtocol",
+                    "DryProtocol",
+                    "HydrogenateProtocol",
+                    "RecrystallizeProtocol"
+                ]
+            },
+            "data": {},
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 600,
+                "y": 400,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "b766f1c4-19ee-42a3-84bf-8c60cf916a78",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "柱子1",
+            "name": "柱子1",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 156.41219,
+                    "y": 1258.4594,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 156.41219,
+                "y": 1258.4594,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "c2b99afb-cad2-4703-b393-6369074f92d6",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "柱子2",
+            "name": "柱子2",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 714.25146,
+                    "y": 1262.454,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 714.25146,
+                "y": 1262.454,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "ae49d638-0d7b-4be9-8488-bb1676f4f7be",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "柱子3",
+            "name": "柱子3",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1199.0966,
+                    "y": 1262.8632,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 1199.0966,
+                "y": 1262.8632,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "27d066c3-a734-491b-b668-2c6134e8c2dd",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "柱子4",
+            "name": "柱子4",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1847.2239,
+                    "y": 1264.3146,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 1847.2239,
+                "y": 1264.3146,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "94fae9a4-b6ae-4db6-a96d-32ae2de88367",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "柱子5",
+            "name": "柱子5",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 2494.6897,
+                    "y": 1257.0006,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 2494.6897,
+                "y": 1257.0006,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "ce1a15f6-1ca3-4aea-9973-2d473ecbfd53",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "样品4",
+            "name": "样品4",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 2441.254,
+                    "y": 2046.071,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 2441.254,
+                "y": 2046.071,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "98b4b985-9873-43c9-a3bc-5e401ed700f8",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "样品5",
+            "name": "样品5",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 2092.9087,
+                    "y": 2033.2596,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 2092.9087,
+                "y": 2033.2596,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "e95813aa-5487-4ae4-8069-1fcff8cba781",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "syringe_pump_with_valve_runze_SY03B_T06",
+            "name": "syringe_pump_with_valve_runze_SY03B_T06",
+            "type": "device",
+            "class": "syringe_pump_with_valve.runze.SY03B-T06",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 491.56442,
+                    "y": 1656.5593,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "port": "COM9",
+                "address": "6",
+                "max_volume": 25
+            },
+            "data": {
+                "status": "Idle",
+                "position": 0,
+                "max_velocity": 2.5,
+                "velocity_end": "[900, 3.75]",
+                "velocity_init": "[900, 3.75]",
+                "valve_position": "6",
+                "velocity_grade": "15",
+                "plunger_position": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 491.56442,
+                "y": 1656.5593,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "51b24d7a-36c7-4d89-87f9-9dc29d0b894c",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "syringe_pump_with_valve_runze_SY03B_T07",
+            "name": "syringe_pump_with_valve_runze_SY03B_T07",
+            "type": "device",
+            "class": "syringe_pump_with_valve.runze.SY03B-T06",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 2290.91,
+                    "y": 1697.0286,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "port": "COM9",
+                "address": "8",
+                "max_volume": 25
+            },
+            "data": {
+                "status": "Idle",
+                "position": 0,
+                "valve_position": "I"
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 2290.91,
+                "y": 1697.0286,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "f22872ce-75f9-4c9c-adf1-a972c60c2778",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "syringe_pump_with_valve_runze_SY03B_T08",
+            "name": "syringe_pump_with_valve_runze_SY03B_T08",
+            "type": "device",
+            "class": "syringe_pump_with_valve.runze.SY03B-T06",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1410.7649,
+                    "y": 1714.5437,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "port": "COM9",
+                "address": "7",
+                "max_volume": 25
+            },
+            "data": {
+                "status": "Idle",
+                "max_velocity": 0,
+                "valve_position": "I"
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 1410.7649,
+                "y": 1714.5437,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "e86c30ed-4f4c-4417-9e56-c13084d4874f",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "溶剂1",
+            "name": "溶剂1",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1096.1096,
+                    "y": 2031.5,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 1096.1096,
+                "y": 2031.5,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "cd6a651b-1829-4795-8b23-bb168fcf7edf",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "溶剂2",
+            "name": "溶剂2",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1388.0128,
+                    "y": 2024.62,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 1388.0128,
+                "y": 2024.62,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "f9f0d98b-e2c3-41e4-8bcb-88f3afbebedb",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "溶剂3",
+            "name": "溶剂3",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1650.9214,
+                    "y": 2027.4559,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 1650.9214,
+                "y": 2027.4559,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "fc2c6eb5-f115-4353-8213-0c63092e4c89",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "样品1",
+            "name": "样品1",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 111.13977,
+                    "y": 2054.4072,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 111.13977,
+                "y": 2054.4072,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "f85697c9-7526-4916-8a10-4ade321de750",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "样品2",
+            "name": "样品2",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 396.39844,
+                    "y": 2054.4072,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 396.39844,
+                "y": 2054.4072,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "3e0ed6aa-248a-45c3-be6d-cbe971e3d0a7",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "样品3",
+            "name": "样品3",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 700.1803,
+                    "y": 2054.4072,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 700.1803,
+                "y": 2054.4072,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "1b255652-cd5b-4bc5-8e60-39c73c017e7c",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "收集1",
+            "name": "收集1",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 2218.1528,
+                    "y": 357.904,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 2218.1528,
+                "y": 357.904,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "5b545986-b8c3-4bc1-93a0-447a0d59164d",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "收集2",
+            "name": "收集2",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 1708.3739,
+                    "y": 362.92398,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 1708.3739,
+                "y": 362.92398,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "928f912f-20d1-4c41-a689-9f3a387a2277",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "收集3",
+            "name": "收集3",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 1141.085,
+                    "y": 354.4024,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 1141.085,
+                "y": 354.4024,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "ecb7d45e-7734-4e92-aa6b-94aa7039e39f",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "收集4",
+            "name": "收集4",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 585.2762,
+                    "y": 344.0494,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 585.2762,
+                "y": 344.0494,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "d8cd8ea2-4916-4e29-9c2a-cf922e6d7bd2",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "收集5",
+            "name": "收集5",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 118.09093,
+                    "y": 336.41736,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 118.09093,
+                "y": 336.41736,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "5d6d4f97-66bf-447a-b88b-bb5e8cbd81a0",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "废液瓶",
+            "name": "废液瓶",
+            "type": "container",
+            "class": "container",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "2d",
+                "position": {
+                    "x": 2691.3062,
+                    "y": 358.3671,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "size_x": 0,
+                "size_y": 0,
+                "size_z": 0,
+                "category": "container",
+                "max_volume": 0,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "liquids": [],
+                "max_volume": 0,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 2691.3062,
+                "y": 358.3671,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "03240e1b-b698-494b-be82-bd4b0cb95a97",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "wxf_esp32_valve",
+            "name": "wxf_esp32_valve",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 3102.4495,
+                    "y": 1674.3378,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "channel": 1,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 3102.4495,
+                "y": 1674.3378,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "4e2e9aea-7151-44f6-a1ae-20257bea49b3",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "wxf_esp32_valve1",
+            "name": "wxf_esp32_valve1",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 2462.2615,
+                    "y": 1698.9603,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "channel": 2,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 2462.2615,
+                "y": 1698.9603,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "7cd711d9-8677-41bb-a07d-6fd8a50e1938",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "wxf_esp32_valve2",
+            "name": "wxf_esp32_valve2",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1822.0735,
+                    "y": 1717.4274,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "channel": 3,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 1822.0735,
+                "y": 1717.4274,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "9a7ae5ee-82d7-4e98-9dd2-2fc4556986ab",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "wxf_esp32_valve3",
+            "name": "wxf_esp32_valve3",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 1297.6117,
+                    "y": 1717.4274,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "channel": 4,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 1297.6117,
+                "y": 1717.4274,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "bdbf4483-390d-4225-b831-5dc4a44040e7",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "wxf_esp32_valve4",
+            "name": "wxf_esp32_valve4",
+            "type": "device",
+            "class": "wxf_esp32_valve",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 773.1501,
+                    "y": 1742.0499,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "channel": 5,
+                "communication": "serial_esp32"
+            },
+            "data": {},
+            "schema": null,
+            "model": null,
+            "position": {
+                "x": 773.1501,
+                "y": 1742.0499,
+                "z": 0
+            }
+        },
+        {
+            "uuid": "5186128c-385c-4fa0-a97c-626a0d7aa588",
+            "parent_uuid": "d7089379-ca81-4a80-894b-ab48cb0646f0",
+            "id": "serial_esp32",
+            "name": "serial_esp32",
+            "type": "device",
+            "class": "serial",
+            "parent": "OrganicSynthesisStation",
+            "pose": {
+                "layout": "x-y",
+                "position": {
+                    "x": 3102,
+                    "y": 1100,
+                    "z": 0
+                },
+                "position_3d": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "size": {
+                    "width": 200,
+                    "height": 200,
+                    "depth": 0
+                },
+                "scale": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "port": "COM6",
+                "baudrate": 115200
+            },
+            "data": {},
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": {
+                "x": 3102,
+                "y": 1100,
+                "z": 0
+            }
+        }
+    ],
+    "edges": [
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "柱子1",
+            "target": "wxf_esp32_valve4",
+            "sourceHandle": "bottom",
+            "targetHandle": "1",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "柱子2",
+            "target": "wxf_esp32_valve3",
+            "sourceHandle": "bottom",
+            "targetHandle": "1",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve",
+            "target": "废液瓶",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve1",
+            "target": "废液瓶",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve4",
+            "target": "废液瓶",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "柱子1",
+            "sourceHandle": "7",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "柱子2",
+            "sourceHandle": "5",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "柱子3",
+            "sourceHandle": "6",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "柱子4",
+            "sourceHandle": "8",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T06",
+            "target": "柱子1",
+            "sourceHandle": "6",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T06",
+            "target": "柱子2",
+            "sourceHandle": "8",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T06",
+            "target": "柱子3",
+            "sourceHandle": "7",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "柱子5",
+            "target": "wxf_esp32_valve",
+            "sourceHandle": "bottom",
+            "targetHandle": "1",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve2",
+            "target": "废液瓶",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve3",
+            "target": "废液瓶",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T06",
+            "target": "样品1",
+            "sourceHandle": "1",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T06",
+            "target": "样品2",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T06",
+            "target": "样品3",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T07",
+            "target": "柱子4",
+            "sourceHandle": "7",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T07",
+            "target": "柱子5",
+            "sourceHandle": "5",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "柱子3",
+            "target": "wxf_esp32_valve2",
+            "sourceHandle": "bottom",
+            "targetHandle": "1",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "柱子4",
+            "target": "wxf_esp32_valve1",
+            "sourceHandle": "bottom",
+            "targetHandle": "1",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve4",
+            "target": "收集1",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve3",
+            "target": "收集2",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve2",
+            "target": "收集3",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve1",
+            "target": "收集4",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "wxf_esp32_valve",
+            "target": "收集5",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "溶剂1",
+            "sourceHandle": "1",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "溶剂2",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "溶剂3",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T08",
+            "target": "柱子5",
+            "sourceHandle": "4",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T07",
+            "target": "样品5",
+            "sourceHandle": "1",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_with_valve_runze_SY03B_T07",
+            "target": "样品4",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+      
+{
+    "nodes": [
+        {
+            "id": "MuffleDevice",
+            "name": "MuffleDevice",
+            "parent": null,
+            "type": "device",
+            "class": "MuffleDevice",
+            "position": {
+                "x": 600,
+                "y": 160,
+                "z": 0
+            },
+            "config": {
+                "host": "169.254.82.99",
+                "port": 29999
+            },
+            "data": {},
+            "children": []
+        }
+    ],
+    "links": []
+}

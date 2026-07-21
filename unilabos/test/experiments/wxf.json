@@ -1,0 +1,53 @@
+{
+    "nodes": [
+        {
+            "id": "pump_1",
+            "name": "注射泵-1号",
+            "children": [],
+            "parent": null,
+            "type": "device",
+            "class": "pump_2",
+            "position": { "x": 0, "y": 0, "z": 0 },
+            "config": {
+                "port": "COM9",
+                "address": "3",
+                "max_volume": 25.0
+            },
+            "data": {}
+        },
+        {
+            "id": "pump_2",
+            "name": "注射泵-2号",
+            "children": [],
+            "parent": null,
+            "type": "device",
+            "class": "pump_2",
+            "position": { "x": 200, "y": 0, "z": 0 },
+            "config": {
+                "port": "COM9",
+                "address": "4",
+                "max_volume": 25.0
+            },
+            "data": {}
+        },
+        {
+            "id": "xkc_sensors",
+            "name": "XKC液位传感器",
+            "children": [],
+            "parent": null,
+            "type": "device",
+            "class": "wxf.xkc_sensor",
+            "position": { "x": 100, "y": 200, "z": 0 },
+            "config": {
+                "port": "COM9",
+                "baudrate": 9600,
+                "device_ids": [1, 2],
+                "threshold": 0,
+                "timeout": 3.0,
+                "poll_interval": 0.5
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

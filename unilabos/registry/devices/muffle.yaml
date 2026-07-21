@@ -1,0 +1,75 @@
+MuffleDevice:
+  category:
+  - MuffleDevice
+  - muffle
+  class:
+    action_value_mappings:
+      auto-start:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: start参数
+          type: object
+        type: UniLabJsonCommand
+      auto-stop:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: stop参数
+          type: object
+        type: UniLabJsonCommand
+    module: unilabos.devices.muffle.dashboard:MuffleDevice
+    status_types: {}
+    type: python
+  config_info: []
+  description: ''
+  displayname: MuffleDevice
+  handles: []
+  icon: Glovebox.webp
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        config:
+          type: string
+        data:
+          type: string
+        host:
+          type: string
+        port:
+          type: string
+      required: []
+      type: object
+    data:
+      properties: {}
+      required: []
+      type: object
+  version: 1.0.0

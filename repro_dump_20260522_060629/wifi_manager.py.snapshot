@@ -1,0 +1,553 @@
+"""
+WiFi 管理器 - 负责网络检测、AP 热点管理、WiFi 配置保存
+
+核心功能：
+- 检测当前网络连接状态
+- 启动/停止 AP 热点
+- 扫描可用 WiFi 列表
+- 保存 WiFi 凭证到 NetworkManager
+"""
+
+import logging
+import os
+import subprocess
+import time
+from pathlib import Path
+from typing import Dict, List, Optional
+
+# NM keyfile 后端的存储目录。系统是 ifupdown 的话改这里没意义，
+# 但 Debian/Ubuntu 默认用 keyfile，香橙派 Bookworm 也用 keyfile。
+_NM_KEYFILE_DIR = "/etc/NetworkManager/system-connections"
+
+logger = logging.getLogger("wifi_manager")
+
+
+class WiFiManager:
+    """WiFi 配网管理器"""
+
+    AP_SSID_PREFIX = "UniLab-Gateway"
+    AP_PASSWORD = None  # 使用开放网络（无密码）以兼容 unisoc WiFi 驱动
+    AP_INTERFACE = "wlan0"
+    CONNECTION_TIMEOUT = 30  # 连接超时（秒）
+
+    def __init__(self, ap_ssid: Optional[str] = None, ap_password: Optional[str] = None):
+        """
+        :param ap_ssid: 热点 SSID（默认 UniLab-Gateway-<MAC后4位>）
+        :param ap_password: 热点密码（默认 None = 开放网络）
+        """
+        self.ap_ssid = ap_ssid or self._generate_ap_ssid()
+        self.ap_password = ap_password if ap_password is not None else self.AP_PASSWORD
+        self._ap_connection_name = "unilab-provisioning-ap"
+
+    def _generate_ap_ssid(self) -> str:
+        """生成唯一的 AP SSID（基于 MAC 地址后4位）"""
+        try:
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "GENERAL.HWADDR", "device", "show", self.AP_INTERFACE],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if result.returncode == 0:
+                mac = result.stdout.strip().split(":")[-1]
+                mac_suffix = mac.replace(":", "")[-4:].upper()
+                return f"{self.AP_SSID_PREFIX}-{mac_suffix}"
+        except Exception as e:
+            logger.warning(f"无法获取 MAC 地址: {e}")
+        return f"{self.AP_SSID_PREFIX}-0000"
+
+    def is_connected(self) -> bool:
+        """检查是否已**真正**连接到 WiFi（必须能出公网）。
+
+        踩过的坑：以前只看 STATE 字段含 "connected"，但 NM 在 AP 模式 / 局域网
+        路由不通时会返回 "connected (local only)"——表面上 has_ip=True 但根本
+        ping 不通公网，DNS 也解析失败。
+        正确判断必须看 connectivity 字段（full=真连公网）。
+        """
+        try:
+            # nmcli general state CONNECTIVITY 字段：
+            #   full=真互联网 / portal=门户 / limited=只有局域网 / none=没网
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "STATE,CONNECTIVITY", "general"],
+                capture_output=True, text=True, timeout=10,
+            )
+            line = result.stdout.strip() if result.returncode == 0 else ""
+            parts = line.split(":", 1)
+            state = parts[0].strip() if parts else ""
+            connectivity = parts[1].strip() if len(parts) > 1 else ""
+
+            ip_result = subprocess.run(
+                ["nmcli", "-t", "-f", "IP4.ADDRESS", "device", "show", self.AP_INTERFACE],
+                capture_output=True, text=True, timeout=5,
+            )
+            has_ip = bool(ip_result.stdout.strip())
+
+            # 真正算"连上"：connectivity=full（NM 实测能 GET 检测 URL）
+            # 或者 state == "connected" 干净没带 (local only) / (site only)
+            is_clean_state = (
+                state == "connected"
+                and "local" not in state.lower()
+                and "site" not in state.lower()
+            )
+            is_truly_connected = (connectivity == "full") or (is_clean_state and has_ip)
+
+            logger.info(
+                f"网络状态: state='{state}', connectivity='{connectivity}', "
+                f"has_ip={has_ip}, truly={is_truly_connected}"
+            )
+            return is_truly_connected
+
+        except Exception as e:
+            logger.error(f"检查网络连接失败: {e}")
+            return False
+
+    def _get_connection_ssid(self, conn_name: str) -> str:
+        """读取一个 NM connection 的 802-11-wireless.ssid 字段"""
+        try:
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "802-11-wireless.ssid",
+                 "connection", "show", conn_name],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode != 0:
+                return ""
+            line = result.stdout.strip()
+            return line.split(":", 1)[1] if ":" in line else ""
+        except Exception:
+            return ""
+
+    def _purge_self_ap_connections(self) -> int:
+        """删除所有 NAME 或 SSID 等于本网关 AP SSID 的脏连接（除 AP 自己）。
+
+        日志里看到过 NM 残留了一个 name=UniLab-Gateway-XX 的 STA connection，
+        会让 has_saved_wifi 误判 + is_connected 进入 local-only 假阳性。
+        每次进入配网模式之前调一次清场。
+        """
+        try:
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "TYPE,NAME", "connection", "show"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode != 0:
+                return 0
+            purged = 0
+            for line in result.stdout.strip().split("\n"):
+                if not line:
+                    continue
+                conn_type, conn_name = line.split(":", 1)
+                if conn_type != "802-11-wireless":
+                    continue
+                if conn_name == self._ap_connection_name:
+                    continue
+                same_ssid = (
+                    conn_name == self.ap_ssid
+                    or self._get_connection_ssid(conn_name) == self.ap_ssid
+                )
+                if same_ssid:
+                    logger.warning(f"清理与 AP 同 SSID 的脏 connection: {conn_name}")
+                    subprocess.run(
+                        ["nmcli", "connection", "delete", conn_name],
+                        capture_output=True, timeout=10,
+                    )
+                    purged += 1
+            return purged
+        except Exception as e:
+            logger.warning(f"清理脏 connection 异常: {e}")
+            return 0
+
+    def has_saved_wifi(self) -> bool:
+        """检查是否有已保存的真实 WiFi 配置（排除 AP 残留 / 同 SSID 脏数据）"""
+        try:
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "TYPE,NAME", "connection", "show"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode != 0:
+                return False
+
+            for line in result.stdout.strip().split("\n"):
+                if not line:
+                    continue
+                conn_type, conn_name = line.split(":", 1)
+                if conn_type != "802-11-wireless":
+                    continue
+                if conn_name == self._ap_connection_name:
+                    continue  # AP connection 自己
+                if conn_name == self.ap_ssid:
+                    continue  # NAME 跟 AP SSID 同名的脏数据
+                if self._get_connection_ssid(conn_name) == self.ap_ssid:
+                    continue  # SSID 字段等于 AP SSID 的脏数据
+                logger.info(f"发现已保存的 WiFi 配置: {conn_name}")
+                return True
+
+            logger.info("未发现已保存的 WiFi 配置")
+            return False
+
+        except Exception as e:
+            logger.error(f"检查 WiFi 配置失败: {e}")
+            return False
+
+    def wait_for_connection(self, timeout: int = CONNECTION_TIMEOUT) -> bool:
+        """
+        等待网络连接建立
+
+        :param timeout: 超时时间（秒）
+        :return: 是否成功连接
+        """
+        logger.info(f"等待网络连接（超时 {timeout} 秒）...")
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            if self.is_connected():
+                logger.info("✓ 网络连接成功")
+                return True
+            time.sleep(2)
+
+        logger.warning(f"✗ 网络连接超时（{timeout} 秒）")
+        return False
+
+    def _reset_wifi_radio(self) -> None:
+        """硬重置 wlan0 驱动状态。
+
+        踩过的坑：unisoc / brcmfmac 这类 SDIO WiFi 芯片，从 STA 模式直接切到 AP
+        模式时，NM 会报告 'connection up 成功'，但实际 wlan0 仍然卡在 STA 状态，
+        手机扫描不到 AP（或扫到也连不上）。
+        在 start_ap 之前先 `radio wifi off → on` 强制让驱动从零开始，能稳定避免。
+
+        副作用：会让所有 active 的 wifi 连接断 2~3 秒，配网模式无所谓。
+        """
+        try:
+            logger.info("[AP] 硬重置 wlan0（radio off → on）以避免 STA→AP 切换 bug")
+            subprocess.run(
+                ["nmcli", "radio", "wifi", "off"],
+                capture_output=True, timeout=10,
+            )
+            time.sleep(2)
+            subprocess.run(
+                ["nmcli", "radio", "wifi", "on"],
+                capture_output=True, timeout=10,
+            )
+            time.sleep(3)  # 等驱动重新枚举 + NM 重新 manage wlan0
+        except Exception as e:
+            logger.warning(f"[AP] radio reset 异常（继续尝试启动 AP）: {e}")
+
+    def start_ap(self) -> bool:
+        """启动 AP 热点（开放网络，无密码，兼容 unisoc WiFi 驱动）"""
+        try:
+            if self.ap_password:
+                logger.info(f"启动 AP 热点: SSID={self.ap_ssid}, 密码={self.ap_password}")
+            else:
+                logger.info(f"启动 AP 热点: SSID={self.ap_ssid} (开放网络，无密码)")
+
+            # 先停止可能存在的旧 AP 连接
+            self.stop_ap()
+            # 双保险：万一 stop_ap 上次异常退出，磁盘还残留 0 字节 keyfile
+            self._purge_ap_keyfile_from_disk()
+            # 清掉所有跟 AP 同 SSID 的脏 STA connection（否则 NM 会卡住）
+            self._purge_self_ap_connections()
+            # 关键：硬重置 wlan0，避免从 STA 切 AP 时卡在半连接状态
+            self._reset_wifi_radio()
+
+            # 创建 AP 连接（不设置任何安全参数 = 开放网络）
+            cmd = [
+                "nmcli", "connection", "add",
+                "type", "wifi",
+                "ifname", self.AP_INTERFACE,
+                "con-name", self._ap_connection_name,
+                "autoconnect", "no",
+                "ssid", self.ap_ssid,
+                "mode", "ap",
+                "ipv4.method", "shared",
+                "ipv4.addresses", "192.168.4.1/24",
+            ]
+
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+            if result.returncode != 0:
+                logger.error(f"创建 AP 连接失败: {result.stderr}")
+                return False
+
+            # 激活 AP 连接
+            cmd = ["nmcli", "connection", "up", self._ap_connection_name]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+            if result.returncode != 0:
+                logger.error(f"启动 AP 失败: {result.stderr}")
+                return False
+
+            time.sleep(2)
+
+            # 关键诊断：确认 wlan0 真的进入 AP 模式（unisoc 驱动有时 NM 撒谎）
+            try:
+                info = subprocess.run(
+                    ["iw", "dev", self.AP_INTERFACE, "info"],
+                    capture_output=True, text=True, timeout=5,
+                )
+                if info.returncode == 0:
+                    iface_type = ""
+                    for line in info.stdout.split("\n"):
+                        line = line.strip()
+                        if line.startswith("type "):
+                            iface_type = line[5:].strip()
+                            break
+                    if iface_type and iface_type != "AP":
+                        logger.error(
+                            f"[AP] NM 报告启动成功但 wlan0 实际是 type={iface_type}，"
+                            f"驱动没切到 AP 模式（unisoc 驱动 bug）"
+                        )
+                        return False
+                    logger.info(f"[AP] iw 验证 wlan0 type=AP 通过")
+            except FileNotFoundError:
+                logger.debug("[AP] iw 命令不存在，跳过类型校验（不影响功能）")
+            except Exception as e:
+                logger.debug(f"[AP] iw 校验异常: {e}")
+
+            logger.info(f"✓ AP 热点已启动: {self.ap_ssid} (192.168.4.1)")
+            if not self.ap_password:
+                logger.warning("⚠ 使用开放网络（无密码），配网完成后将自动关闭")
+            return True
+
+        except Exception as e:
+            logger.error(f"启动 AP 热点异常: {e}")
+            return False
+
+    def _purge_ap_keyfile_from_disk(self) -> None:
+        """删除磁盘上残留的 AP keyfile（含 0 字节脏文件）。
+
+        踩过的大坑：早期版本的 stop_ap 异常退出过，磁盘上留下了一个 0 字节的
+        ``unilab-provisioning-ap.nmconnection`` 文件。NM 加载它会报：
+            keyfile: failed to load connection:
+              invalid connection: connection.type: property is missing
+        这种"加载失败"的 connection 不会出现在 ``nmcli connection show`` 里，
+        于是 ``_purge_self_ap_connections()`` 和 ``stop_ap()`` 里的
+        ``nmcli connection delete`` 都清不到它。空文件持续留在磁盘上，
+        让 NM 处于不一致状态，下次 ``nmcli connection add`` 虽然成功（新 UUID），
+        但 NM 在内部会反复尝试加载这个坏文件 → 重试配网时 AP 模式不稳定/搜不到。
+
+        所以每次 stop_ap 之后都要主动 rm 掉磁盘文件，再 nmcli connection reload
+        让 NM 把对应的"加载失败"残骸彻底从内存里清掉。
+        """
+        try:
+            removed: list[str] = []
+            for fname in os.listdir(_NM_KEYFILE_DIR):
+                if (
+                    fname == f"{self._ap_connection_name}.nmconnection"
+                    or fname.startswith(f"{self.AP_SSID_PREFIX}-")
+                    and fname.endswith(".nmconnection")
+                ):
+                    fpath = os.path.join(_NM_KEYFILE_DIR, fname)
+                    try:
+                        os.remove(fpath)
+                        removed.append(fname)
+                    except OSError as oe:
+                        logger.warning(f"[AP] 无法删除 {fpath}: {oe}")
+            if removed:
+                logger.info(f"[AP] 清理磁盘 keyfile: {removed}")
+                # 让 NM 重新扫描目录，把内存里那个"加载失败"的对象也清掉
+                subprocess.run(
+                    ["nmcli", "connection", "reload"],
+                    capture_output=True, timeout=5,
+                )
+        except FileNotFoundError:
+            logger.debug(f"[AP] {_NM_KEYFILE_DIR} 不存在，跳过 keyfile 清理")
+        except PermissionError:
+            logger.warning(f"[AP] 没有权限清理 {_NM_KEYFILE_DIR}（需要 root）")
+        except Exception as e:
+            logger.warning(f"[AP] 清理 keyfile 异常（继续）: {e}")
+
+    def stop_ap(self) -> bool:
+        """停止 AP 热点。
+
+        重要：不要在这里调 `nmcli device disconnect wlan0`！
+        那条命令会把 wlan0 标记为"用户主动断开"，从此 autoconnect 失效，
+        直到 `connection up <sta>` 才恢复——会害死刚 connect_wifi 上的 STA 连接。
+
+        删 AP connection 即可，NM 会自然把 wlan0 让给已经 active 的 STA。
+        最后再 rm 掉磁盘上的 keyfile，避免 0 字节脏文件残留。
+        """
+        try:
+            subprocess.run(
+                ["nmcli", "connection", "down", self._ap_connection_name],
+                capture_output=True,
+                timeout=10,
+            )
+            subprocess.run(
+                ["nmcli", "connection", "delete", self._ap_connection_name],
+                capture_output=True,
+                timeout=10,
+            )
+            time.sleep(1)
+            # nmcli delete 后磁盘文件 *通常* 会同步删除，但异常退出 / 早期版本
+            # 留下来的 0 字节脏文件 nmcli 自己看不到，必须主动 rm。
+            self._purge_ap_keyfile_from_disk()
+            logger.info("✓ AP 热点已停止")
+            return True
+        except Exception as e:
+            logger.debug(f"停止 AP 时出错（可能不存在）: {e}")
+            return False
+
+    def ensure_sta_active(self, ssid: str, timeout: int = 20) -> bool:
+        """确保指定 STA 连接 active 且有 IP。
+
+        给 stop_ap 之后用：哪怕 NM 没自动重连，也强制 up 一次。
+        :param ssid: 已保存的 NetworkManager connection 名（一般 == SSID）
+        """
+        try:
+            result = subprocess.run(
+                ["nmcli", "connection", "up", ssid, "ifname", self.AP_INTERFACE],
+                capture_output=True, text=True, timeout=timeout,
+            )
+            if result.returncode != 0:
+                logger.warning(f"connection up {ssid} 失败: {result.stderr.strip()}")
+                return False
+            return self.wait_for_connection(timeout=10)
+        except Exception as e:
+            logger.error(f"ensure_sta_active 异常: {e}")
+            return False
+
+    def scan_wifi(self) -> List[Dict[str, str]]:
+        """
+        扫描可用的 WiFi 列表
+
+        :return: WiFi 列表，每项包含 ssid, signal, security
+        """
+        try:
+            # 先触发扫描
+            subprocess.run(
+                ["nmcli", "device", "wifi", "rescan"],
+                capture_output=True,
+                timeout=10,
+            )
+            time.sleep(2)  # 等待扫描完成
+
+            # 获取 WiFi 列表
+            result = subprocess.run(
+                ["nmcli", "-t", "-f", "SSID,SIGNAL,SECURITY", "device", "wifi", "list"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+
+            if result.returncode != 0:
+                logger.error(f"扫描 WiFi 失败: {result.stderr}")
+                return []
+
+            wifi_list = []
+            seen_ssids = set()
+
+            for line in result.stdout.strip().split("\n"):
+                if not line:
+                    continue
+                parts = line.split(":", 2)
+                if len(parts) < 3:
+                    continue
+
+                ssid, signal, security = parts
+                ssid = ssid.strip()
+
+                # 跳过空 SSID、重复项、以及自己的 AP
+                if not ssid or ssid in seen_ssids or ssid == self.ap_ssid:
+                    continue
+
+                seen_ssids.add(ssid)
+                wifi_list.append({
+                    "ssid": ssid,
+                    "signal": int(signal) if signal.isdigit() else 0,
+                    "security": security or "Open",
+                })
+
+            # 按信号强度排序
+            wifi_list.sort(key=lambda x: x["signal"], reverse=True)
+            logger.info(f"扫描到 {len(wifi_list)} 个 WiFi")
+            return wifi_list
+
+        except Exception as e:
+            logger.error(f"扫描 WiFi 异常: {e}")
+            return []
+
+    def connect_wifi(self, ssid: str, password: str) -> tuple[bool, str]:
+        """
+        连接到指定 WiFi 并保存配置。
+
+        失败语义（很重要）：
+        - nmcli 失败时会留一个 broken connection 占用 wlan0，导致下次 scan 看不到
+          这个 SSID、AP 模式启动也会被卡。所以**任何失败路径都必须 delete**。
+        - 密码错的话 nmcli 会报 "Secrets were required, but not provided"，要把
+          这个错误透传给前端让用户重输。
+
+        :return: (success, error_message)
+            success=True 时 error_message="" ，否则是给前端展示的中文错误
+        """
+        try:
+            logger.info(f"尝试连接 WiFi: {ssid}")
+
+            if not password:
+                logger.warning("connect_wifi 收到空密码")
+                self._cleanup_failed_connection(ssid)
+                return False, "密码不能为空"
+
+            # 先删除同名的旧连接（避免复用 cached 错密码）
+            subprocess.run(
+                ["nmcli", "connection", "delete", ssid],
+                capture_output=True, timeout=10,
+            )
+
+            cmd = [
+                "nmcli", "device", "wifi", "connect", ssid,
+                "password", password,
+                "ifname", self.AP_INTERFACE,
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
+
+            if result.returncode != 0:
+                stderr = (result.stderr or "").strip()
+                logger.error(f"连接 WiFi 失败: {stderr}")
+                # 重点：失败时清理掉 nmcli 留下的 broken connection
+                self._cleanup_failed_connection(ssid)
+                return False, self._translate_nmcli_error(stderr)
+
+            time.sleep(3)
+
+            if self.is_connected():
+                logger.info(f"✓ 成功连接到 {ssid}")
+                return True, ""
+            else:
+                logger.warning(f"✗ 连接到 {ssid} 后无网络（local only 或无 DNS）")
+                self._cleanup_failed_connection(ssid)
+                return False, f"已连接 {ssid} 但无法访问公网，请检查路由器是否能上网"
+
+        except subprocess.TimeoutExpired:
+            logger.error(f"连接 WiFi 超时: {ssid}")
+            self._cleanup_failed_connection(ssid)
+            return False, "连接超时（45 秒），可能是 AP 不在附近或信号太弱"
+        except Exception as e:
+            logger.error(f"连接 WiFi 异常: {e}")
+            self._cleanup_failed_connection(ssid)
+            return False, f"内部错误：{e}"
+
+    def _cleanup_failed_connection(self, ssid: str) -> None:
+        """nmcli 连接失败时会留一个 broken connection 占着 wlan0，必须清理"""
+        try:
+            subprocess.run(
+                ["nmcli", "connection", "down", ssid],
+                capture_output=True, timeout=5,
+            )
+            subprocess.run(
+                ["nmcli", "connection", "delete", ssid],
+                capture_output=True, timeout=5,
+            )
+            logger.info(f"已清理失败的 connection: {ssid}")
+        except Exception as e:
+            logger.debug(f"清理 broken connection 异常（可能已不存在）: {e}")
+
+    @staticmethod
+    def _translate_nmcli_error(stderr: str) -> str:
+        """把 nmcli 原始报错翻成中文，给前端看"""
+        s = stderr.lower()
+        if "secrets were required" in s or "no key available" in s:
+            return "密码错误，请重新输入"
+        if "no network with ssid" in s or "ssid not found" in s:
+            return "找不到该 WiFi（可能已离开范围）"
+        if "timeout" in s or "timed out" in s:
+            return "连接超时，请检查信号或重试"
+        if "auth" in s and "fail" in s:
+            return "认证失败（密码错或路由器拒绝）"
+        return f"连接失败：{stderr[:200]}"

@@ -1,0 +1,366 @@
+{
+    "nodes": [
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000001",
+            "parent_uuid": "",
+            "id": "host_node",
+            "name": "host_node",
+            "type": "device",
+            "class": "host_node",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": 0, "y": 0, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 0, "height": 0, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {},
+            "data": {},
+            "schema": {},
+            "description": "",
+            "model": null,
+            "position": { "x": 0, "y": 0, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000002",
+            "parent_uuid": "",
+            "id": "syringe_pump_runze_SY03B_T06",
+            "name": "润泽注射泵（SY03B-T06 六通阀）",
+            "type": "device",
+            "class": "syringe_pump_with_valve.runze.SY03B-T06",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": 0, "y": -300, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 200, "height": 200, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "port": "COM5",
+                "address": "1",
+                "max_volume": 25.0
+            },
+            "data": {},
+            "schema": {},
+            "description": "六通阀注射泵：进液口1/2/3 对应 液体1/2/3，出液口4/5/6 对应 柱1/2/3",
+            "model": null,
+            "position": { "x": 0, "y": -300, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000101",
+            "parent_uuid": "",
+            "id": "液体1",
+            "name": "液体1",
+            "type": "container",
+            "class": "container",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": -400, "y": -700, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 120, "height": 120, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 100,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 100,
+                "liquids": [],
+                "max_volume": 100,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "进液口1",
+            "model": null,
+            "position": { "x": -400, "y": -700, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000102",
+            "parent_uuid": "",
+            "id": "液体2",
+            "name": "液体2",
+            "type": "container",
+            "class": "container",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": -200, "y": -700, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 120, "height": 120, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 100,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 100,
+                "liquids": [],
+                "max_volume": 100,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "进液口2",
+            "model": null,
+            "position": { "x": -200, "y": -700, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000103",
+            "parent_uuid": "",
+            "id": "液体3",
+            "name": "液体3",
+            "type": "container",
+            "class": "container",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": 0, "y": -700, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 120, "height": 120, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 100,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 100,
+                "liquids": [],
+                "max_volume": 100,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "进液口3",
+            "model": null,
+            "position": { "x": 0, "y": -700, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000201",
+            "parent_uuid": "",
+            "id": "柱1",
+            "name": "柱1",
+            "type": "container",
+            "class": "container",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": 200, "y": -700, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 120, "height": 120, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 100,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 100,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "出液口4",
+            "model": null,
+            "position": { "x": 200, "y": -700, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000202",
+            "parent_uuid": "",
+            "id": "柱2",
+            "name": "柱2",
+            "type": "container",
+            "class": "container",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": 400, "y": -700, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 120, "height": 120, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 100,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 100,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "出液口5",
+            "model": null,
+            "position": { "x": 400, "y": -700, "z": 0 }
+        },
+        {
+            "uuid": "b1000000-0000-4000-8000-000000000203",
+            "parent_uuid": "",
+            "id": "柱3",
+            "name": "柱3",
+            "type": "container",
+            "class": "container",
+            "parent": "",
+            "pose": {
+                "layout": "x-y",
+                "position": { "x": 600, "y": -700, "z": 0 },
+                "position_3d": { "x": 0, "y": 0, "z": 0 },
+                "size": { "width": 120, "height": 120, "depth": 0 },
+                "scale": { "x": 1, "y": 1, "z": 1 },
+                "rotation": { "x": 0, "y": 0, "z": 0 },
+                "extra": null,
+                "cross_section_type": "rectangle"
+            },
+            "config": {
+                "type": "RegularContainer",
+                "model": null,
+                "category": "container",
+                "max_volume": 100,
+                "height_volume_data": null,
+                "material_z_thickness": null,
+                "preferred_pickup_location": null,
+                "compute_height_from_volume": null,
+                "compute_volume_from_height": null
+            },
+            "data": {
+                "thing": "get_regular_container_volume_tracker",
+                "volume": 0,
+                "liquids": [],
+                "max_volume": 100,
+                "liquid_history": [],
+                "unknown_counter": 0
+            },
+            "schema": {},
+            "description": "出液口6",
+            "model": null,
+            "position": { "x": 600, "y": -700, "z": 0 }
+        }
+    ],
+    "edges": [
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_runze_SY03B_T06",
+            "target": "液体1",
+            "sourceHandle": "1",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_runze_SY03B_T06",
+            "target": "液体2",
+            "sourceHandle": "2",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_runze_SY03B_T06",
+            "target": "液体3",
+            "sourceHandle": "3",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_runze_SY03B_T06",
+            "target": "柱1",
+            "sourceHandle": "4",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_runze_SY03B_T06",
+            "target": "柱2",
+            "sourceHandle": "5",
+            "targetHandle": "top",
+            "type": ""
+        },
+        {
+            "source_uuid": "",
+            "target_uuid": "",
+            "source": "syringe_pump_runze_SY03B_T06",
+            "target": "柱3",
+            "sourceHandle": "6",
+            "targetHandle": "top",
+            "type": ""
+        }
+    ]
+}

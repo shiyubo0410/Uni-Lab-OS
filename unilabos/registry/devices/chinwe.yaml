@@ -73,21 +73,59 @@ separator.chinwe:
           title: execute_command_from_outer参数
           type: object
         type: UniLabJsonCommand
+      drain:
+        feedback: {}
+        goal:
+          speed: 60
+          threshold: 1500
+          timeout: 300
+        goal_default:
+          speed: 60
+          threshold: 1500
+          timeout: 300
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 分液漏斗放液 (电机5 700脉冲打开→传感器检测无液→关闭)
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                speed:
+                  default: 60
+                  description: 电机转速 (RPM)
+                  type: integer
+                threshold:
+                  default: 1500
+                  description: 液位判断阈值 (RSSI高于此值为有液)
+                  type: integer
+                timeout:
+                  default: 300
+                  description: 等待液体流干超时时间 (秒)
+                  type: integer
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: drain参数
+          type: object
+        type: UniLabJsonCommand
       motor_rotate_quarter:
         feedback: {}
         goal:
           direction: 顺时针
-          motor_id: 4
           speed: 60
         goal_default:
           direction: 顺时针
-          motor_id: null
           speed: 60
         handles: {}
         placeholder_keys: {}
         result: {}
         schema:
-          description: 电机旋转 1/4 圈
+          description: 电机5旋转 1/4 圈 (分液漏斗旋钮)
           properties:
             feedback: {}
             goal:
@@ -96,59 +134,16 @@ separator.chinwe:
                   default: 顺时针
                   description: 旋转方向
                   type: string
-                motor_id:
-                  description: 选择电机 (4:搅拌, 5:旋钮)
-                  type: integer
                 speed:
                   default: 60
                   description: 速度 (RPM)
                   type: integer
-              required:
-              - motor_id
+              required: []
               type: object
             result: {}
           required:
           - goal
           title: motor_rotate_quarter参数
-          type: object
-        type: UniLabJsonCommand
-      motor_run_continuous:
-        feedback: {}
-        goal:
-          direction: 顺时针
-          motor_id: 4
-          speed: 60
-        goal_default:
-          direction: 顺时针
-          motor_id: null
-          speed: null
-        handles: {}
-        placeholder_keys: {}
-        result: {}
-        schema:
-          description: 电机一直旋转 (速度模式)
-          properties:
-            feedback: {}
-            goal:
-              properties:
-                direction:
-                  default: 顺时针
-                  description: 旋转方向
-                  type: string
-                motor_id:
-                  description: 选择电机 (4:搅拌, 5:旋钮)
-                  type: integer
-                speed:
-                  description: 速度 (RPM)
-                  type: integer
-              required:
-              - motor_id
-              - speed
-              type: object
-            result: {}
-          required:
-          - goal
-          title: motor_run_continuous参数
           type: object
         type: UniLabJsonCommand
       motor_stop:
@@ -336,6 +331,86 @@ separator.chinwe:
           title: pump_valve参数
           type: object
         type: UniLabJsonCommand
+      separation_step:
+        goal:
+          max_cycles: 0
+          motor_id: 5
+          pulses: 700
+          speed: 60
+          timeout: 300
+        handles: {}
+        schema:
+          description: 分液步骤 - 液位传感器与电机联动 (有液→顺时针, 无液→逆时针)
+          properties:
+            goal:
+              properties:
+                max_cycles:
+                  default: 0
+                  description: 最大循环次数 (0=无限制)
+                  type: integer
+                motor_id:
+                  default: '5'
+                  description: 选择电机
+                  enum:
+                  - '4'
+                  - '5'
+                  title: '注: 4=搅拌, 5=旋钮'
+                  type: string
+                pulses:
+                  default: 700
+                  description: 每次旋转脉冲数 (约1/4圈)
+                  type: integer
+                speed:
+                  default: 60
+                  description: 电机转速 (RPM)
+                  type: integer
+                timeout:
+                  default: 300
+                  description: 超时时间 (秒)
+                  type: integer
+              required:
+              - motor_id
+              type: object
+        type: UniLabJsonCommand
+      stir:
+        feedback: {}
+        goal:
+          direction: 顺时针
+          duration: 30
+          speed: 60
+        goal_default:
+          direction: 顺时针
+          duration: null
+          speed: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: 搅拌 (电机4，运行指定时间后自动停止)
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  default: 顺时针
+                  description: 旋转方向
+                  type: string
+                duration:
+                  description: 搅拌时长 (秒)
+                  type: number
+                speed:
+                  description: 速度 (RPM)
+                  type: integer
+              required:
+              - speed
+              - duration
+              type: object
+            result: {}
+          required:
+          - goal
+          title: stir参数
+          type: object
+        type: UniLabJsonCommand
       wait_sensor_level:
         feedback: {}
         goal:
@@ -406,8 +481,10 @@ separator.chinwe:
     type: python
   config_info: []
   description: ChinWe 简易工作站控制器 (3泵, 2电机, 1传感器)
+  displayname: separator.chinwe
   handles: []
   icon: ''
+  init_param_enforce: {}
   init_param_schema:
     config:
       properties:
@@ -426,10 +503,10 @@ separator.chinwe:
             type: integer
           type: array
         sensor_id:
-          default: 6
+          default: 1
           type: integer
         sensor_threshold:
-          default: 300
+          default: 1500
           type: integer
         timeout:
           default: 10.0

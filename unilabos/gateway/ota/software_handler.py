@@ -54,7 +54,17 @@ from .state import (
     OngoingSoftware,
     OtaState,
 )
-from .tb_client import TBClient, TBClientError
+# 容错导入：TB(MQTT) 路径正在被自建 OTA 取代，环境可能未装 aiomqtt。
+# software_handler 里与传输无关的"应用原语"（解压/切链/重启/健康检查）被自建
+# OTA(selfhosted.py) 复用，故必须保证缺 aiomqtt 时本模块仍可导入。
+# 仅当真正走 TB 下载路径(_download_software)时才会用到 TBClient，selfhosted 不会调用。
+try:
+    from .tb_client import TBClient, TBClientError
+except Exception:  # noqa: BLE001  (aiomqtt 缺失等)
+    TBClient = None  # type: ignore[assignment,misc]
+
+    class TBClientError(Exception):  # type: ignore[no-redef]
+        """占位异常（真实 TBClient 不可用时）。"""
 
 logger = logging.getLogger(__name__)
 

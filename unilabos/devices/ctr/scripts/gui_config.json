@@ -1,0 +1,14 @@
+{
+  "recent_files": [
+    "F:/ctr/scripts/programs/1.json",
+    "F:/ctr/scripts/programs/autosave.json"
+  ],
+  "max_recent_files": 5,
+  "auto_save_program": true,
+  "relay_ip": "192.168.1.18",
+  "relay_port": 1883,
+  "spin_coater_port": "COM6",
+  "spin_coater_baudrate": 19200,
+  "saved_at": "2026-04-13 16:45:30",
+  "version": "1.0"
+}

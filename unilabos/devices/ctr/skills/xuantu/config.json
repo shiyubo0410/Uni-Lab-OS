@@ -1,0 +1,102 @@
+{
+  "name": "旋涂仪 Modbus RTU 协议技能包",
+  "version": "1.0.0",
+  "description": "旋涂仪（Spin Coater）完整 Modbus RTU 协议文档和工具，支持单步/多步旋涂控制",
+  "author": "AI Assistant",
+  "date": "2026-02-28",
+  "device": {
+    "brand": "旋涂仪",
+    "type": "Spin Coater",
+    "interface": "RS232",
+    "protocol": "Modbus RTU"
+  },
+  "serial": {
+    "port": "COM6",
+    "baudrate": 19200,
+    "connect_baudrate": 9600,
+    "data_bits": 8,
+    "stop_bits": 1,
+    "parity": "EVEN",
+    "station": 1,
+    "special_flow": "先用9600建立连接，再切换到19200"
+  },
+  "protocols": {
+    "modbus_rtu": {
+      "enabled": true,
+      "description": "标准 Modbus RTU 协议",
+      "baudrate": 19200,
+      "data_bits": 8,
+      "stop_bits": 1,
+      "parity": "EVEN",
+      "function_codes": ["01", "03", "05", "06"],
+      "note": "功能码05需要发送命令对（置位+复位）"
+    }
+  },
+  "commands": {
+    "enable": {
+      "name": "使能开启",
+      "function_code": "05",
+      "address": "0010",
+      "on": "01 05 00 10 FF 00 8D FF",
+      "off": "01 05 00 10 00 00 CC 0F"
+    },
+    "vacuum": {
+      "name": "开启真空",
+      "function_code": "05",
+      "address": "0032",
+      "on": "01 05 00 32 FF 00 2D F5",
+      "off": "01 05 00 32 00 00 6C 05"
+    },
+    "single_step": {
+      "name": "单步启停",
+      "function_code": "05",
+      "address": "0007",
+      "on": "01 05 00 07 FF 00 3D FB",
+      "off": "01 05 00 07 00 00 7C 0B"
+    },
+    "multi_step": {
+      "name": "多步启停",
+      "function_code": "05",
+      "address": "0007",
+      "on": "01 05 00 07 FF 00 3D FB",
+      "off": "01 05 00 07 00 00 7C 0B"
+    },
+    "manual_home": {
+      "name": "手动回原",
+      "function_code": "05",
+      "address": "0014",
+      "on": "01 05 00 14 FF 00 9D CF",
+      "off": "01 05 00 14 00 00 DC 0F"
+    }
+  },
+  "parameters": {
+    "single_step": {
+      "speed": {"min": 10, "max": 10000, "unit": "", "address": "A0DA"},
+      "time": {"min": 0, "max": 3000, "unit": "ms", "address": "A0DB"},
+      "acceleration": {"min": 200, "max": 30000, "unit": "", "address": "A0DC"}
+    },
+    "multi_step": {
+      "step_count": {"min": 1, "max": 100, "unit": "步"},
+      "speed": {"min": 0, "max": 10000, "unit": ""},
+      "time": {"min": 0, "max": 3000, "unit": "ms"},
+      "acceleration": {"min": 200, "max": 30000, "unit": ""},
+      "address_base": "A0E4",
+      "address_step": 3
+    },
+    "alignment": {
+      "speed": {"min": 100, "max": 500, "unit": "", "address": "A0A0"},
+      "time": {"min": 1, "max": 100, "unit": "ms", "address": "A0A2"}
+    },
+    "oscillation": {
+      "speed": {"min": 10, "max": 800, "unit": "", "address": "A0A4"},
+      "acceleration": {"min": 10, "max": 2000, "unit": "", "address": "A0A6"},
+      "time": {"min": 1, "max": 100, "unit": "ms", "address": "A0A8"},
+      "count": {"min": 1, "max": 20, "unit": "次", "address": "A0AA"}
+    },
+    "other": {
+      "deceleration": {"min": 100, "max": 2500, "unit": "", "address": "A09E"},
+      "vacuum_protection": {"min": 10, "max": 50, "unit": "", "address": "A096"}
+    }
+  },
+  "data_file": "data/xuantu.txt"
+}

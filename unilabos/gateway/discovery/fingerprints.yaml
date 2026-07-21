@@ -1,4 +1,5 @@
 # 设备指纹库
+# OTA-TEST-MARKER: v0.0.6 2026-07-17  # 自建 OTA 验证用标记：升级后 grep 到此行即证明内容已落地
 #
 # 每条记录定义一种设备的自动识别规则：
 # - name: 指纹名称（唯一标识）
@@ -293,6 +294,78 @@
     - firmware_alive
     - valve_states
   poll_interval: 3.0
+  report_unchanged: true
+
+# =============================================================================
+# 兰格 BT100-2J 蠕动泵 (兰格自定义二进制协议, 1200bps 8E1=偶校验!)
+# 帧头 0xE9, 字节填充 (E8->E8 00, E9->E8 01), 异或 FCS。
+# 探测发 RJ 读运行参数 (52 4A, 无副作用不启停泵), 期望应答以 E9 + 地址 开头。
+# 探测帧写死地址 0x01 (出厂默认); 若现场改过泵地址则探测不到。
+# 1200/8E1 组合很少见, 几乎不会和别的设备误撞。
+# =============================================================================
+- name: longer_bt100_pump
+  # 驱动路径必须与 driver_url 包解压后的路径一致：包顶层目录是 longerpump/，
+  # 解压到 unilabos/devices/ 后 = unilabos/devices/longerpump/longer_bt100.py，
+  # 故 import 路径为 unilabos.devices.longerpump.longer_bt100（不带 SHU 层）。
+  driver: unilabos.devices.longerpump.longer_bt100.LongerBT100
+  driver_url: https://uni-lab.oss-cn-zhangjiakou.aliyuncs.com/default/37b44fed-3a15-4cb7-a208-2bca64c0b833/unilab_device_longer_bt100-0.1.0.tar.gz
+  driver_version: "0.1.0"
+  registry_class: longer_bt100
+  probe:
+    baudrate: 1200
+    bytesize: 8
+    parity: E          # 偶校验, 兰格协议要求 (8data + 1even + 1stop)
+    stopbits: 1
+    commands:
+      # RJ 读运行参数: flag E9 + addr 01 + len 02 + RJ(52 4A) + FCS 1B (无副作用)
+      - send: "\xe9\x01\x02\x52\x4a\x1b"
+        expect_prefix: "\xe9\x01"
+        timeout: 1.0
+  init_template:
+    baudrate: 1200
+    address: 1
+  properties:
+    # pump_alive 真发 RJ 读串口, 作心跳点用于掉线检测; status/speed 为缓存展示。
+    - pump_alive
+    - status
+    - speed
+    - direction
+  poll_interval: 2.0
+  report_unchanged: true
+
+# =============================================================================
+# Zolix Omni-λ 单色仪/光谱仪 (ASCII 协议, \r 结尾, 19200 8N1)
+# 探测发 SYSTEMINFO? (无副作用不移动波长), 真机应答:
+#   b'SYSTEMINFO Andor,Omni500,SR-3094,20220421,V2.8\rOK\r'
+# send 开头带一个 \r: 前序指纹的二进制探测(如 longer_bt100 的 RJ 帧)无 \r 结尾,
+#   会残留在本设备的命令缓冲里, 与 SYSTEMINFO? 拼成一行导致回 E01。开头的 \r 先把
+#   残留行冲掉(设备对垃圾行回 E01\r), 随后 SYSTEMINFO? 才被干净解析。
+# 故用 expect_regex "[\s\S]*SYSTEMINFO " (re.match 从头锚定, 前面可能有 E01\r) 而非
+#   expect_prefix; SYSTEMINFO 关键字回显与型号无关, Andor/Zolix 贴牌单元都通用。
+# =============================================================================
+- name: zolix_omni_lambda
+  driver: unilabos.devices.zolix_Omni.zolix_omni_lambda.ZolixOmniLambda
+  driver_url: https://uni-lab.oss-cn-zhangjiakou.aliyuncs.com/default/35366e42-a35c-41b0-b62d-e7be47646319/unilab_device_zolix_omni_lambda-0.1.0.tar.gz
+  driver_version: "0.1.0"
+  registry_class: zolix_omni_lambda
+  probe:
+    baudrate: 19200
+    bytesize: 8
+    parity: N
+    stopbits: 1
+    commands:
+      - send: "\rSYSTEMINFO?\r"
+        expect_regex: "[\\s\\S]*SYSTEMINFO "
+        timeout: 2.0
+  init_template:
+    baudrate: 19200
+  properties:
+    # device_alive 真发 Hello 读串口, 作心跳点用于掉线检测; 其余为缓存展示。
+    - device_alive
+    - status
+    - wavelength
+    - grating
+  poll_interval: 5.0
   report_unchanged: true
 
 # =============================================================================

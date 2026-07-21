@@ -13,7 +13,7 @@
                 "z": 0
             },
             "config": {
-                "port": "192.168.31.13:8899",
+                "port": "COM7",
                 "baudrate": 9600,
                 "pump_ids": [
                     1,

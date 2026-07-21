@@ -1,0 +1,55 @@
+{
+    "nodes": [
+        {
+            "id": "youling_motor",
+            "uuid": "b9f3d2a1-4e7c-4a8b-9d2e-1f3a5b7c9d0e",
+            "name": "youling_motor",
+            "description": "俏优灵 YL42B 步进电机 (RS485 Modbus RTU, 站号 1, 115200bps)",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "type": "device",
+            "class": "motor.youling.yl42b",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 100.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "baudrate": 115200,
+                "device_id": 1,
+                "timeout": 0.5,
+                "steps_per_rev": 1600,
+                "lead_mm": 4.0,
+                "response_delay": 0.02,
+                "auto_connect": true
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unilab-device-longer-bt100"
+version = "0.1.0"
+description = "兰格 (Longer) BT100-2J 蠕动泵 Uni-Lab-OS 设备驱动包, 采用兰格自定义二进制协议 (1200bps 8E1), 支持转速/方向/启停控制与运行参数读取。"
+requires-python = ">=3.10"
+license = { text = "DP Technology Proprietary License" }
+authors = [{ name = "The unilabos developers" }]
+keywords = ["unilab", "unilabos", "pump", "peristaltic-pump", "longer", "bt100", "serial", "rs485"]
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[tool.setuptools]
+py-modules = ["longer_bt100"]
+
+[tool.unilabos.registry]
+paths = ["."]

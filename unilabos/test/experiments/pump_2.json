@@ -1,0 +1,242 @@
+{
+    "nodes": [
+        {
+            "id": "sample_pump_1",
+            "uuid": "c4d5e6f7-a8b9-4c0d-1e2f-3a4b5c6d7e8f",
+            "name": "sample_pump_1",
+            "description": "上样泵1（地址1，COM9）- 负责通道1/2/3",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "wxf.sample_pump_1",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 200.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "address": "6",
+                "max_volume": 25.0
+            },
+            "data": {}
+        },
+        {
+            "id": "sample_pump_2",
+            "uuid": "d5e6f7a8-b9c0-4d1e-2f3a-4b5c6d7e8f9a",
+            "name": "sample_pump_2",
+            "description": "上样泵2（地址2，COM9）- 负责通道4/5",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "wxf.sample_pump_2",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 500.0,
+                    "y": 200.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "address": "8",
+                "max_volume": 25.0
+            },
+            "data": {}
+        },
+        {
+            "id": "solution_pump",
+            "uuid": "e6f7a8b9-c0d1-4e2f-3a4b-5c6d7e8f9a0b",
+            "name": "solution_pump",
+            "description": "加液泵（地址3，COM9）- 负责向5通道加3种溶液",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "wxf.solution_pump",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 300.0,
+                    "y": 400.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "address": "7",
+                "max_volume": 25.0
+            },
+            "data": {}
+        },
+        {
+            "id": "esp32_valve",
+            "uuid": "f7a8b9c0-d1e2-4f3a-4b5c-6d7e8f9a0b1c",
+            "name": "esp32_valve",
+            "description": "ESP32 五路阀门控制器",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "wxf.esp32_valve",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 700.0,
+                    "y": 200.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM7",
+                "baudrate": 115200,
+                "timeout": 1.0
+            },
+            "data": {}
+        },
+        {
+            "id": "xkc_sensor",
+            "uuid": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c50",
+            "name": "xkc_sensor",
+            "description": "五路电导传感器（地址1-5，共享RS485总线）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "wxf.xkc_sensor",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 400.0,
+                    "y": 600.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM6",
+                "baudrate": 9600,
+                "device_ids": [1, 2, 3, 4, 5],
+                "threshold": 0,
+                "poll_interval": 0.5,
+                "timeout": 3.0
+            },
+            "data": {
+                "is_connected": false,
+                "liquid_detected": false,
+                "rssi": 0
+            }
+        }
+    ],
+    "links": []
+}

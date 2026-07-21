@@ -1,0 +1,486 @@
+{
+    "nodes": [
+        {
+            "id": "simple_station",
+            "uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "name": "simple_station",
+            "description": "",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": null,
+            "type": "device",
+            "class": "workstation",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "protocol_type": "PumpTransferProtocol, EvacuateAndRefillProtocol",
+                "url": ""
+            },
+            "data": {},
+            "children": [
+                "serial_pump",
+                "peristalticpump_A",
+                "peristalticpump_B",
+                "guozhuji_pump",
+                "motor_x",
+                "motor_y",
+                "jingfei_spectrometer",
+                "esp32_controller",
+                "workstation_guozhuji"
+            ]
+        },
+        {
+            "id": "serial_pump",
+            "uuid": "19b596ce-5b28-49ba-9b21-f9770f057bd7",
+            "name": "serial_pump",
+            "description": "RS485串口（COM7）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "serial",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 464.8268223163367,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM9",
+                "baudrate": 9600
+            },
+            "data": {}
+        },
+        {
+            "id": "peristalticpump_A",
+            "uuid": "d1954b5f-10c2-5555-a32e-eb0f4eeb031c",
+            "name": "peristalticpump_A",
+            "description": "蠕动泵A（地址1）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "peristalticpump_A",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 300.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "serial_pump",
+                "address": 1,
+                "baudrate": 9600
+            },
+            "data": {}
+        },
+        {
+            "id": "peristalticpump_B",
+            "uuid": "e2a7c8b1-4f6a-4b2e-9c3d-123456789abc",
+            "name": "peristalticpump_B",
+            "description": "蠕动泵B（地址2）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "peristalticpump_B",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 100.0,
+                    "y": 400.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "serial_pump",
+                "address": 2,
+                "baudrate": 9600
+            },
+            "data": {}
+        },
+        {
+            "id": "guozhuji_pump",
+            "uuid": "c0843a4f-09f1-4444-921d-da0e3dad920b",
+            "name": "guozhuji_pump",
+            "description": "润泽注射泵（地址3）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "guozhuji_pump",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 262.8134340992351,
+                    "y": 188.8493856605189,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "max_volume": 25.0,
+                "address": "3",
+                "port": "serial_pump"
+            },
+            "data": {}
+        },
+        {
+            "id": "motor_x",
+            "uuid": "f7a3b5c9-2e8d-4f1a-9b6e-8d4c7e3a5f2b",
+            "name": "motor_x",
+            "description": "XY35步进电机X轴（地址4）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "xy35motor_x_device",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 400.0,
+                    "y": 300.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "serial_pump",
+                "address": 4,
+                "baudrate": 9600
+            },
+            "data": {}
+        },
+        {
+            "id": "motor_y",
+            "uuid": "a2c8f4d6-1b9e-4c7d-8e3f-9a5b6c2d4e7f",
+            "name": "motor_y",
+            "description": "XY35步进电机Y轴（地址5）",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "xy35motor_y_device",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 400.0,
+                    "y": 400.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "serial_pump",
+                "address": 5,
+                "baudrate": 9600
+            },
+            "data": {}
+        },
+        {
+            "id": "jingfei_spectrometer",
+            "uuid": "b8d4f6a2-3c5e-4d7f-9e1a-6b8c7d9e2f3a",
+            "name": "jingfei_spectrometer",
+            "description": "京飞光谱检测仪",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "jingfeispectrometer_device",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 262.8134340992351,
+                    "y": 50.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "dll_name": "FLA5000DLL.dll"
+            },
+            "data": {}
+        },
+        {
+            "id": "esp32_controller",
+            "uuid": "3f8e5a1c-7d42-4e9a-a3f1-9b2c8e6d4a7b",
+            "name": "esp32_controller",
+            "description": "",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "esp32_controller",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 650.0,
+                    "y": 188.8493856605189,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM8",
+                "baudrate": 115200,
+                "timeout": 1
+            },
+            "data": {
+                "status": "idle"
+            }
+        },
+        {
+            "id": "workstation_guozhuji",
+            "uuid": "9d7e6f5a-4c3b-2a1f-8e9d-7c6b5a4f3e2d",
+            "name": "workstation_guozhuji",
+            "description": "",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "parent_uuid": "a44059c5-9a27-4ee7-b721-77dfeaf39bc8",
+            "type": "device",
+            "class": "workstation_guozhuji",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 262.8134340992351,
+                    "y": 500.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "protocol_type": "PumpTransferProtocol",
+                "monitor_wavelength": 280,
+                "monitor_interval": 0.5,
+                "slope_threshold": 0.1,
+                "slope_window_size": 5,
+                "x_move_distance": 100.0,
+                "y_move_distance": 50.0,
+                "motor_speed": 10.0,
+                "motor_acceleration": 5000,
+                "pump_air_inlet_valve": "I",
+                "pump_air_outlet_valve": "O",
+                "pump_blow_volume": 10.0,
+                "pump_blow_cycles": 3,
+                "pump_aspirate_velocity": 5.0,
+                "pump_dispense_velocity": 8.0
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

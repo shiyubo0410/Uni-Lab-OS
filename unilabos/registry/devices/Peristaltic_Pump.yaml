@@ -1,0 +1,950 @@
+peristalticpump_A:
+  category:
+  - Peristaltic_Pump
+  class:
+    action_value_mappings:
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disable_offline_mode:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: disable_offline_mode参数
+          type: object
+        type: UniLabJsonCommand
+      auto-enable_offline_mode:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: enable_offline_mode参数
+          type: object
+        type: UniLabJsonCommand
+      auto-forward:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: forward参数
+          type: object
+        type: UniLabJsonCommand
+      auto-initialize:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: initialize参数
+          type: object
+        type: UniLabJsonCommand
+      auto-list:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: list的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: list参数
+          type: object
+        type: UniLabJsonCommand
+      auto-pause:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pause参数
+          type: object
+        type: UniLabJsonCommand
+      auto-reverse:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: reverse参数
+          type: object
+        type: UniLabJsonCommand
+      auto-run_with_volume:
+        feedback: {}
+        goal: {}
+        goal_default:
+          direction: FORWARD
+          ml_per_rotation: null
+          rpm: null
+          volume_ml: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  default: FORWARD
+                  description: 转向，默认为 "FORWARD"（正转/出液），可选 "REVERSE"（反转）
+                  type: string
+                ml_per_rotation:
+                  description: 每圈泵送的体积，单位：毫升/圈（根据泵管规格确定）
+                  type: number
+                rpm:
+                  description: 运行速度，单位：圈/分钟
+                  type: number
+                volume_ml:
+                  description: 需要泵送的体积，单位：毫升(mL)
+                  type: number
+              required:
+              - rpm
+              - volume_ml
+              - ml_per_rotation
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: run_with_volume参数
+          type: object
+        type: UniLabJsonCommand
+      auto-send_command:
+        feedback: {}
+        goal: {}
+        goal_default:
+          command: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                command:
+                  type: object
+              required:
+              - command
+              type: object
+            result:
+              type: object
+          required:
+          - goal
+          title: send_command参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_angle:
+        feedback: {}
+        goal: {}
+        goal_default:
+          degrees: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                degrees:
+                  description: 旋转角度，单位：度（如360表示360°）
+                  type: number
+              required:
+              - degrees
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_angle参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_direction:
+        feedback: {}
+        goal: {}
+        goal_default:
+          direction: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  description: 转向（FORWARD 正转/出液 / REVERSE 反转）
+                  type: object
+              required:
+              - direction
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_direction参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_pulse_count:
+        feedback: {}
+        goal: {}
+        goal_default:
+          pulse_count: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pulse_count:
+                  description: 脉冲数（如1600表示1600脉冲）
+                  type: integer
+              required:
+              - pulse_count
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_pulse_count参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_rotation_count:
+        feedback: {}
+        goal: {}
+        goal_default:
+          rounds: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                rounds:
+                  description: 圈数（如5表示5圈）
+                  type: integer
+              required:
+              - rounds
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_rotation_count参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_speed:
+        feedback: {}
+        goal: {}
+        goal_default:
+          rpm: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                rpm:
+                  description: 速度，单位：圈/分钟（如120表示120圈每分钟）
+                  type: number
+              required:
+              - rpm
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_speed参数
+          type: object
+        type: UniLabJsonCommand
+      auto-start:
+        feedback: {}
+        goal: {}
+        goal_default:
+          direction: FORWARD
+          duration_seconds: null
+          rpm: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  default: FORWARD
+                  description: 转向，默认为 "FORWARD"（正转/出液），可选 "REVERSE"（反转）
+                  type: string
+                duration_seconds:
+                  description: 运行时间，单位：秒。如果为None则持续运行
+                  type: number
+                rpm:
+                  description: 运行速度，单位：圈/分钟。如果为None则使用当前速度
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: start参数
+          type: object
+        type: UniLabJsonCommand
+      auto-stop:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: stop参数
+          type: object
+        type: UniLabJsonCommand
+    hardware_interface:
+      name: hardware_interface
+      read: null
+      write: send_command
+    module: unilabos.devices.workstation_guozhuji.Peristaltic_Pump:PeristalticPump
+    status_types: {}
+    type: python
+  config_info: []
+  description: ''
+  displayname: peristalticpump_A
+  handles: []
+  icon: ''
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        address:
+          default: 1
+          description: 从机地址，默认 1
+          type: integer
+        baudrate:
+          default: 9600
+          description: 波特率，默认 9600
+          type: integer
+        hardware_interface:
+          type: object
+        port:
+          description: 串口号，默认 COM7
+          type: string
+      required:
+      - port
+      type: object
+    data:
+      properties: {}
+      required: []
+      type: object
+  version: 1.0.0
+peristalticpump_B:
+  category:
+  - Peristaltic_Pump
+  class:
+    action_value_mappings:
+      auto-close:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: close参数
+          type: object
+        type: UniLabJsonCommand
+      auto-disable_offline_mode:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: disable_offline_mode参数
+          type: object
+        type: UniLabJsonCommand
+      auto-enable_offline_mode:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: enable_offline_mode参数
+          type: object
+        type: UniLabJsonCommand
+      auto-forward:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: forward参数
+          type: object
+        type: UniLabJsonCommand
+      auto-initialize:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: initialize参数
+          type: object
+        type: UniLabJsonCommand
+      auto-list:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: list的参数schema
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result: {}
+          required:
+          - goal
+          title: list参数
+          type: object
+        type: UniLabJsonCommand
+      auto-pause:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: pause参数
+          type: object
+        type: UniLabJsonCommand
+      auto-reverse:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: reverse参数
+          type: object
+        type: UniLabJsonCommand
+      auto-run_with_volume:
+        feedback: {}
+        goal: {}
+        goal_default:
+          direction: FORWARD
+          ml_per_rotation: null
+          rpm: null
+          volume_ml: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  default: FORWARD
+                  description: 转向，默认为 "FORWARD"（正转/出液），可选 "REVERSE"（反转）
+                  type: string
+                ml_per_rotation:
+                  description: 每圈泵送的体积，单位：毫升/圈（根据泵管规格确定）
+                  type: number
+                rpm:
+                  description: 运行速度，单位：圈/分钟
+                  type: number
+                volume_ml:
+                  description: 需要泵送的体积，单位：毫升(mL)
+                  type: number
+              required:
+              - rpm
+              - volume_ml
+              - ml_per_rotation
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: run_with_volume参数
+          type: object
+        type: UniLabJsonCommand
+      auto-send_command:
+        feedback: {}
+        goal: {}
+        goal_default:
+          command: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                command:
+                  type: object
+              required:
+              - command
+              type: object
+            result:
+              type: object
+          required:
+          - goal
+          title: send_command参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_angle:
+        feedback: {}
+        goal: {}
+        goal_default:
+          degrees: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                degrees:
+                  description: 旋转角度，单位：度（如360表示360°）
+                  type: number
+              required:
+              - degrees
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_angle参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_direction:
+        feedback: {}
+        goal: {}
+        goal_default:
+          direction: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  description: 转向（FORWARD 正转/出液 / REVERSE 反转）
+                  type: object
+              required:
+              - direction
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_direction参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_pulse_count:
+        feedback: {}
+        goal: {}
+        goal_default:
+          pulse_count: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                pulse_count:
+                  description: 脉冲数（如1600表示1600脉冲）
+                  type: integer
+              required:
+              - pulse_count
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_pulse_count参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_rotation_count:
+        feedback: {}
+        goal: {}
+        goal_default:
+          rounds: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                rounds:
+                  description: 圈数（如5表示5圈）
+                  type: integer
+              required:
+              - rounds
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_rotation_count参数
+          type: object
+        type: UniLabJsonCommand
+      auto-set_speed:
+        feedback: {}
+        goal: {}
+        goal_default:
+          rpm: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                rpm:
+                  description: 速度，单位：圈/分钟（如120表示120圈每分钟）
+                  type: number
+              required:
+              - rpm
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: set_speed参数
+          type: object
+        type: UniLabJsonCommand
+      auto-start:
+        feedback: {}
+        goal: {}
+        goal_default:
+          direction: FORWARD
+          duration_seconds: null
+          rpm: null
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties:
+                direction:
+                  default: FORWARD
+                  description: 转向，默认为 "FORWARD"（正转/出液），可选 "REVERSE"（反转）
+                  type: string
+                duration_seconds:
+                  description: 运行时间，单位：秒。如果为None则持续运行
+                  type: number
+                rpm:
+                  description: 运行速度，单位：圈/分钟。如果为None则使用当前速度
+                  type: number
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: start参数
+          type: object
+        type: UniLabJsonCommand
+      auto-stop:
+        feedback: {}
+        goal: {}
+        goal_default: {}
+        handles: {}
+        placeholder_keys: {}
+        result: {}
+        schema:
+          description: ''
+          properties:
+            feedback: {}
+            goal:
+              properties: {}
+              required: []
+              type: object
+            result:
+              type: boolean
+          required:
+          - goal
+          title: stop参数
+          type: object
+        type: UniLabJsonCommand
+    hardware_interface:
+      name: hardware_interface
+      read: null
+      write: send_command
+    module: unilabos.devices.workstation_guozhuji.Peristaltic_Pump:PeristalticPump
+    status_types: {}
+    type: python
+  config_info: []
+  description: ''
+  displayname: peristalticpump_B
+  handles: []
+  icon: ''
+  init_param_enforce: {}
+  init_param_schema:
+    config:
+      properties:
+        address:
+          default: 1
+          description: 从机地址，默认 1
+          type: integer
+        baudrate:
+          default: 9600
+          description: 波特率，默认 9600
+          type: integer
+        hardware_interface:
+          type: object
+        port:
+          description: 串口号，默认 COM7
+          type: string
+      required:
+      - port
+      type: object
+    data:
+      properties: {}
+      required: []
+      type: object
+  version: 1.0.0

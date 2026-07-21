@@ -252,4 +252,7 @@ ros-humble-unilabos-msgs-0.9.13-h6403a04_5.tar.bz2
 *.bz2
 test_config.py
 
+# 大体积备份归档，不入库
+backup/
+
 

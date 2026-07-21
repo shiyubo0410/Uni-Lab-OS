@@ -1,0 +1,119 @@
+{
+  "name": "CGXi 协作机器人 Python SDK 技能包",
+  "version": "2.20e",
+  "description": "CGXi协作机器人完整Python SDK，支持运动控制、工程管理、配置管理等功能",
+  "author": "CGXi",
+  "date": "2025",
+  "device": {
+    "brand": "CGXi",
+    "type": "协作机器人",
+    "interface": "TCP/IP",
+    "protocol": "CGXi Robot SDK"
+  },
+  "connection": {
+    "real_robot": {
+      "ip": "192.168.6.6",
+      "port": 2323,
+      "password": "123"
+    },
+    "virtual_robot": {
+      "ip": "127.0.0.1",
+      "port": 2325,
+      "password": "123"
+    }
+  },
+  "sdk": {
+    "version": "v2.20e",
+    "libraries": [
+      "cgxiapi",
+      "basestruct",
+      "ctypes"
+    ],
+    "platform": "Windows/Linux",
+    "python_version": "3.7+"
+  },
+  "features": {
+    "motion_control": {
+      "enabled": true,
+      "modes": ["MoveJ", "MoveL", "MoveC", "MoveJog"],
+      "coordinate_types": ["base", "tool", "user", "joint"]
+    },
+    "project_management": {
+      "enabled": true,
+      "operations": ["download", "upload", "play", "pause", "resume", "stop"]
+    },
+    "configuration": {
+      "enabled": true,
+      "types": ["TCP", "Payload", "CoordinateSystem", "Variable"]
+    },
+    "communication": {
+      "enabled": true,
+      "types": ["ModbusMaster", "Serial", "Ethernet"]
+    },
+    "advanced": {
+      "enabled": true,
+      "features": ["ForceControl", "ExternalAxis", "TrajectoryRecord", "TrajectoryReplay"]
+    }
+  },
+  "robot_modes": {
+    "undefined": 0,
+    "disconnected": 1,
+    "connecting": 2,
+    "connected": 3,
+    "disconnected_state": 4,
+    "connection_error": 5,
+    "power_off": 6,
+    "powering_on": 7,
+    "powered_on": 8,
+    "enabling": 9,
+    "enabled": 10,
+    "disabling": 11,
+    "disabled": 12,
+    "moving": 13,
+    "move_complete": 14,
+    "pausing": 15,
+    "paused": 16,
+    "stopping": 17,
+    "stopped": 18,
+    "error": 19,
+    "error_recovering": 20,
+    "error_recovered": 21,
+    "emergency_stopping": 22,
+    "emergency_stopped": 23,
+    "safety_door_open": 24,
+    "safety_door_closed": 25,
+    "safety_door_error": 26,
+    "not_enabled": 100,
+    "not_powered": 101,
+    "powering": 102,
+    "idle": 103,
+    "paused_state": 104,
+    "running": 105,
+    "drag_teaching": 106,
+    "updating": 107,
+    "update_complete": 108,
+    "update_failed": 109,
+    "update_cancelled": 110,
+    "update_paused": 111,
+    "update_resumed": 112,
+    "update_stopped": 113,
+    "update_error": 114
+  },
+  "coordinate_types": {
+    "base": 0,
+    "tool": 1,
+    "user": 2,
+    "joint": 3
+  },
+  "transition_types": {
+    "stop": 0,
+    "blend": 1
+  },
+  "script_status": {
+    "not_running": 0,
+    "running": 1,
+    "paused": 2,
+    "stopped": 3
+  },
+  "data_file": "inf/CGXi-Robot-SDK-Python-v2.2e/CGXi-Robot-SDK-Python-v2.2e/demo/python3.7/64位/sdk_test_Python/"
+}

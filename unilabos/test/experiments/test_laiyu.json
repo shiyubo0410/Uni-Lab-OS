@@ -23,7 +23,7 @@
                 },
                 "backend": {
                     "type": "UniLiquidHandlerLaiyuBackend",
-                    "port": "/dev/ttyUSB_CH340"
+                    "port": "COM9"
                 },
                 "simulator": false,
                 "total_height": 232.5
@@ -32,7 +32,6 @@
         {
             "id": "deck",
             "name": "deck",
-            
             "children": [
                 "tip_rack",
                 "plate_well",
@@ -64,7 +63,6 @@
         {
             "id": "tip_rack",
             "name": "tip_rack",
-            
             "children": [
                 "tip_rack_A1"
             ],
@@ -95,14 +93,9 @@
             },
             "data": {}
         },
-
-
-
-
         {
             "id": "tip_rack_A1",
             "name": "tip_rack_A1",
-            
             "children": [],
             "parent": "tip_rack",
             "type": "container",
@@ -139,12 +132,9 @@
                 "pending_tip": null
             }
         },
-
-
         {
             "id": "plate_well",
             "name": "plate_well",
-            
             "children": [
                 "plate_well_A1"
             ],
@@ -175,15 +165,9 @@
             },
             "data": {}
         },
-
-
-
-
-
         {
             "id": "plate_well_A1",
             "name": "plate_well_A1",
-            
             "children": [],
             "parent": "plate_well",
             "type": "device",
@@ -214,17 +198,24 @@
                 "cross_section_type": "rectangle"
             },
             "data": {
-                "liquids": [["water", 50.0]],
-                "pending_liquids": [["water", 50.0]],
+                "liquids": [
+                    [
+                        "water",
+                        50.0
+                    ]
+                ],
+                "pending_liquids": [
+                    [
+                        "water",
+                        50.0
+                    ]
+                ],
                 "liquid_history": []
             }
         },
-
-
         {
             "id": "tube_rack",
             "name": "tube_rack",
-            
             "children": [
                 "tube_rack_A1"
             ],
@@ -254,12 +245,9 @@
             },
             "data": {}
         },
-
-
         {
             "id": "tube_rack_A1",
             "name": "tube_rack_A1",
-            
             "children": [],
             "parent": "tube_rack",
             "type": "device",
@@ -290,20 +278,24 @@
                 "cross_section_type": "rectangle"
             },
             "data": {
-                "liquids": [["water", 50.0]],
-                "pending_liquids": [["water", 50.0]],
+                "liquids": [
+                    [
+                        "water",
+                        50.0
+                    ]
+                ],
+                "pending_liquids": [
+                    [
+                        "water",
+                        50.0
+                    ]
+                ],
                 "liquid_history": []
             }
-        }
-
-
-        ,
-
-
+        },
         {
             "id": "bottle_rack",
             "name": "bottle_rack",
-            
             "children": [
                 "bottle_rack_A1"
             ],
@@ -334,12 +326,9 @@
             },
             "data": {}
         },
-
-
         {
             "id": "bottle_rack_A1",
             "name": "bottle_rack_A1",
-            
             "children": [],
             "parent": "bottle_rack",
             "type": "device",
@@ -370,13 +359,21 @@
                 "cross_section_type": "rectangle"
             },
             "data": {
-                "liquids": [["water", 50.0]],
-                "pending_liquids": [["water", 50.0]],
+                "liquids": [
+                    [
+                        "water",
+                        50.0
+                    ]
+                ],
+                "pending_liquids": [
+                    [
+                        "water",
+                        50.0
+                    ]
+                ],
                 "liquid_history": []
             }
         }
-
-
     ],
     "links": []
 }

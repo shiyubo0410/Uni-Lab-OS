@@ -1,0 +1,19 @@
+{
+  "recent_files": [
+    "F:/ctr/scripts/programs/1.json",
+    "F:/ctr/scripts/waypoints.json",
+    "F:/ctr/scripts/gui_config.json"
+  ],
+  "max_recent_files": 5,
+  "auto_save_program": true,
+  "relay_port": "COM11",
+  "relay_baudrate": 9600,
+  "relay_data_bits": 8,
+  "relay_stop_bits": 1,
+  "relay_parity": "NONE",
+  "relay_device_address": 1,
+  "spin_coater_port": "COM6",
+  "spin_coater_baudrate": 19200,
+  "saved_at": "2026-04-17 14:33:06",
+  "version": "1.0"
+}

@@ -47,17 +47,25 @@ class GatewayClient:
         machine_name: str,
         on_message: OnMessage,
         on_ready: Optional[OnReady] = None,
+        extra_headers: Optional[Dict[str, str]] = None,
     ) -> None:
         self.url = url
         self.machine_name = machine_name
         self.session_id = uuid.uuid4().hex[:6]
         self.on_message = on_message
         self.on_ready = on_ready
+        # 额外握手头（如 OTA 用的 ConnType/ProductKey/DeviceName），与默认头合并。
+        self.extra_headers = dict(extra_headers or {})
 
         self._send_queue: asyncio.Queue[Dict[str, Any]] = asyncio.Queue()
         self._ws: Optional[websockets.WebSocketClientProtocol] = None
         self._running = False
         self._reconnect_count = 0
+
+    @property
+    def is_connected(self) -> bool:
+        """当前是否持有一条活动的 WS 连接（供外部断网看门狗判断）。"""
+        return self._ws is not None
 
     async def run(self) -> None:
         """主循环。阻塞运行直到 stop() 被调用或达到最大重连次数。"""
@@ -115,17 +123,20 @@ class GatewayClient:
         """建立一次连接并阻塞处理消息直到断开。"""
         ssl_ctx = ssl_module.create_default_context() if self.url.startswith("wss://") else None
 
+        headers = {
+            "Authorization": f"Lab {BasicConfig.auth_secret()}",
+            "EdgeSession": self.session_id,
+        }
+        headers.update(self.extra_headers)
+
         async with websockets.connect(
             self.url,
             ssl=ssl_ctx,
             open_timeout=20,
-            ping_interval=WSConfig.ping_interval,
-            ping_timeout=10,
+            ping_interval=WSConfig.ws_ping_interval,
+            ping_timeout=WSConfig.ws_ping_timeout,
             close_timeout=5,
-            additional_headers={
-                "Authorization": f"Lab {BasicConfig.auth_secret()}",
-                "EdgeSession": self.session_id,
-            },
+            additional_headers=headers,
             max_size=10 * 1024 * 1024,
         ) as ws:
             self._ws = ws

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unilab-device-zolix-omni-lambda"
+version = "0.1.1"
+description = "卓立汉光 (Zolix) Omni-λ 单色仪/光谱仪 Uni-Lab-OS 设备驱动包, 采用 ASCII 文本协议 (19200 8N1, \\r 结尾), 支持波长/波数移动、光栅切换、出入口切换与状态查询。"
+requires-python = ">=3.10"
+license = { text = "DP Technology Proprietary License" }
+authors = [{ name = "The unilabos developers" }]
+keywords = ["unilab", "unilabos", "monochromator", "spectrometer", "zolix", "omni-lambda", "serial"]
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[tool.setuptools]
+py-modules = ["zolix_omni_lambda"]
+
+[tool.unilabos.registry]
+paths = ["."]

@@ -1,0 +1,27 @@
+{
+    "nodes": [
+        {
+            "id": "XKC_Sensors",
+            "name": "XKC液位传感器",
+            "children": [],
+            "parent": null,
+            "type": "device",
+            "class": "wxf.xkc_sensor",
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "config": {
+                "port": "COM9",
+                "baudrate": 9600,
+                "device_ids": [1, 2],
+                "threshold": 0,
+                "timeout": 3.0,
+                "poll_interval": 0.5
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

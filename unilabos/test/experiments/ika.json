@@ -1,0 +1,52 @@
+{
+    "nodes": [
+        {
+            "id": "ika_rct5",
+            "uuid": "b3c7d8e2-1a4f-5b6c-9d8e-7a2b3c4d5e6f",
+            "name": "ika_rct5",
+            "description": "IKA RCT 5 digital 加热磁力搅拌仪 (USB 虚拟串口 COM8)",
+            "schema": {},
+            "model": {},
+            "icon": "",
+            "type": "device",
+            "class": "heaterstirrer_ika_rct5_digital",
+            "position": {
+                "size": {
+                    "depth": 0.0,
+                    "width": 0.0,
+                    "height": 0.0
+                },
+                "scale": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "layout": "2d",
+                "position": {
+                    "x": 200.0,
+                    "y": 200.0,
+                    "z": 0.0
+                },
+                "position3d": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                }
+            },
+            "config": {
+                "port": "COM7",
+                "baudrate": 9600,
+                "timeout": 1.0,
+                "command_suffix": " \r \n",
+                "auto_connect": true
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}

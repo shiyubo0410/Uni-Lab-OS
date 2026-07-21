@@ -157,6 +157,37 @@ def _install_deps(pyproject: Path) -> None:
         )
 
 
+def install_driver_package(archive: Path) -> List[str]:
+    """把一个**已下载到本地**的驱动 tar.gz 解压安装到 ``unilabos/devices/``。
+
+    供自建 OTA 的 ``device_driver`` applier 复用：OTA 侧已完成下载 + sha256 校验，
+    这里只做"解压到 devices 目录 + 装依赖 + 失效 import 缓存"，不重启整机。
+
+    压缩包布局同 ``ensure_driver_available``（顶层即包目录，如 ``ika/ika.py``，
+    可含 ``pyproject.toml``）。
+
+    Args:
+        archive: 本地 tar.gz 路径。
+
+    Returns:
+        解压出的顶层目录名列表（即安装/更新的驱动包名）。
+
+    Raises:
+        任何解压异常（非法路径 / 坏包）向上抛，由调用方转 failed。
+    """
+    dest = _devices_dir()
+    with tarfile.open(archive, "r:gz") as tar:
+        top_dirs = _safe_extract(tar, dest)
+    logger.info(f"[DRV] device_driver 已解压到 {dest}: {', '.join(top_dirs) or '(空)'}")
+    for d in top_dirs:
+        pyproject = dest / d / "pyproject.toml"
+        if pyproject.exists():
+            _install_deps(pyproject)
+    # 解压出新文件后必须让 import 系统重新扫描，否则 find_spec 仍命中旧缓存
+    importlib.invalidate_caches()
+    return top_dirs
+
+
 def ensure_driver_available(driver_path: str, driver_url: str = "", driver_version: str = "") -> bool:
     """确保 driver_path(形如 pkg.module.Class)对应的模块可 import。
 

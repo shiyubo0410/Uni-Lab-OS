@@ -1,0 +1,45 @@
+{
+    "nodes": [
+        {
+            "id": "apd_sv_dispenser",
+            "name": "铼羽加样仪",
+            "description": "铼羽 APD-SV 单通道固体加样仪",
+            "type": "device",
+            "class": "sample_dispenser.laiyu.apd_sv",
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "config": {
+                "port": "COM6",
+                "baudrate": 115200,
+                "slave_addr": 1,
+                "poll_interval": 0.3,
+                "timeout": 300
+            },
+            "data": {}
+        },
+        {
+            "id": "sjs_elite_arm",
+            "name": "SJS Elite 机械臂",
+            "description": "SJS Elite 机械臂 Modbus TCP 控制",
+            "type": "device",
+            "class": "arm.elite.sjs",
+            "position": {
+                "x": 200,
+                "y": 0,
+                "z": 0
+            },
+            "config": {
+                "host": "192.168.1.200",
+                "modbus_port": 502,
+                "unit_id": 1,
+                "poll_interval": 0.3,
+                "timeout": 120
+            },
+            "data": {}
+        }
+    ],
+    "links": []
+}
