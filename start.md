@@ -71,6 +71,15 @@ git stash         #暂存再拉取，清理仓库工作树
 git pull
 git stash pop
 ```
+# 备份
+```bash
+
+git add -A
+git commit -m "backup: 更新备份"
+git push backup gateway
+```
+
+
 
 # 上传修改分支(push)
     打开源代码管理(Ctrl+Shift+G)
