@@ -222,6 +222,42 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* 悬浮对话按钮 + 弹窗（局域网 Web Runner，方法 B） */
+        .chat-fab {
+            position: fixed; right: 24px; bottom: 24px; z-index: 1000;
+            width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; font-size: 26px; box-shadow: 0 8px 24px rgba(102,126,234,0.45);
+            transition: transform 0.15s;
+        }
+        .chat-fab:hover { transform: scale(1.06); }
+        .chat-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1001;
+            display: none; align-items: flex-end; justify-content: flex-end; padding: 20px;
+        }
+        .chat-overlay.open { display: flex; }
+        .chat-box {
+            background: white; border-radius: 16px; width: 100%; max-width: 420px;
+            height: 70vh; max-height: 620px; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+        .chat-head { padding: 14px 16px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+        .chat-head h3 { font-size: 16px; color: #333; }
+        .chat-head .acts button { background: #f0f0f5; border: none; border-radius: 8px; padding: 5px 10px; font-size: 12px; color: #666; cursor: pointer; margin-left: 6px; }
+        .chat-head .acts button:hover { background: #e5e5ee; }
+        .chat-msgs { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msgs .m { max-width: 85%; padding: 9px 13px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+        .chat-msgs .m.u { align-self: flex-end; background: #667eea; color: #fff; border-bottom-right-radius: 3px; }
+        .chat-msgs .m.b { align-self: flex-start; background: #f0f4ff; color: #333; border-bottom-left-radius: 3px; }
+        .chat-msgs .m.e { align-self: flex-start; background: #fdeaea; color: #c0392b; border-bottom-left-radius: 3px; }
+        .chat-msgs .m.t { align-self: flex-start; color: #999; font-style: italic; }
+        .chat-input { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #eee; }
+        .chat-input textarea { flex: 1; resize: none; border: 1px solid #ddd; border-radius: 10px; padding: 9px 11px; font-size: 14px; font-family: inherit; height: 40px; max-height: 100px; }
+        .chat-input textarea:focus { outline: none; border-color: #667eea; }
+        .chat-input button { background: #667eea; color: #fff; border: none; border-radius: 10px; padding: 0 16px; font-size: 14px; cursor: pointer; }
+        .chat-input button:disabled { background: #b0b8e8; cursor: not-allowed; }
+        .chat-tip { color: #aaa; text-align: center; margin: auto; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -292,6 +328,69 @@
 
         <div class="message" id="message"></div>
     </div>
+
+    {% if agent_enabled %}
+    <!-- 悬浮对话按钮 + 弹窗（局域网 Web Runner，方法 B） -->
+    <button class="chat-fab" id="chatFab" title="和网关助手对话">💬</button>
+    <div class="chat-overlay" id="chatOverlay">
+        <div class="chat-box">
+            <div class="chat-head">
+                <h3>网关助手</h3>
+                <div class="acts">
+                    <button type="button" onclick="chatReset()">清空</button>
+                    <button type="button" onclick="toggleChat(false)">关闭</button>
+                </div>
+            </div>
+            <div class="chat-msgs" id="chatMsgs">
+                <div class="chat-tip" id="chatTip">问问设备状态、怎么操作都行</div>
+            </div>
+            <div class="chat-input">
+                <textarea id="chatInput" placeholder="输入消息，回车发送（Shift+回车换行）"></textarea>
+                <button type="button" id="chatSend" onclick="chatSend()">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CHAT_SESSION = "web-" + Math.random().toString(36).slice(2, 10);
+        const chatOverlay = document.getElementById('chatOverlay');
+        const chatMsgs = document.getElementById('chatMsgs');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSend');
+
+        function toggleChat(open) {
+            chatOverlay.classList.toggle('open', open);
+            if (open) setTimeout(() => chatInput.focus(), 50);
+        }
+        document.getElementById('chatFab').addEventListener('click', () => toggleChat(true));
+        chatOverlay.addEventListener('click', (e) => { if (e.target === chatOverlay) toggleChat(false); });
+
+        function chatAdd(text, cls) {
+            const tip = document.getElementById('chatTip'); if (tip) tip.remove();
+            const d = document.createElement('div'); d.className = 'm ' + cls; d.textContent = text;
+            chatMsgs.appendChild(d); chatMsgs.scrollTop = chatMsgs.scrollHeight; return d;
+        }
+        async function chatSend() {
+            const text = chatInput.value.trim(); if (!text) return;
+            chatInput.value = ''; chatAdd(text, 'u'); chatSendBtn.disabled = true;
+            const typing = chatAdd('思考中…', 't');
+            try {
+                const r = await fetch('/api/agent/chat', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session: CHAT_SESSION, text })
+                });
+                const data = await r.json(); typing.remove();
+                if (data.success) chatAdd(data.reply, 'b'); else chatAdd('出错：' + (data.error || '未知错误'), 'e');
+            } catch (e) { typing.remove(); chatAdd('网络错误：' + e, 'e'); }
+            finally { chatSendBtn.disabled = false; chatInput.focus(); }
+        }
+        async function chatReset() {
+            try { await fetch('/api/agent/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session: CHAT_SESSION }) }); } catch (e) {}
+            chatMsgs.innerHTML = '<div class="chat-tip" id="chatTip">上下文已清空</div>';
+        }
+        chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatSend(); } });
+    </script>
+    {% endif %}
 
     <script>
         const form = document.getElementById('cfgForm');

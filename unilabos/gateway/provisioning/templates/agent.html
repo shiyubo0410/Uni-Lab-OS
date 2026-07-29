@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLab 网关助手</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 { font-size: 18px; color: #333; }
+        .header .sub { font-size: 12px; color: #999; margin-top: 2px; }
+        .header button {
+            background: #f0f0f5; border: none; border-radius: 8px;
+            padding: 6px 12px; font-size: 13px; color: #666; cursor: pointer;
+        }
+        .header button:hover { background: #e5e5ee; }
+        .messages {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 15px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+        .msg.user { align-self: flex-end; background: #667eea; color: white; border-bottom-right-radius: 3px; }
+        .msg.bot { align-self: flex-start; background: #f0f4ff; color: #333; border-bottom-left-radius: 3px; }
+        .msg.err { align-self: flex-start; background: #fdeaea; color: #c0392b; border-bottom-left-radius: 3px; }
+        .msg.typing { align-self: flex-start; color: #999; font-style: italic; }
+        .input-bar {
+            display: flex; gap: 10px; padding: 14px 16px; border-top: 1px solid #eee;
+        }
+        .input-bar textarea {
+            flex: 1; resize: none; border: 1px solid #ddd; border-radius: 10px;
+            padding: 10px 12px; font-size: 15px; font-family: inherit; height: 44px; max-height: 120px;
+        }
+        .input-bar textarea:focus { outline: none; border-color: #667eea; }
+        .input-bar button {
+            background: #667eea; color: white; border: none; border-radius: 10px;
+            padding: 0 20px; font-size: 15px; cursor: pointer;
+        }
+        .input-bar button:disabled { background: #b0b8e8; cursor: not-allowed; }
+        .empty-tip { color: #aaa; text-align: center; margin: auto; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>网关助手</h1>
+                <div class="sub">{{ machine_name }}</div>
+            </div>
+            <button onclick="resetChat()">清空</button>
+        </div>
+        <div class="messages" id="messages">
+            <div class="empty-tip" id="emptyTip">和网关助手聊聊吧，问它设备状态、怎么操作都行</div>
+        </div>
+        <div class="input-bar">
+            <textarea id="input" placeholder="输入消息，回车发送（Shift+回车换行）" autofocus></textarea>
+            <button id="sendBtn" onclick="send()">发送</button>
+        </div>
+    </div>
+
+    <script>
+        // 每次打开页面生成一个会话 id，刷新即新会话。
+        const SESSION = "web-" + Math.random().toString(36).slice(2, 10);
+        const messagesEl = document.getElementById("messages");
+        const inputEl = document.getElementById("input");
+        const sendBtn = document.getElementById("sendBtn");
+
+        function addMsg(text, cls) {
+            const tip = document.getElementById("emptyTip");
+            if (tip) tip.remove();
+            const div = document.createElement("div");
+            div.className = "msg " + cls;
+            div.textContent = text;
+            messagesEl.appendChild(div);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+            return div;
+        }
+
+        async function send() {
+            const text = inputEl.value.trim();
+            if (!text) return;
+            inputEl.value = "";
+            addMsg(text, "user");
+            sendBtn.disabled = true;
+            const typing = addMsg("思考中…", "typing");
+            try {
+                const resp = await fetch("/api/agent/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ session: SESSION, text }),
+                });
+                const data = await resp.json();
+                typing.remove();
+                if (data.success) {
+                    addMsg(data.reply, "bot");
+                } else {
+                    addMsg("出错：" + (data.error || "未知错误"), "err");
+                }
+            } catch (e) {
+                typing.remove();
+                addMsg("网络错误：" + e, "err");
+            } finally {
+                sendBtn.disabled = false;
+                inputEl.focus();
+            }
+        }
+
+        async function resetChat() {
+            try {
+                await fetch("/api/agent/reset", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ session: SESSION }),
+                });
+            } catch (e) {}
+            messagesEl.innerHTML = '<div class="empty-tip" id="emptyTip">上下文已清空，重新开始吧</div>';
+        }
+
+        inputEl.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                send();
+            }
+        });
+    </script>
+</body>
+</html>

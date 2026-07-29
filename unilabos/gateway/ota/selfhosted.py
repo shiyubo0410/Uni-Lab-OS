@@ -557,10 +557,11 @@ class SelfHostedOtaAgent:
                     _systemctl_restart(svc)
                 except SoftwareError as exc:
                     logger.warning("[OTA] 附带服务 %s 重启失败（忽略，继续自重启）: %s", svc, exc)
-            # 尽量在被杀前把一条进度发出去（能发就发，发不出去无所谓，marker 兜底）
+            # 尽量在被杀前把一条进度发出去（能发就发，发不出去无所谓，marker 兜底）。
+            # 注意 error_msg 语义是"失败原因"，不能塞进度备注（否则会污染前端"错误"列，
+            # 且成功后空串未必能覆盖它）——进度信息用 status/progress 表达即可。
             if task_uuid:
-                await self._report(task_uuid, ST_UPGRADING, 95, from_version, version,
-                                   error_msg="restarting")
+                await self._report(task_uuid, ST_UPGRADING, 95, from_version, version)
             self._systemctl_restart_noblock(self.self_service)
             raise _RestartPending()
 

@@ -37,6 +37,7 @@ from unilabos.gateway.device import DeviceWorker, MockDevice
 from unilabos.gateway.register import register_async
 from unilabos.gateway.ws import GatewayClient
 from unilabos.gateway.ota.selfhosted import SelfHostedOtaAgent
+from unilabos.gateway.agent import GatewayAgent, DeviceSkill, build_llm_from_env
 from unilabos.gateway.provisioning import (
     WiFiManager,
     ProvisioningServer,
@@ -165,6 +166,7 @@ def _safe_unlink(path: Path) -> bool:
 async def _start_admin_server(
     wifi_mgr: WiFiManager,
     machine_name: str,
+    agent=None,
 ) -> Optional[ProvisioningServer]:
     """启动常驻的管理后台 Web 服务器（mode=management）。
 
@@ -182,6 +184,7 @@ async def _start_admin_server(
         mode="management",
         port=admin_port,
         machine_name=machine_name,
+        agent=agent,
     )
     try:
         await server.start()
@@ -446,11 +449,28 @@ async def run_gateway(
                 logger.error("[GW] reboot 未生效，退出由 systemd 重新拉起本进程")
                 sys.exit(1)
 
+    # 网关内常驻 Agent（见《网关Agent_开发文档》）。进程内组件：
+    # - 局域网 Web Runner（方法 B）：注入到下方管理后台，浏览器 /agent 直接对话（走 chat_once，不需要 WS）；
+    # - 云端中转（方法 A，依赖 D1）就绪后：on_message 路由 agent_msg → handle_agent_msg，回复经 send_fn。
+    # 这里先建好（send_fn 稍后 client 就绪再补），LLM 由 env 构建（配了 GpuGeek key 走真实推理，
+    # 没配自动回退 EchoLLM 桩）。
+    # workers 活字典（设备ID→DeviceWorker）：提前建好并原地增删（见下方 update 与热插拔），
+    # 这样注入给 Agent Skill 的引用始终指向同一对象，能实时看到设备上下线。
+    workers: Dict[str, DeviceWorker] = {}
+
+    gateway_agent = GatewayAgent(
+        send_fn=None,
+        machine_name=machine_name,
+        llm=build_llm_from_env(machine_name),
+        # 设备控制 Skill：让 Agent 能查设备/下动作（写动作会二次确认）。
+        skill=DeviceSkill(workers),
+    )
+
     # 常驻管理后台：联网正常之后启动一个 ProvisioningServer(mode="management")
     # 让用户在同 WiFi 下用浏览器修改 AK/SK / mount_uuid，省掉 ssh + sudo nano
     # /etc/unilab-gateway.env 的麻烦。即使 register/ws 后续连不上云端，本管理后台
-    # 仍然在跑，用户可以改 AK/SK 救场。
-    admin_server = await _start_admin_server(wifi_mgr, machine_name)
+    # 仍然在跑，用户可以改 AK/SK 救场。注入 agent 后同时挂上 /agent 局域网聊天页。
+    admin_server = await _start_admin_server(wifi_mgr, machine_name, agent=gateway_agent)
 
     if register:
         base_url = (http_url or HTTPConfig.remote_addr).rstrip("/")
@@ -470,14 +490,16 @@ async def run_gateway(
                 "[GW] 资源树注册失败，仍将尝试启动 WebSocket（前端可能看不到设备）"
             )
 
-    workers: Dict[str, DeviceWorker] = {}
-
     def on_device_lost(device_id: str) -> None:
         logger.info(f"[GW] 设备 {device_id} 已丢失，从 workers 移除，等待热插拔重新识别")
         workers.pop(device_id, None)
 
     async def send_fn(msg: Dict[str, Any]) -> None:
         await client.send(msg)
+
+    # 补上 Agent 的上行发送口：云端中转（方法 A）就绪后，WS agent_msg 的回复经此发回。
+    # 局域网 Web Runner（方法 B）走 chat_once，不用这个，故上面先 None 也无碍。
+    gateway_agent.send_fn = send_fn
 
     # 自建 OTA 客户端（对接 uni-lab-backend，见 ota/ota-design.md §13）。
     # 网关以"一台特殊 device"身份登记：product_key 固定，device_name = hostname 后缀。
@@ -488,7 +510,7 @@ async def run_gateway(
         base_url=http_url,
     )
 
-    async def on_ready() -> Dict[str, Any]:
+    async def on_ready():
         devices_payload = []
         for device_id, worker in workers.items():
             actions = worker.list_actions()
@@ -512,8 +534,10 @@ async def run_gateway(
                 }
             )
 
-        logger.info(f"[GW] host_node_ready: 上报 {len(devices_payload)} 个设备")
-        return {
+        # 全量动作锁快照：必须在 host_node_ready 之前发（后端 device_lock 依赖此表，
+        # 否则抢锁报 "edge not start device"）。返回列表，ws 层按序发出。
+        locks_msg = _build_action_locks(workers, machine_name)
+        ready_msg = {
             "action": "host_node_ready",
             "data": {
                 "status": "ready",
@@ -523,6 +547,11 @@ async def run_gateway(
                 "devices": devices_payload,
             },
         }
+        logger.info(
+            f"[GW] host_node_ready: 上报 {len(devices_payload)} 个设备, "
+            f"{len(locks_msg['data']['locks'])} 个动作锁"
+        )
+        return [locks_msg, ready_msg]
 
     async def on_message(msg: Dict[str, Any]) -> None:
         action = msg.get("action")
@@ -532,10 +561,16 @@ async def run_gateway(
             await _handle_job_start(data, workers, client, machine_name)
         elif action == "query_action_state":
             await _handle_query_action_state(data, workers, client)
+        elif action == "query_action_lock":
+            # 后端要求重传全量锁快照（状态对齐）。
+            await client.send(_build_action_locks(workers, machine_name))
+            logger.info("[GW] query_action_lock: 已重发全量动作锁快照")
         elif action == "ota_cmd":
             await ota_agent.handle_ota_cmd(data)
         elif action == "ota_cancel":
             await ota_agent.handle_ota_cancel(data)
+        elif action == "agent_msg":
+            await gateway_agent.handle_agent_msg(data)
         elif action == "cancel_action" or action == "cancel_task":
             logger.info(f"[GW] 收到取消请求 action={action} data={data}（暂未实现）")
         elif action in ("add_material", "update_material", "remove_material"):
@@ -561,7 +596,10 @@ async def run_gateway(
         },
     )
 
-    workers = _build_workers(devices_cfg, send_fn=send_fn, machine_name=machine_name, on_device_lost=on_device_lost)
+    # 原地填充（不能重新赋值，否则 Agent Skill 持有的旧引用会失效）。
+    workers.update(
+        _build_workers(devices_cfg, send_fn=send_fn, machine_name=machine_name, on_device_lost=on_device_lost)
+    )
     for worker in workers.values():
         await worker.start()
 
@@ -599,6 +637,43 @@ async def run_gateway(
                 await admin_server.stop()
             except Exception as e:
                 logger.debug(f"[GW] 关闭管理后台 Web 异常（忽略）: {e}")
+
+
+def _build_action_locks(
+    workers: Dict[str, DeviceWorker], machine_name: str
+) -> Dict[str, Any]:
+    """构造 report_action_lock 全量快照：每个 device+action 一条 free=True。
+
+    背景（dev 分支新增 device_lock）：后端调度抢设备锁时依赖 edge 上报的锁表判定
+    "设备是否已在 edge 启动"。极简网关此前不发此消息，导致后端认为设备未启动
+    （acquire device lock failed: edge not start device）。启动/重连/热插拔后发送
+    全量 free 快照即可让设备可被抢锁。顺序上须在 host_node_ready 之前发。
+    """
+    locks = []
+    for device_id, worker in workers.items():
+        for action_name in worker.list_actions().keys():
+            locks.append(
+                {"device_id": device_id, "action_name": action_name, "free": True}
+            )
+    return {
+        "action": "report_action_lock",
+        "data": {"locks": locks, "machine_name": machine_name},
+    }
+
+
+def _action_lock_msg(
+    device_id: str, action_name: str, free: bool, machine_name: str
+) -> Dict[str, Any]:
+    """构造单个 device+action 的锁翻转消息（job_start 前后 busy/free 用）。"""
+    return {
+        "action": "report_action_lock",
+        "data": {
+            "locks": [
+                {"device_id": device_id, "action_name": action_name, "free": free}
+            ],
+            "machine_name": machine_name,
+        },
+    }
 
 
 async def _handle_job_start(
@@ -651,7 +726,13 @@ async def _handle_job_start(
         }
     )
 
-    result = await worker.execute_action(action_name, action_args)
+    # 抢占：翻转该 device+action 锁为 busy（与后端 device_lock 口径一致，防并发下发）。
+    await client.send(_action_lock_msg(device_id, action_name, False, machine_name))
+    try:
+        result = await worker.execute_action(action_name, action_args)
+    finally:
+        # 无论成功失败都释放锁，避免设备被永久占用。
+        await client.send(_action_lock_msg(device_id, action_name, True, machine_name))
 
     await client.send(
         {
@@ -818,6 +899,25 @@ async def _hotplug_monitor(
                                 "machine_name": machine_name,
                                 "actions": actions,
                                 "meta": meta,
+                            },
+                        }
+                    )
+
+                    # 补发该设备的动作锁（free），否则后端 device_lock 认不得这台
+                    # 热插拔上来的设备，抢锁会报 "edge not start device"。
+                    await client.send(
+                        {
+                            "action": "report_action_lock",
+                            "data": {
+                                "locks": [
+                                    {
+                                        "device_id": device_id,
+                                        "action_name": a,
+                                        "free": True,
+                                    }
+                                    for a in actions.keys()
+                                ],
+                                "machine_name": machine_name,
                             },
                         }
                     )

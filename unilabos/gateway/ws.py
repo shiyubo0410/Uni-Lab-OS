@@ -145,7 +145,15 @@ class GatewayClient:
 
             if self.on_ready is not None:
                 ready_msg = await self.on_ready()
-                await self._send_raw(ready_msg)
+                # on_ready 可返回单条消息或消息列表：列表按序 _send_raw 发出，
+                # 用于"先发 report_action_lock 全量锁快照，再发 host_node_ready"
+                # （后端 device_lock 依赖锁表，顺序与 PC 端 WebSocketClient 保持一致）。
+                if isinstance(ready_msg, list):
+                    for m in ready_msg:
+                        if m:
+                            await self._send_raw(m)
+                elif ready_msg:
+                    await self._send_raw(ready_msg)
 
             send_task = asyncio.create_task(self._send_loop(), name="gw-send")
             try:
