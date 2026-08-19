@@ -78,7 +78,12 @@ git add -A
 git commit -m "backup: 更新备份"
 git push backup gateway
 ```
-
+# 从其他分支拉取dev的改动
+```bash
+git checkout gateway
+git fetch upstream dev
+git merge upstream/dev
+```
 
 
 # 上传修改分支(push)
